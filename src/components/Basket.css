@@ -1,0 +1,37 @@
+.basket-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .basket-container h3 {
+    margin-bottom: 20px;
+  }
+  
+  .basket-container table {
+    margin-bottom: 20px;
+  }
+  
+  .basket-container th {
+    text-align: left;
+  }
+  
+  .basket-container td {
+    text-align: left;
+  }
+  
+  .total-cost {
+    margin-top: 20px;
+    margin-right: 50px;
+    text-align: left;
+  }
+  
+  .btn-success {
+    background-color: green;
+    color: white;
+    margin-top: 20px;
+    margin-right: 50px;
+    float: left;
+  }
+  

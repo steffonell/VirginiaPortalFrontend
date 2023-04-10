@@ -1,0 +1,49 @@
+.shop-card {
+    background-color: #f7f7f7;
+    padding: 20px;
+    margin: 10px;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shop-card img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .shop-card h4,
+  .shop-card h5 {
+    margin-bottom: 10px;
+  }
+  
+  .shop-card label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .brand-filter {
+    max-width: 200px; /* Set the static width you prefer */
+    min-width: 200px;
+    padding: 1rem;
+    border-right: 1px solid #ccc;
+  }
+
+  .brand-filter .btn {
+    width: 100%; /* Set the width to 100% so that all buttons occupy the same width */
+    white-space: nowrap; /* This ensures that the button text doesn't wrap to the next line */
+    overflow: hidden;
+    text-overflow: ellipsis; /* This will add an ellipsis if the button text is too long */
+  }
+  
+  
+  @media (max-width: 767px) {
+    .brand-filter {
+      max-width: 100%;
+      margin-bottom: 1rem;
+      border-right: none;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+  
+  
