@@ -44,7 +44,7 @@ const Login = () => {
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Korisničko ime</label>
             <input
               type="text"
               id="username"
@@ -53,7 +53,7 @@ const Login = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Šifra</label>
             <input
               type="password"
               id="password"
@@ -61,7 +61,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit">Potvrdi</button>
         </form>
       </div>
     </div>
