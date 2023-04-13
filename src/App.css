@@ -27,6 +27,10 @@
   height: 100vh;
 }
 
+.main-content {
+  margin-top: 100px; /* Adjust the value according to your desired spacing */
+}
+
 .home-title {
   font-size: 3rem;
   text-align: center;

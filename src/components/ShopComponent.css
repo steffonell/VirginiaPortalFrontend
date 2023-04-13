@@ -1,11 +1,13 @@
 .shop-card {
-    background-color: #f7f7f7;
-    padding: 20px;
-    margin: 10px;
-    border: 1px solid #e5e5e5;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
+  background-color: #f7f7f7;
+  padding: 20px;
+  margin: 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex: 1 0 calc(33.333% - 20px); /* Added to make the cards responsive */
+  width: 100%;
+}
   
   .shop-card img {
     width: 100%;
@@ -27,6 +29,7 @@
     min-width: 200px;
     padding: 1rem;
     border-right: 1px solid #ccc;
+    width: 100%;
   }
 
   .brand-filter .btn {
@@ -43,7 +46,55 @@
       margin-bottom: 1rem;
       border-right: none;
       border-bottom: 1px solid #ccc;
+      width: 200px;
     }
   }
+  
+  @media (max-width: 767px) {
+    .shop-card {
+      flex: 1 0 calc(50% - 20px); /* Adjust the flex-basis for mobile */
+      width: 300px;
+    }
+  }
+  @media (max-width: 767px) {
+    .d-flex {
+      flex-direction: column;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .shop-card {
+      flex: 1 0 100%; /* Adjust the flex-basis for very small mobile screens */
+    }
+  }
+
+  .shop-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Add this new class to apply some margin */
+.shop-main-container {
+  margin-top: 1rem;
+}
+
+/* Add a z-index to the navbar to ensure it stays above the content */
+.navbar {
+  z-index: 100;
+}
+
+/* Add responsive flex direction for the main container */
+@media (max-width: 767px) {
+  .d-flex.shop-main-container {
+    flex-direction: column;
+  }
+
+  /* Add margin to separate the brand filter from the navbar */
+  .brand-filter {
+    margin-top: 1rem;
+  }
+}
+
   
   

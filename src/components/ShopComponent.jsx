@@ -91,7 +91,7 @@ const ShopComponent = (props) => {
   });
 
   return (
-    <div className="d-flex">
+    <div className="d-flex shop-main-container">
       <div className="brand-filter">
         <h5>Filtriranje po brendu</h5>
         <button
@@ -110,7 +110,7 @@ const ShopComponent = (props) => {
           </button>
         ))}
       </div>
-      <div className="d-flex flex-wrap justify-content-center mt-5">
+      <div className="shop-container mt-5">
         {updatedArticles.map((article) => {
           const currentQuantity = quantities[article.article_id] || "";
           const formattedWholesalePrice = numberFormatter.format(article.wholesalePrice);

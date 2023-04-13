@@ -35,6 +35,7 @@ const App = () => {
   return (
       <BrowserRouter>
         <Navbar />
+        <div className="main-content">
         <Routes>
           {/* <Route exact path="/" element={<Login />} /> */}
           {/*  <Route exact path="/home" element={<ProtectedRoute element={HomeComponent} />} /> */}
@@ -59,6 +60,7 @@ const App = () => {
           <Route exact path="/discount/add" element={<AddCustomerDiscount />} />
           <Route exact path="/basket" element={<Basket />} />
         </Routes>
+        </div>
       </BrowserRouter>
   )
 }

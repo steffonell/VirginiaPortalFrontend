@@ -1,28 +1,46 @@
-import { useState, useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useState, useContext, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import { ApplicationContext } from "./ApplicationContext";
-import './navbar.css';
-import { Navbar, Nav } from 'react-bootstrap';
+import "./navbar.css";
+import { Navbar, Nav } from "react-bootstrap";
 
 const NavbarComponent = () => {
   const [showNavbar, setShowNavbar] = useState(false);
   const { loggedInClient, authenticated } = useContext(ApplicationContext);
 
-  const handleShowNavbar = () => {
-    setShowNavbar(!showNavbar);
+  const handleScroll = () => {
+    if (window.scrollY > 100) {
+      setShowNavbar(true);
+    } else {
+      setShowNavbar(false);
+    }
   };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   if (authenticated === null || !authenticated) {
     return null;
   }
 
+  const handleShowNavbar = () => {
+    setShowNavbar(!showNavbar);
+  };
+
   return (
-    <Navbar bg="light" expand="md">
+    <Navbar className={`navbar ${showNavbar ? "show" : ""}`}
+    bg="light"
+    expand="md"
+  >
       <Navbar.Brand>
         <img src={require('./logo.jpg')} alt="Logo Image" />
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={handleShowNavbar} />
-      <Navbar.Collapse id="basic-navbar-nav">
+      <Navbar.Collapse id="basic-navbar-nav" className="custom-navbar-collapse">
         <Nav className="mr-auto" onClick={handleShowNavbar}>
           <NavLink to="/shop" className="nav-link">Shop</NavLink>
           <NavLink to="/articles" className="nav-link">Artikli</NavLink>
