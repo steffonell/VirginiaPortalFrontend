@@ -8,10 +8,6 @@ const Basket = () => {
     const [entries, setEntries] = useState([]);
     const [deliveryAddress, setDeliveryAddress] = useState("");
 
-    const totalCost = basketItems
-        ? basketItems.reduce((acc, item) => acc + item.article.wholesalePrice * item.quantity, 0)
-        : 0;
-
     /*     const confirmOrder = () => {
             if (basketItems && basketItems.length > 0) {
                 basketItems.forEach(async (item) => {
@@ -44,12 +40,34 @@ const Basket = () => {
         }
     };
 
+    const brandDiscount = (brand) => {
+        const brandName = brand.brandName;
+        const discountForTheBrand = loggedInClient?.discounts?.find((item) => item.brand.brandName === brandName);
+        if (discountForTheBrand) {
+          return discountForTheBrand.discount;
+        } else {
+          return 0;
+        }
+      };
+
+    const articlePriceWithDiscount = (article) =>{
+        return(Number(article.wholesalePrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
+    }
+
     function handleDeliveryAddressChange(event) {
         const parsedDeliveryAddress = JSON.parse(event.target.value);
         console.log(parsedDeliveryAddress);
         setDeliveryAddress(parsedDeliveryAddress);
         console.log(deliveryAddress);
     }
+
+    const formatNumber = (number) =>{
+        return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
+    }
+
+    const totalCost = basketItems
+    ? basketItems.reduce((acc, item) => acc + articlePriceWithDiscount(item.article) * item.quantity, 0)
+    : 0;
 
     return (
         <div className="basket-container">
@@ -69,8 +87,8 @@ const Basket = () => {
                             <tr key={item.article.id}>
                                 <td>{item.article.name}</td>
                                 <td>{item.quantity}</td>
-                                <td>{item.article.wholesalePrice}</td>
-                                <td>{item.article.wholesalePrice * item.quantity}</td>
+                                <td>{formatNumber(articlePriceWithDiscount(item.article))}</td>
+                                <td>{formatNumber(articlePriceWithDiscount(item.article) * item.quantity)}</td>
                             </tr>
                         ))
                     ) : (
@@ -79,7 +97,7 @@ const Basket = () => {
                 </tbody>
             </table>
             <div className="total-cost">
-                <strong>Ukupna cena :</strong> {totalCost}
+                <strong>Ukupna cena :</strong> {formatNumber(totalCost)}
             </div>
             <select className="form-control" onChange={handleDeliveryAddressChange} style={{ width: '400px' }}>
                 <option key="0" value="">Izaberite Adresu Slanja</option>

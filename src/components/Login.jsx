@@ -10,37 +10,39 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setLoggedInClient, setAuthenticated } = useContext(ApplicationContext);
+  const { setLoggedInClient, setAuthenticated, setUserRole } = useContext(ApplicationContext);
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault(); // Add this line to prevent form submission
-  
+
     try {
       const response = await axiosInstance.post("auth/signin", {
         username,
         password,
       });
-  
+
       if (response.data.accessToken) {
+        console.log(response.data);
         localStorage.setItem("user", JSON.stringify(response.data));
         setAuthToken(response.data.accessToken);
         setLoggedInClient(response.data.user);
+        setUserRole(response.data.roles[0]);
         navigate("/home");
         setAuthenticated(true);
       } else {
-        setError("Invalid credentials");
+        setError("Netačni kredencijali");
       }
     } catch (error) {
-      console.error("Error during login", error);
-      setError("Invalid credentials");
+      console.error("Greška prilikom prijavljivanja", error);
+      setError("Netačni kredencijali");
     }
   };
 
   return (
     <div className="login-container">
       <div className="login-form">
-        <h1>Login</h1>
+        <h1>Prijava na Virdžinija Portal</h1>
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className="form-group">

@@ -23,22 +23,20 @@ import IndentEntries from "./components/IndentEntries";
 import DiscountList from "./components/DiscountList";
 import AddCustomerDiscount from "./components/AddCustomerDiscount";
 import Basket from "./components/Basket";
-import { ApplicationContextProvider, ApplicationContext } from "./components/ApplicationContext";
+import { ApplicationContext } from "./components/ApplicationContext";
 import Login from "./components/Login";
 import AddDeliveryAddress from "./components/AddDeliveryAddress";
-import AuthenticatedRoute from "./components/AuthenticatedRoute";
+import Forbidden from './components/Forbidden';
 
 const App = () => {
 
   const { authenticated } = useContext(ApplicationContext);
 
   return (
-      <BrowserRouter>
-        <Navbar />
-        <div className="main-content">
+    <BrowserRouter>
+      <Navbar />
+      <div className="main-content">
         <Routes>
-          {/* <Route exact path="/" element={<Login />} /> */}
-          {/*  <Route exact path="/home" element={<ProtectedRoute element={HomeComponent} />} /> */}
           <Route exact path="/" element={<Login />} />
           <Route exact path="/shop" element={<ShopComponent />} />
           <Route exact path="/articles" element={<ArticlesList />} />
@@ -59,10 +57,11 @@ const App = () => {
           <Route exact path="/discount" element={<DiscountList />} />
           <Route exact path="/discount/add" element={<AddCustomerDiscount />} />
           <Route exact path="/basket" element={<Basket />} />
+          <Route exact path="/forbidden" element={<Forbidden />} />
         </Routes>
-        </div>
-      </BrowserRouter>
-  )
-}
+      </div>
+    </BrowserRouter>
+  );
+};
 
-export default App
+export default App;

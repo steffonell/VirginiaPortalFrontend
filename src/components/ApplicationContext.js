@@ -13,6 +13,7 @@ export const ApplicationContextProvider = (props) => {
           basketItems: [],
           token: null,
           authenticated: false,
+          userRole: null
         };
       }
       return JSON.parse(serializedState);
@@ -23,6 +24,7 @@ export const ApplicationContextProvider = (props) => {
         basketItems: [],
         token: null,
         authenticated: false,
+        userRole: null
       };
     }
   };
@@ -33,6 +35,7 @@ export const ApplicationContextProvider = (props) => {
   const [basketItems, setBasketItems] = useState(initialState.basketItems);
   const [token, setToken] = useState(initialState.token);
   const [authenticated, setAuthenticated] = useState(initialState.authenticated);
+  const [userRole, setUserRole] = useState(initialState.userRole);
 
   // Save state to local storage when state changes
   useEffect(() => {
@@ -41,6 +44,7 @@ export const ApplicationContextProvider = (props) => {
       basketItems,
       token,
       authenticated,
+      userRole
     };
     saveStateToLocalStorage(state);
   }, [loggedInClient, basketItems, token, authenticated]);
@@ -99,6 +103,8 @@ export const ApplicationContextProvider = (props) => {
     setToken,
     authenticated,
     setAuthenticated,
+    userRole,
+    setUserRole
   };
 
   return (
