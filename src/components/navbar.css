@@ -8,73 +8,42 @@ body {
 }
 
 .logo {
+  max-height: 50px;
   max-width: 40px;
   margin-right: 15px;
 }
 
 .navbar {
   height: 80px;
-  background-color: #ffffff; /* Changed the background color to white */
+  background-color: #ffffff;
   position: fixed;
-  top: -80px;
+  top: 0; /* Add this line */
   width: 100%;
-  z-index: 100;
-  transition: top 0.3s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for a better look */
+  z-index: 1000;
+  transition: all 0.3s; /* Change 'top' to 'all' */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 
 .navbar.show {
   top: 0;
   background-color: white !important;
 }
 
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-}
-
-.menu-icon {
-  display: block;
-  cursor: pointer;
-  font-size: 24px; /* Increased the font size for better visibility */
-  margin-left: auto; /* Align the menu icon to the right */
-}
-
-.nav-elements {
-  display: none; /* Hide the elements on mobile */
-}
-
-
-.nav-elements ul {
-  margin-top:20px;
-  display: flex;
-  justify-content: space-between;
-  list-style-type: none;
-}
-
-.nav-elements ul li:not(:last-child) {
-  margin-right: 60px;
-}
-
-.nav-elements ul a {
+.nav-link {
   font-size: 16px;
   font-weight: 400;
   color: #2f234f;
   text-decoration: none;
 }
 
-.nav-elements ul a.active {
+.nav-link.active {
   color: #574c4c;
   font-weight: 500;
   position: relative;
 }
 
-.nav-elements ul a.active::after {
+.nav-link.active::after {
   content: '';
   position: absolute;
   bottom: -4px;
@@ -84,183 +53,38 @@ body {
   background-color: #574c4c;
 }
 
-@media (max-width: 768px) {
-  .nav-elements ul li:not(:last-child) {
-    margin-right: 30px;
-    margin-bottom: 15px; /* Added margin-bottom for better spacing */
+@media (max-width: 991.98px) {
+  .navbar.show .custom-navbar-collapse {
+    background-color: white;
   }
-}
 
-@media (max-width: 600px) {
-  .nav-elements {
-    display: block; /* Show the nav-elements on mobile */
-    position: absolute;
-    right: 0;
-    top: 80px; /* Adjusted the top value to match the new navbar height */
-    background-color: #fef7e5;
-    width: 100%; /* Set the width to 100% for full-screen display */
+  .custom-navbar-collapse {
+    position: relative;
+    z-index: 2000;
+    background-color: white;
+    width: 100%;
+  }
+
+  .custom-navbar-collapse.show {
     height: calc(100vh - 80px);
-    transition: all 0.3s ease-in;
-    overflow: hidden;
-    z-index: 10; /* Added z-index to ensure nav-elements stay on top */
-  }
-
-  .nav-elements ul {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Added to center-align the menu items */
-    padding: 0; /* Removed any default padding */
-  }
-
-  .nav-elements ul li {
-    margin-right: unset;
-    margin-bottom: 22px; /* Changed from margin-top to margin-bottom */
+    overflow: auto;
   }
 }
 
-.custom-navbar-collapse {
-  position: relative;
-}
-
-.custom-navbar-collapse.show {
-  z-index: 2000; /* Any value higher than other components' z-index */
-}
-
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
-  background-color: #fcfcfc;
-}
-
-.logo {
-  max-width: 40px;
-  margin-right: 15px;
-}
-
-.navbar {
-  height: 80px;
-  background-color: #ffffff; /* Changed the background color to white */
-  position: fixed;
-  top: -80px;
-  width: 100%;
-  z-index: 100;
-  transition: top 0.3s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for a better look */
-}
-
-.navbar.show {
-  top: 0;
-  background-color: white !important;
-}
-
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-}
-
-.menu-icon {
-  display: block;
-  cursor: pointer;
-  font-size: 24px; /* Increased the font size for better visibility */
-  margin-left: auto; /* Align the menu icon to the right */
-}
-
-.nav-elements {
-  display: none; /* Hide the elements on mobile */
-}
-
-
-.nav-elements ul {
-  margin-top:20px;
-  display: flex;
-  justify-content: space-between;
-  list-style-type: none;
-}
-
-.nav-elements ul li:not(:last-child) {
-  margin-right: 60px;
-}
-
-.nav-elements ul a {
-  font-size: 16px;
-  font-weight: 400;
-  color: #2f234f;
-  text-decoration: none;
-}
-
-.nav-elements ul a.active {
-  color: #574c4c;
-  font-weight: 500;
-  position: relative;
-}
-
-.nav-elements ul a.active::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #574c4c;
-}
-
-@media (max-width: 768px) {
-  .nav-elements ul li:not(:last-child) {
-    margin-right: 30px;
-    margin-bottom: 15px; /* Added margin-bottom for better spacing */
-  }
-}
-
-@media (max-width: 600px) {
-  .nav-elements {
-    display: block; /* Show the nav-elements on mobile */
-    position: absolute;
-    right: 0;
-    top: 80px; /* Adjusted the top value to match the new navbar height */
-    background-color: #fef7e5;
-    width: 100%; /* Set the width to 100% for full-screen display */
-    height: calc(100vh - 80px);
-    transition: all 0.3s ease-in;
-    overflow: hidden;
-    z-index: 10; /* Added z-index to ensure nav-elements stay on top */
-  }
-
-  .nav-elements ul {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Added to center-align the menu items */
-    padding: 0; /* Removed any default padding */
-  }
-
-  .nav-elements ul li {
-    margin-right: unset;
-    margin-bottom: 22px; /* Changed from margin-top to margin-bottom */
-  }
-}
-
-.custom-navbar-collapse {
-  position: relative;
-}
-
-.custom-navbar-collapse.show {
-  z-index: 2000; /* Any value higher than other components' z-index */
-}
-
-/* Add this media query to handle the desktop view */
 @media (min-width: 992px) {
   .navbar {
-    top: 0 !important; /* Make sure the navbar is always visible on desktop */
+    top: 0 !important;
   }
 }
 
+@media (max-width: 991.98px) {
+  .navbar.show .custom-navbar-collapse.collapsing {
+    display: none;
+  }
+}
 
-
+.navbar-toggle-custom {
+  padding: 4px 10px;
+  font-size: 14px;
+  line-height: 1;
+}

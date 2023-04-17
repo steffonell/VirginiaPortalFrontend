@@ -81,7 +81,7 @@ export const ApplicationContextProvider = (props) => {
     }
   };
 
-  const removeBasketItem = (article, quantity) => {
+  const removeBasketItem = (article) => {
     const updatedItems = basketItems.filter(
       (item) => item.article.article_id !== article.article_id
     );

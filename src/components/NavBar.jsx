@@ -23,6 +23,12 @@ const NavbarComponent = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (showNavbar) {
+      setShowNavbar(false);
+    }
+  }, [window.location.pathname]);
+
   if (authenticated === null || !authenticated) {
     return null;
   }
@@ -32,14 +38,11 @@ const NavbarComponent = () => {
   };
 
   return (
-    <Navbar className={`navbar ${showNavbar ? "show" : ""}`}
-    bg="light"
-    expand="md"
-  >
+    <Navbar className={`navbar ${showNavbar ? "show" : ""}`} bg="light" expand="md">
       <Navbar.Brand>
         <img src={require('./logo.jpg')} alt="Logo Image" />
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={handleShowNavbar} />
+      <Navbar.Toggle className="navbar-toggle-custom" aria-controls="basic-navbar-nav" onClick={handleShowNavbar} />
       <Navbar.Collapse id="basic-navbar-nav" className="custom-navbar-collapse">
         <Nav className="mr-auto" onClick={handleShowNavbar}>
           <NavLink to="/shop" className="nav-link">Shop</NavLink>
@@ -63,3 +66,4 @@ const NavbarComponent = () => {
 };
 
 export default NavbarComponent;
+

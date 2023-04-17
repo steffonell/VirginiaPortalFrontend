@@ -34,4 +34,48 @@
     margin-right: 50px;
     float: left;
   }
+
+  @media screen and (max-width: 767px) {
+    .basket-container {
+      padding: 10px;
+      margin-top: 10px;
+    }
+  
+    .basket-container h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+  
+    .basket-container table {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+  
+    .basket-container th,
+    .basket-container td {
+      padding: 8px;
+    }
+  
+    .total-cost {
+      margin-top: 10px;
+      margin-right: 25px;
+    }
+  
+    .btn-success {
+      font-size: 14px;
+      margin-top: 10px;
+      margin-right: 25px;
+    }
+  }
+  
+  .basket-container select {
+    width: 100%;
+  }
+  
+  .clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
   

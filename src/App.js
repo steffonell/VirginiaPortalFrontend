@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "@fortawesome/fontawesome-free/css/all.css";
 import "@fortawesome/fontawesome-free/js/all.js";
 import "./App.css";
-import Navbar from "./components/NavBar";
 import BrandsList from "./components/BrandsList";
 import AddBrand from "./components/AddBrand";
 import Brand from "./components/Brand";
@@ -27,6 +26,8 @@ import { ApplicationContext } from "./components/ApplicationContext";
 import Login from "./components/Login";
 import AddDeliveryAddress from "./components/AddDeliveryAddress";
 import Forbidden from './components/Forbidden';
+import Navbar from "./components/NavBar";
+import NavbarComponent from "./components/NavbarComponent";
 
 const App = () => {
 
@@ -34,7 +35,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Navbar />
+      <NavbarComponent />
       <div className="main-content">
         <Routes>
           <Route exact path="/" element={<Login />} />

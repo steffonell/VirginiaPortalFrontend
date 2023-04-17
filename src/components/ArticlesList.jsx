@@ -175,8 +175,8 @@ const ArticlesList = (props) => {
     });
 
     return (
-        <div className="list row">
-            <div className="col-md-8">
+        <div className="container-fluid">
+        <div className="row">
                 <div className="input-group mb-3">
                     <input
                         type="text"
@@ -196,7 +196,8 @@ const ArticlesList = (props) => {
                     </div>
                 </div>
             </div>
-            <div className="col-md-12 list">
+            <div className="col-12 list">
+            <div className="table-responsive">
                 <table
                     className="table table-striped table-bordered"
                     {...getTableProps()}
@@ -235,12 +236,13 @@ const ArticlesList = (props) => {
                         })}
                     </tbody>
                 </table>
+                </div>
             </div>
 
             <div className="col-md-4">
                 <a href="/articles/add" className="btn btn-sm btn-primary">Add Article</a>
             </div>
-            <div className="col-md-8">
+            <div className="col-12 col-md-8">
                 <button className="btn btn-sm btn-danger" onClick={removeAllArticles}>
                     Remove All
                 </button>

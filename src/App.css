@@ -19,16 +19,13 @@
 .max-width-150 {
   max-width: 150px;
 }
+
 .home-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-}
-
-.main-content {
-  margin-top: 100px; /* Adjust the value according to your desired spacing */
 }
 
 .home-title {
@@ -348,3 +345,6 @@ border-radius: 10px;
   margin-top: 10px;
 }
 
+.main-content {
+  margin-top: 20px;
+}
