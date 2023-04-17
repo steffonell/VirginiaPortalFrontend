@@ -28,7 +28,7 @@ const Login = () => {
         setAuthToken(response.data.accessToken);
         setLoggedInClient(response.data.user);
         setUserRole(response.data.roles[0]);
-        navigate("/home");
+        navigate("/shop");
         setAuthenticated(true);
       } else {
         setError("Netačni kredencijali");
