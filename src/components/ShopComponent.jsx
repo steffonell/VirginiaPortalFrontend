@@ -5,14 +5,14 @@ import logo from "./../images/logo.jpg";
 import { ApplicationContext } from "./ApplicationContext";
 import './ShopComponent.css';
 import { setAuthToken } from "../components/apiService";
+const images = require.context("./../images/", true);
 
 const ShopComponent = (props) => {
   const [articles, setArticles] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [brands, setBrands] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState(null);
-  const [quantity, setQuantity] = useState("");
-  const { basketItems, loggedInClient, setLoggedInClient, addOrUpdateBasketItem } = useContext(ApplicationContext);
+  const { loggedInClient, setLoggedInClient, addOrUpdateBasketItem } = useContext(ApplicationContext);
   const [quantities, setQuantities] = useState({});
 
   const handleQuantityChange = (id, value) => {
@@ -85,59 +85,61 @@ const ShopComponent = (props) => {
     currency: "RSD",
   });
 
+  const discountedPrice = (price, discount) =>{
+    return (Number(price) * (1 - Number(discount / 100)).toFixed(2));
+  }
+
   const updatedArticles = filteredArticles.map((article) => {
-    const newWholesalePrice = (Number(article.wholesalePrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
+    const newWholesalePrice = (Number(article.retailPrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
     return { ...article, wholesalePrice: newWholesalePrice };
   });
 
   return (
     <div className="d-flex shop-main-container">
-      <div className="brand-filter">
+       <div className="brand-filter">
         <h5>Filtriranje po brendu</h5>
-        <button
-          className={`btn btn-${!selectedBrand ? 'primary' : 'secondary'} my-1`}
-          onClick={() => handleBrandFilterChange(null)}
+        <select
+          className="form-select my-1"
+          value={selectedBrand}
+          onChange={(e) => handleBrandFilterChange(e.target.value)}
         >
-          Svi brendovi
-        </button>
-        {brands.map((brandName, index) => (
-          <button
-            key={index}
-            className={`btn btn-${selectedBrand === brandName ? 'primary' : 'secondary'} my-1`}
-            onClick={() => handleBrandFilterChange(brandName)}
-          >
-            {brandName}
-          </button>
-        ))}
+          <option value="">Svi brendovi</option>
+          {brands.map((brandName, index) => (
+            <option key={index} value={brandName}>
+              {brandName}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="shop-container mt-5">
-        {updatedArticles.map((article) => {
+        {filteredArticles.map((article) => {
           const currentQuantity = quantities[article.article_id] || "";
-          const formattedWholesalePrice = numberFormatter.format(article.wholesalePrice);
+          const finalPriceWithDiscountForCustomer = discountedPrice(article.retailPrice, brandDiscount(article.brand));
+          const priceWithPDV = article.retailPrice.toFixed(2);
           return (
             <div
               key={article.article_id}
               className="shop-card"
               style={{ maxWidth: "300px" }}
             >
-              <img
-                src={logo}
-                alt="Logo"
-                className="img-fluid"
-                style={{ height: "200px", objectFit: "cover" }}
-              />
+<img
+  src={article.image_source ? images(`${article.image_source}`) : logo}
+  alt={article.name}
+  className="img-fluid"
+  style={{ height: "200px", objectFit: "cover" }}
+/>
               <div>
                 <label>Artikal</label>
                 <h4>{article.name}</h4>
                 <label>Brend</label>
                 <h5>{article.brand.brandName}</h5>
                 <br></br>
-                <label>Minimalna količina</label>
-                <h5> {article.minimumQuantityDemand} KOM</h5>
                 <label>Transportno Pakovanje</label>
                 <h5> {article.quantityPerTransportPackage} KOM</h5>
+                <label>Cena sa PDV [{article.pdv}%]</label>
+                <h5>{priceWithPDV} RSD</h5>
                 <label>Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
-                <h5>{formattedWholesalePrice}</h5>
+                <h5>{finalPriceWithDiscountForCustomer} RSD</h5>
                 <br></br>
                 <br></br>
                 <div className="form-group">

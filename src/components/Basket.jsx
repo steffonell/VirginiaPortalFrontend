@@ -51,7 +51,7 @@ const Basket = () => {
     };
 
     const articlePriceWithDiscount = (article) => {
-        return (Number(article.wholesalePrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
+        return (Number(article.retailPrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
     }
 
     function handleDeliveryAddressChange(event) {
