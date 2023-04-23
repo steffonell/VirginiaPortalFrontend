@@ -5,76 +5,102 @@
   border: 1px solid #e5e5e5;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  flex: 1 0 calc(33.333% - 20px); /* Added to make the cards responsive */
+  flex: 1 0 calc(33.333% - 20px);
+  /* Added to make the cards responsive */
+  width: 100%;
+  max-height: 700px;
+  object-fit: scale-down;
+}
+
+.shop-card img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: scale-down;
+}
+
+.shop-card label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.brand-filter {
+  max-width: 200px;
+  /* Set the static width you prefer */
+  min-width: 200px;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
   width: 100%;
 }
+
+.brand-filter .btn {
+  width: 100%;
+  /* Set the width to 100% so that all buttons occupy the same width */
+  white-space: nowrap;
+  /* This ensures that the button text doesn't wrap to the next line */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* This will add an ellipsis if the button text is too long */
+}
+
+
+@media (max-width: 767px) {
+
+}
+
+.brand-filter {
+  max-width: 100%;
+  margin-bottom: 1rem;
+  border-right: none;
+  border-bottom: 1px solid #ccc;
+  width: 200px;
+}
+
+
+@media (max-width: 767px) {
+  .shop-card {
+    flex: 1 0 calc(50% - 20px);
+    /* Adjust the flex-basis for mobile */
+    width: 300px;
+    max-height: 500px;
+  }
+
   
-  .shop-card img {
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* You can set a specific height or leave it as is */
+  height: 100%;
+}
+
+  .img-fluid {
+    /* max-height: 250px; */
     width: 100%;
-    height: auto;
+    max-height: 250px;
+    object-fit: scale-down;
   }
-  
-  .shop-card h4,
-  .shop-card h5 {
-    margin-bottom: 10px;
-  }
-  
-  .shop-card label {
-    font-weight: bold;
-    margin-right: 5px;
-  }
+}
 
-  .brand-filter {
-    max-width: 200px; /* Set the static width you prefer */
-    min-width: 200px;
-    padding: 1rem;
-    border-right: 1px solid #ccc;
-    width: 100%;
+@media (max-width: 767px) {
+  .d-flex {
+    flex-direction: column;
   }
+}
 
-  .brand-filter .btn {
-    width: 100%; /* Set the width to 100% so that all buttons occupy the same width */
-    white-space: nowrap; /* This ensures that the button text doesn't wrap to the next line */
-    overflow: hidden;
-    text-overflow: ellipsis; /* This will add an ellipsis if the button text is too long */
+@media (max-width: 480px) {
+  .shop-card {
+    flex: 1 0 100%;
+    /* Adjust the flex-basis for very small mobile screens */
   }
-  
-  
-  @media (max-width: 767px) {
-    .brand-filter {
-      max-width: 100%;
-      margin-bottom: 1rem;
-      border-right: none;
-      border-bottom: 1px solid #ccc;
-      width: 200px;
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .shop-card {
-      flex: 1 0 calc(50% - 20px); /* Adjust the flex-basis for mobile */
-      width: 300px;
-    }
-  }
-  @media (max-width: 767px) {
-    .d-flex {
-      flex-direction: column;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .shop-card {
-      flex: 1 0 100%; /* Adjust the flex-basis for very small mobile screens */
-    }
-  }
+}
 
-  .shop-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  /* Add this new class to apply some margin */
+.shop-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Add this new class to apply some margin */
 .shop-main-container {
   margin-top: 1rem;
 }
@@ -94,7 +120,18 @@
   .brand-filter {
     margin-top: 1rem;
   }
+
+  .hide-on-mobile {
+    display: none;
+  }
 }
 
-  
-  
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

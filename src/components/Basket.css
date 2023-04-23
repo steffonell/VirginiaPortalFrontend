@@ -1,81 +1,89 @@
 .basket-container {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin-top: 20px;
-  }
-  
-  .basket-container h3 {
-    margin-bottom: 20px;
-  }
-  
-  .basket-container table {
-    margin-bottom: 20px;
-  }
-  
-  .basket-container th {
-    text-align: left;
-  }
-  
-  .basket-container td {
-    text-align: left;
-  }
-  
-  .total-cost {
-    margin-top: 20px;
-    margin-right: 50px;
-    text-align: left;
-  }
-  
-  .btn-success {
-    background-color: green;
-    color: white;
-    margin-top: 20px;
-    margin-right: 50px;
-    float: left;
-  }
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+}
 
-  @media screen and (max-width: 767px) {
-    .basket-container {
+.basket-container h3 {
+  margin-bottom: 20px;
+}
+
+.basket-container table {
+  margin-bottom: 20px;
+}
+
+.basket-container th {
+  text-align: left;
+}
+
+.basket-container td {
+  text-align: left;
+}
+
+.total-cost {
+  margin-top: 20px;
+  margin-right: 50px;
+  text-align: left;
+}
+
+.btn-success {
+  background-color: green;
+  color: white;
+  margin-top: 20px;
+  margin-right: 50px;
+  float: left;
+}
+
+.input-width {
+  min-width: 500px;
+  max-width: 500px;
+  width: 100%;
+}
+
+@media screen and (max-width: 767px) {
+  .basket-container {
       padding: 10px;
       margin-top: 10px;
-    }
-  
-    .basket-container h3 {
+  }
+
+  .basket-container h3 {
       font-size: 18px;
       margin-bottom: 15px;
-    }
-  
-    .basket-container table {
+  }
+
+  .basket-container table {
       font-size: 14px;
       margin-bottom: 10px;
-    }
-  
-    .basket-container th,
-    .basket-container td {
+  }
+
+  .basket-container th,
+  .basket-container td {
       padding: 8px;
-    }
-  
-    .total-cost {
+  }
+
+  .total-cost {
       margin-top: 10px;
       margin-right: 25px;
-    }
-  
-    .btn-success {
+  }
+
+  .btn-success {
       font-size: 14px;
       margin-top: 10px;
       margin-right: 25px;
-    }
   }
-  
-  .basket-container select {
-    width: 100%;
+
+  .hide-on-mobile {
+      display: none;
   }
-  
-  .clearfix::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  
-  
+}
+
+.basket-container select {
+  width: 100%;
+}
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}

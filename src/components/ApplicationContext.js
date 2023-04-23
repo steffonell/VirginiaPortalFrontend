@@ -59,6 +59,7 @@ export const ApplicationContextProvider = (props) => {
     }
   };
 
+  // kada nema autentifikacije da se brise kontekst
   const addOrUpdateBasketItem = (article, quantity) => {
     const existingItem = basketItems.find(
       (item) => item.article.article_id === article.article_id
@@ -98,6 +99,7 @@ export const ApplicationContextProvider = (props) => {
     removeAllBasketItems,
     setLoggedInClient,
     loggedInClient,
+    setBasketItems,
     basketItems,
     token,
     setToken,

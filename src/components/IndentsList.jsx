@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useContext, useState, useEffect, useMemo, useRef } from "react";
 import IndentDataService from "../services/IndentService";
 import { useTable } from "react-table";
 import { Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { Outlet, Link } from "react-router-dom";
+import {Link,useNavigate } from "react-router-dom";
+import { ApplicationContext } from "./ApplicationContext";
 import logo from './../images/logo.jpg';
 
 const IndentsList = (props) => {
@@ -12,6 +12,7 @@ const IndentsList = (props) => {
     const indentsRef = useRef();
     const navigate = useNavigate();
     indentsRef.current = indents;
+    const { loggedInClient } = useContext(ApplicationContext);
 
     useEffect(() => {
         retrieveIndents();
@@ -118,7 +119,10 @@ const IndentsList = (props) => {
             },
             {
                 Header: "Klijent",
-                accessor: "customer.nameOfTheLegalEntity",
+                accessor: "loggedInClient.nameOfTheLegalEntity",
+                Cell: ({ value }) => (
+                    <span>{loggedInClient.nameOfTheLegalEntity}</span>
+                ),
             },
             {
                 Header: "Status Porudzbenice",

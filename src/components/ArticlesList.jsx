@@ -73,11 +73,8 @@ const ArticlesList = (props) => {
         ArticleDataService.remove(id)
             .then((response) => {
                 <Navigate to="/articles" replace={true} />
-                /* props.history.push("/articles"); */
-
                 let newArticles = [...articlesRef.current];
                 newArticles.splice(rowIndex, 1);
-
                 setArticles(newArticles);
             })
             .catch((e) => {
@@ -88,32 +85,55 @@ const ArticlesList = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Barkod",
-                accessor: "barcode",
-            },
-            {
-                Header: "Bruto Masa",
-                accessor: "brutoMass",
-            },
-            {
-                Header: "Kod",
+                Header: "Šifra Artikla",
                 accessor: "code",
             },
             {
-                Header: "Slika",
-                accessor: "imageSource",
+                Header: "GTIN",
+                accessor: "barcode",
             },
             {
-                Header: "Minimalni Trazeni Kvantitet",
-                accessor: "minimumQuantityDemand",
+                Header: "Naziv",
+                accessor: "name",
+            },
+            {
+                Header: "Jedinica Mere",
+                accessor: "unitOfMeasurement",
+            },
+            {
+                Header: "Brend",
+                accessor: "brand.brandName",
+            },
+            {
+                Header: "Fakturna Cena",
+                accessor: "wholesalePrice",
+                Cell: ({ value }) => (
+                    <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
+                ),
+            },
+            {
+                Header: "Stopa PDV-a",
+                accessor: "pdv",
+                Cell: ({ value }) => <span>{value}%</span>,
             },
             {
                 Header: "Broj Komada U Paketu",
                 accessor: "quantityPerTransportPackage",
             },
             {
-                Header: "Naziv",
-                accessor: "name",
+                Header: "Minimum Za Trebovanje",
+                accessor: "minimumQuantityDemand",
+            },
+            {
+                Header: "Bruto Težina Proizvoda (KG)",
+                accessor: "brutoMass",
+                Cell: ({ cell: { value } }) => {
+                    return value + " KG";
+                },
+            },
+            {
+                Header: "Slika",
+                accessor: "imageSource",
             },
             {
                 Header: "Maloprodajna Cena",
@@ -122,26 +142,6 @@ const ArticlesList = (props) => {
                     <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
                 ),
             },    
-            {
-                Header: "Jedinica Mere",
-                accessor: "unitOfMeasurement",
-            },
-            {
-                Header: "Veleprodajna Cena",
-                accessor: "wholesalePrice",
-                Cell: ({ value }) => (
-                    <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
-                ),
-            },
-            {
-                Header: "PDV",
-                accessor: "pdv",
-                Cell: ({ value }) => <span>{value}%</span>,
-            },
-            {
-                Header: "Brend",
-                accessor: "brand.brandName",
-            },
             {
                 Header: "Akcije",
                 accessor: "actions",

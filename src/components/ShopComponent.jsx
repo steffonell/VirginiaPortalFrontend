@@ -16,9 +16,11 @@ const ShopComponent = (props) => {
   const [quantities, setQuantities] = useState({});
 
   const handleQuantityChange = (id, value) => {
+    const newValue = Math.max(value, 0);
+
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [id]: parseInt(value) || "",
+      [id]: newValue,
     }));
   };
 
@@ -85,7 +87,7 @@ const ShopComponent = (props) => {
     currency: "RSD",
   });
 
-  const discountedPrice = (price, discount) =>{
+  const discountedPrice = (price, discount) => {
     return (Number(price) * (1 - Number(discount / 100)).toFixed(2));
   }
 
@@ -94,56 +96,96 @@ const ShopComponent = (props) => {
     return { ...article, wholesalePrice: newWholesalePrice };
   });
 
+  const handleValueValidation = (id, value, minQuantityDemand) => {
+    const parsedValue = parseInt(value) || 0;
+    const newValue = Math.max(Math.round(parsedValue / minQuantityDemand) * minQuantityDemand, 0);
+
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [id]: newValue,
+    }));
+  };
+
+  const findArticleImage = (code) => {
+    const checkFileExists = (path) => {
+      try {
+        images(path);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    };
+  
+    if (checkFileExists(`./${code}.jpg`)) {
+      return images(`./${code}.jpg`);
+    } else if (checkFileExists(`./${code}.png`)) {
+      return images(`./${code}.png`);
+    } else {
+      return logo;
+    }
+  };
+
   return (
     <div className="d-flex shop-main-container">
-       <div className="brand-filter">
-        <h5>Filtriranje po brendu</h5>
-        <select
-          className="form-select my-1"
-          value={selectedBrand}
-          onChange={(e) => handleBrandFilterChange(e.target.value)}
-        >
-          <option value="">Svi brendovi</option>
-          {brands.map((brandName, index) => (
-            <option key={index} value={brandName}>
-              {brandName}
-            </option>
-          ))}
-        </select>
+      <div class="filter-container">
+        <div className="brand-filter">
+          <h5>Filtriranje po brendu</h5>
+          <select
+            className="form-select my-1"
+            value={selectedBrand}
+            onChange={(e) => handleBrandFilterChange(e.target.value)}
+          >
+            <option value="">Svi brendovi</option>
+            {brands.map((brandName, index) => (
+              <option key={index} value={brandName}>
+                {brandName}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="shop-container mt-5">
         {filteredArticles.map((article) => {
           const currentQuantity = quantities[article.article_id] || "";
-          const finalPriceWithDiscountForCustomer = discountedPrice(article.retailPrice, brandDiscount(article.brand));
-          const priceWithPDV = article.retailPrice.toFixed(2);
+          const finalPriceWithDiscountForCustomer = discountedPrice(article.wholesalePrice, brandDiscount(article.brand)).toFixed(2);
           return (
             <div
               key={article.article_id}
               className="shop-card"
-              style={{ maxWidth: "300px" }}
+              style={{ maxWidth: "250px" }}
             >
-<img
-  src={article.image_source ? images(`${article.image_source}`) : logo}
-  alt={article.name}
-  className="img-fluid"
-  style={{ height: "200px", objectFit: "cover" }}
-/>
+              <img
+                src={findArticleImage(article.code)}
+                alt={article.name}
+                className="img-fluid styleShopImage"
+              />
               <div>
+                <div className="hide-on-mobile">
+                  <label>ID</label>
+                  <h6>{article.code}</h6>
+                </div>
                 <label>Artikal</label>
-                <h4>{article.name}</h4>
-                <label>Brend</label>
-                <h5>{article.brand.brandName}</h5>
-                <br></br>
-                <label>Transportno Pakovanje</label>
-                <h5> {article.quantityPerTransportPackage} KOM</h5>
-                <label>Cena sa PDV [{article.pdv}%]</label>
-                <h5>{priceWithPDV} RSD</h5>
+                <h6>{article.name}</h6>
+                <div className="hide-on-mobile">
+                  <label>Transportno Pakovanje</label>
+                  <h6> {article.quantityPerTransportPackage} KOM</h6>
+                  <label>Minimalna Količina</label>
+                  <h6> {article.minimumQuantityDemand} KOM</h6>
+                  <label>Fakturna Cena</label>
+                  <h6>{article.wholesalePrice.toFixed(2)} RSD</h6>
+                </div>
                 <label>Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
-                <h5>{finalPriceWithDiscountForCustomer} RSD</h5>
-                <br></br>
-                <br></br>
-                <div className="form-group">
-                  <label htmlFor={`quantity_${article.article_id}`}>Količina</label>
+                <h6>{finalPriceWithDiscountForCustomer} RSD</h6>
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => currentQuantity > 0 && handleQuantityChange(article.article_id, currentQuantity - article.minimumQuantityDemand)}
+                    >
+                      -
+                    </button>
+                  </div>
                   <input
                     type="number"
                     className="form-control"
@@ -153,16 +195,26 @@ const ShopComponent = (props) => {
                     min={article.minimumQuantityDemand}
                     value={currentQuantity}
                     onChange={(e) => handleQuantityChange(article.article_id, e.target.value)}
+                    onBlur={(e) => handleValueValidation(article.article_id, e.target.value, article.minimumQuantityDemand)}
                   />
+                  <div className="input-group-append">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => handleQuantityChange(article.article_id, currentQuantity + article.minimumQuantityDemand)}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
                 <button
                   onClick={() => {
                     addToBasket(article, currentQuantity);
                   }}
                   className="btn btn-success"
-                  disabled={!currentQuantity || currentQuantity % article.quantityPerTransportPackage !== 0}
+                  disabled={!currentQuantity || currentQuantity % article.minimumQuantityDemand !== 0}
                 >
-                  Dodaj u porudžbinu
+                  Dodaj
                 </button>
               </div>
             </div>
