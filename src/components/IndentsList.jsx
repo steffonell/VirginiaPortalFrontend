@@ -1,10 +1,11 @@
 import React, { useContext, useState, useEffect, useMemo, useRef } from "react";
 import IndentDataService from "../services/IndentService";
-import { useTable } from "react-table";
+import { useTable, useSortBy, useFilters } from "react-table";
 import { Navigate } from "react-router-dom";
-import {Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ApplicationContext } from "./ApplicationContext";
 import logo from './../images/logo.jpg';
+import { formatDate } from "./utils";
 
 const IndentsList = (props) => {
     const [indents, setIndents] = useState([]);
@@ -13,6 +14,11 @@ const IndentsList = (props) => {
     const navigate = useNavigate();
     indentsRef.current = indents;
     const { loggedInClient } = useContext(ApplicationContext);
+    const [searchCode, setSearchCode] = useState("");
+    const [searchDateFrom, setSearchDateFrom] = useState("");
+    const [searchDateTo, setSearchDateTo] = useState("");
+    const [displayedIndents, setDisplayedIndents] = useState([]);
+
 
     useEffect(() => {
         retrieveIndents();
@@ -27,6 +33,7 @@ const IndentsList = (props) => {
         IndentDataService.getAll()
             .then((response) => {
                 setIndents(response.data);
+                setDisplayedIndents(response.data);
                 console.log(response.data);
             })
             .catch((e) => {
@@ -82,33 +89,53 @@ const IndentsList = (props) => {
             });
     };
 
+    const DefaultColumnFilter = ({ column: { filterValue, setFilter } }) => {
+        return (
+            <input
+                value={filterValue || ""}
+                onChange={(e) => {
+                    setFilter(e.target.value || undefined);
+                }}
+                placeholder={`Search`}
+            />
+        );
+    };
+
+    const defaultColumn = React.useMemo(
+        () => ({
+            Filter: DefaultColumnFilter,
+        }),
+        []
+    );
+
+
 
     const activateIndent = (rowIndex) => {
         const selectedIndent = indentsRef.current[rowIndex];
         const code = selectedIndent.code;
-      
+
         if (selectedIndent.indentStatus !== "ACTIVATED") {
-          selectedIndent.indentStatus = "ACTIVATED";
-      
-          IndentDataService.activateIndent(selectedIndent)
-            .then(() => {
-              const newIndents = [...indentsRef.current];
-              newIndents[rowIndex] = selectedIndent;
-              setIndents(newIndents);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
+            selectedIndent.indentStatus = "ACTIVATED";
+
+            IndentDataService.activateIndent(selectedIndent)
+                .then(() => {
+                    const newIndents = [...indentsRef.current];
+                    newIndents[rowIndex] = selectedIndent;
+                    setIndents(newIndents);
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
         }
-      };
-      
-      
+    };
+
+
 
     const viewIndent = (rowIndex) => {
         const indentCode = indentsRef.current[rowIndex].code;
         console.log("navigate");
         navigate(`/indents/entries/${indentCode}`);
-      };
+    };
 
 
     const columns = useMemo(
@@ -127,6 +154,11 @@ const IndentsList = (props) => {
             {
                 Header: "Status Porudzbenice",
                 accessor: "indentStatus",
+            },
+            {
+                Header: "Datum",
+                accessor: "creationTime",
+                Cell: ({ value }) => formatDate(value),
             },
             {
                 Header: "Actions",
@@ -160,39 +192,80 @@ const IndentsList = (props) => {
         []
     );
 
+
+    const handleSearchClick = () => {
+        const filteredIndents = indentsRef.current.filter(indent => {
+            const indentDate = new Date(indent.creationTime);
+
+            const isCodeMatch = !searchCode || indent.code.includes(searchCode);
+            const isDateFromMatch = !searchDateFrom || indentDate >= new Date(searchDateFrom);
+            const isDateToMatch = !searchDateTo || indentDate <= new Date(searchDateTo);
+
+            return isCodeMatch && isDateFromMatch && isDateToMatch;
+        });
+
+        setDisplayedIndents(filteredIndents);
+    };
+
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({
-        columns,
-        data: indents,
-    });
+        state,
+    } = useTable(
+        {
+            columns,
+            data: displayedIndents,
+            initialState: {
+                sortBy: [{ id: "creationTime", desc: true }],
+            },
+        },
+        useSortBy
+    );
 
     return (
         <div className="list row">
-            <div className="col-md-8">
-                <div className="input-group mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search by name"
-                        value={searchName}
-                        onChange={onChangeSearchName}
-                    />
-                    <div className="input-group-append">
-                        <button
-                            className="btn btn-outline-secondary"
-                            type="button"
-                            onClick={findByName}
-                        >
-                            Search
-                        </button>
+            <div className="row">
+                <div className="col-12">
+                    <div className="form-row justify-content-center">
+                        <div className="col-12 col-md-auto my-1">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Indent Code"
+                                value={searchCode}
+                                onChange={(e) => setSearchCode(e.target.value)}
+                            />
+                        </div>
+                        <div className="col-12 col-md-auto my-1">
+                            <input
+                                type="date"
+                                className="form-control"
+                                placeholder="Date From"
+                                value={searchDateFrom}
+                                onChange={(e) => setSearchDateFrom(e.target.value)}
+                            />
+                        </div>
+                        <div className="col-12 col-md-auto my-1">
+                            <input
+                                type="date"
+                                className="form-control"
+                                placeholder="Date To"
+                                value={searchDateTo}
+                                onChange={(e) => setSearchDateTo(e.target.value)}
+                            />
+                        </div>
+                        <div className="col-12 col-md-auto my-1">
+                            <button className="btn btn-outline-secondary" type="button" onClick={handleSearchClick}>
+                                Search
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div className="col-md-12 list">
                 <table
                     className="table table-striped table-bordered"
@@ -202,7 +275,19 @@ const IndentsList = (props) => {
                         {headerGroups.map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        <div>
+                                            {column.render("Header")}
+                                            <span>
+                                                {column.isSorted
+                                                    ? column.isSortedDesc
+                                                        ? " 🔽"
+                                                        : " 🔼"
+                                                    : ""}
+                                            </span>
+                                        </div>
+                                        <div>{column.canFilter ? column.render("Filter") : null}</div>
+                                    </th>
                                 ))}
                             </tr>
                         ))}
@@ -229,7 +314,6 @@ const IndentsList = (props) => {
                     </tbody>
                 </table>
             </div>
-
             <div className="col-md-4">
                 <a href="/indents/add" className="btn btn-sm btn-primary">Add Indent</a>
             </div>

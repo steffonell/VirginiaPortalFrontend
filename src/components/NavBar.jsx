@@ -38,7 +38,7 @@ const NavbarComponent = () => {
   };
 
   return (
-    <Navbar className={`navbar ${showNavbar ? "show" : ""}`} bg="light" expand="md">
+    <Navbar className={`navbar ${showNavbar ? "show" : ""}`} bg="light" expand="sm">
       <Navbar.Brand>
         <img src={require('./logo.jpg')} alt="Logo Image" />
       </Navbar.Brand>
