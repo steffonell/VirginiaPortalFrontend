@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ApplicationContext } from "./ApplicationContext";
 import ClientDataService from "../services/CustomerService";
@@ -14,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
-    event.preventDefault(); // Add this line to prevent form submission
+    event.preventDefault();
 
     try {
       const response = await axiosInstance.post("auth/signin", {
@@ -23,13 +22,23 @@ const Login = () => {
       });
 
       if (response.data.accessToken) {
-        console.log(response.data);
+        const { accessToken, user, roles, email } = response.data;
         localStorage.setItem("user", JSON.stringify(response.data));
-        setAuthToken(response.data.accessToken);
-        setLoggedInClient(response.data.user);
-        setUserRole(response.data.roles[0]);
-        navigate("/shop");
+        setAuthToken(accessToken);
+        setLoggedInClient(user);
+        setUserRole(roles[0]);
         setAuthenticated(true);
+
+        ClientDataService.findByEmail(email)
+          .then((response) => {
+            const customer = response.data;
+            console.log("Found customer:", customer);
+            setLoggedInClient(customer);
+            navigate("/shop");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       } else {
         setError("Netačni kredencijali");
       }

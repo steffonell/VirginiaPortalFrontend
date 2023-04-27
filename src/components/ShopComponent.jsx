@@ -29,16 +29,6 @@ const ShopComponent = (props) => {
     const token = user ? user.accessToken : null; // Extract the accessToken from the user object
     setAuthToken(token);
     retrieveArticles();
-    ClientDataService.getAll()
-      .then((response) => {
-        console.log(response.data);
-        const firstClient = response.data[0];
-        console.log(firstClient);
-        setLoggedInClient(firstClient);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
   }, []);
 
   const retrieveArticles = () => {

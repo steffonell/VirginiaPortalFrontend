@@ -37,6 +37,10 @@ const findByName = (clientName) => {
   return axiosInstance.get(`klijenti/findByClientName?clientName=${clientName}`);
 };
 
+const findByEmail = (email) => {
+  return axiosInstance.get(`klijenti/findByEmail?email=${email}`);
+};
+
 const ClientService = {
   getAll,
   get,
@@ -45,6 +49,7 @@ const ClientService = {
   remove,
   removeAll,
   findByName,
+  findByEmail
 };
 
 export default ClientService;
