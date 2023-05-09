@@ -20,7 +20,15 @@ export const setAuthToken = (token) => {
   }
 };
 
-const token = JSON.parse(localStorage.getItem("user"))?.accessToken;
+let token;
+try {
+  const user = JSON.parse(localStorage.getItem("user") || '{}');
+
+  token = user?.accessToken;
+} catch (error) {
+  console.error("Error parsing localStorage user data:", error);
+  token = null;
+}
 
 if (token) {
   setAuthToken(token);
