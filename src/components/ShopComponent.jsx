@@ -25,9 +25,6 @@ const ShopComponent = (props) => {
   };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user")); // Get the user object from local storage
-    const token = user ? user.accessToken : null; // Extract the accessToken from the user object
-    setAuthToken(token);
     retrieveArticles();
   }, []);
 
