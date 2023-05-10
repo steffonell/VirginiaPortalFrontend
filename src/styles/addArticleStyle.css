@@ -1,19 +1,49 @@
 .submit-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  input {
-    margin-bottom: 10px;
-  }
-  
-  .error-message {
-    color: red;
-    font-size: 0.8em;
-    margin-bottom: 10px;
-  }
-  
-  button {
-    margin-top: 20px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  max-width: 500px; /* Add a max-width to control the overall width of the form */
+  margin: 0 auto; /* Center the form */
+  padding: 20px; /* Add padding to the form */
+  background: #f4f7f8; /* Add a background color to the form */
+  border-radius: 8px; /* Add border-radius to the form */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); /* Add a box-shadow to the form */
+}
+
+input {
+  /* margin-bottom: 10px; */
+  width: 100%; /* Set the input width to 100% */
+  /* padding: 10px; */ /* Add padding to the input fields */
+  border: 1px solid #ccc; /* Add a border to the input fields */
+  border-radius: 4px; /* Add border-radius to the input fields */
+  font-size: 16px; /* Increase font size of the input fields */
+  box-sizing: border-box; /* Ensures padding and border are included in the total width */
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px 20px; /* Add padding to the button */
+  background-color: #1abc9c; /* Add a background color to the button */
+  color: #fff; /* Set the button text color */
+  border: none; /* Remove the button border */
+  cursor: pointer; /* Set cursor to pointer on button hover */
+  border-radius: 4px; /* Add border-radius to the button */
+  font-size: 16px; /* Increase font size of the button */
+  transition: background-color 0.3s; /* Add a smooth transition for the background color */
+}
+
+button:hover {
+  background-color: #16a085; /* Change the button background color on hover */
+}
+
+.submit-form h2 {
+  font-size: 24px; /* Set the font size of the title */
+  margin-bottom: 20px; /* Add some margin below the title */
+  text-align: center; /* Center the title */
+  color: #333; /* Set the title text color */
+}

@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import BrandDataService from "../services/BrandService";
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+
 
 const AddBrand = () => {
   const initialBrandState = {
@@ -8,6 +12,21 @@ const AddBrand = () => {
   };
   const [brand, setBrand] = useState(initialBrandState);
   const [submitted, setSubmitted] = useState(false);
+
+  const validationSchema = Yup.object().shape({
+    brandName: Yup.string().required('Brand Name is required'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      brandName: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log('Form data', values);
+    },
+  });
+
 
   const handleInputChange = event => {
     const { name, value } = event.target;
@@ -39,6 +58,22 @@ const AddBrand = () => {
   };
 
   return (
+    <form onSubmit={formik.handleSubmit}>
+      <input
+        name="firstName"
+        value={formik.values.brandName}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+      />
+      {formik.touched.brandName && formik.errors.firsbrandNametName ? (
+        <div>{formik.errors.brandName}</div>
+      ) : null}
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+
+/*   return (
     <div className="submit-form">
       {submitted ? (
         <div>
@@ -69,6 +104,6 @@ const AddBrand = () => {
       )}
     </div>
   );
-};
+}; */
 
 export default AddBrand;

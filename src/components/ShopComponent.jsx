@@ -163,7 +163,7 @@ const ShopComponent = (props) => {
                 </div>
                 <label>Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
                 <h6>{finalPriceWithDiscountForCustomer} RSD</h6>
-                <div className="input-group">
+                <div className="input-group input-group-custom">
                   <div className="input-group-prepend">
                     <button
                       type="button"

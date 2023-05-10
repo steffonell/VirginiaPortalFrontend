@@ -7,10 +7,10 @@ import BrandService from "../services/BrandService";
 
 const AddArticle = () => {
 
-    // Add state for brands
+    // Dodaj stanje za brendove
     const [brands, setBrands] = useState([]);
 
-    // Fetch brands using BrandService
+    // Dobavi brendove koristeći BrandService
     useEffect(() => {
         retrieveBrands();
     }, []);
@@ -26,16 +26,16 @@ const AddArticle = () => {
     };
 
     const validationSchema = Yup.object().shape({
-        code: Yup.string().required('Code is required'),
-        name: Yup.string().required('Name is required'),
+        code: Yup.string().required('Kod je obavezan'),
+        name: Yup.string().required('Ime je obavezno'),
         unitOfMeasurement: Yup.string(),
         quantityPerTransportPackage: Yup.number().integer(),
         minimumQuantityDemand: Yup.number().integer(),
         brutoMass: Yup.number(),
-        wholesalePrice: Yup.number().required('Wholesale Price is required'),
+        wholesalePrice: Yup.number().required('Veleprodajna cena je obavezna'),
         imageSource: Yup.string(),
-        pdv: Yup.number().required('PDV is required'),
-        brandName: Yup.string().required('Brand Name is required'),
+        pdv: Yup.number().required('PDV je obavezan'),
+        brandName: Yup.string().required('Naziv brenda je obavezan'),
     });
 
     const formik = useFormik({
@@ -55,25 +55,26 @@ const AddArticle = () => {
         onSubmit: async (values) => {
             try {
                 const response = await axiosInstance.post('articles', values);
-                console.log('Article created', response.data);
+                console.log('Artikal kreiran', response.data);
             } catch (error) {
-                console.error('Error creating article', error);
+                console.error('Greška prilikom kreiranja artikla', error);
             }
         },
     });
 
-    // Add a handler for the brand change
+    // Dodaj hendler za promenu brenda
     const handleBrandChange = (event) => {
         formik.setFieldValue('brandName', event.target.value);
     };
 
     return (
         <div className="submit-form">
+            <h2>Dodaj Artikal</h2>
             <form onSubmit={formik.handleSubmit}>
-                {/* Code */}
+                {/* Kod */}
                 <input
                     name="code"
-                    placeholder="Code"
+                    placeholder="Kod"
                     value={formik.values.code}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -82,10 +83,10 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.code}</div>
                 ) : null}
 
-                {/* Name */}
+                {/* Ime */}
                 <input
                     name="name"
-                    placeholder="Name"
+                    placeholder="Ime"
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -94,10 +95,10 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.name}</div>
                 ) : null}
 
-                {/* Unit of Measurement */}
+                {/* Jedinica mere */}
                 <input
                     name="unitOfMeasurement"
-                    placeholder="Unit of Measurement"
+                    placeholder="Jedinica mere"
                     value={formik.values.unitOfMeasurement}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -106,10 +107,10 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.unitOfMeasurement}</div>
                 ) : null}
 
-                {/* Quantity Per Transport Package */}
+                {/* Količina po transportnom paketu */}
                 <input
                     name="quantityPerTransportPackage"
-                    placeholder="Quantity Per Transport Package"
+                    placeholder="Količina po transportnom paketu"
                     value={formik.values.quantityPerTransportPackage}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -118,10 +119,10 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.quantityPerTransportPackage}</div>
                 ) : null}
 
-                {/* Minimum Quantity Demand */}
+                {/* Minimalna tražena količina */}
                 <input
                     name="minimumQuantityDemand"
-                    placeholder="Minimum Quantity Demand"
+                    placeholder="Minimalna tražena količina"
                     value={formik.values.minimumQuantityDemand}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -130,10 +131,10 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.minimumQuantityDemand}</div>
                 ) : null}
 
-                {/* Bruto Mass */}
+                {/* Bruto masa */}
                 <input
                     name="brutoMass"
-                    placeholder="Bruto Mass"
+                    placeholder="Bruto masa"
                     value={formik.values.brutoMass}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -142,10 +143,10 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.brutoMass}</div>
                 ) : null}
 
-                {/* Wholesale Price */}
+                {/* Veleprodajna cena */}
                 <input
                     name="wholesalePrice"
-                    placeholder="Wholesale Price"
+                    placeholder="Veleprodajna cena"
                     value={formik.values.wholesalePrice}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -154,10 +155,10 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.wholesalePrice}</div>
                 ) : null}
 
-                {/* Image Source */}
+                {/* Izvor slike */}
                 <input
                     name="imageSource"
-                    placeholder="Image Source"
+                    placeholder="Izvor slike"
                     value={formik.values.imageSource}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -178,9 +179,9 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.pdv}</div>
                 ) : null}
 
-                {/* Brand Name */}
+                {/* Naziv brenda */}
                 <div className="form-group">
-                    <label htmlFor="brandName">Brand</label>
+                    <label htmlFor="brandName">Brend</label>
                     <select className="form-control" onChange={handleBrandChange}>
                         <option key="0" value="">
                             Izaberite Brend
@@ -198,8 +199,8 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.brandName}</div>
                 ) : null}
 
-                {/* Submit Button */}
-                <button type="submit">Add Article</button>
+                {/* Dugme za dodavanje */}
+                <button type="submit">Dodaj artikal</button>
             </form>
         </div>
     );

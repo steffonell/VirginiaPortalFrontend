@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
 import BrandDataService from "../services/BrandService";
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required('First Name is required'),
+  lastName: Yup.string().required('Last Name is required'),
+  email: Yup.string().email('Invalid email').required('Email is required'),
+});
 
 const Brand = props => {
   const initialBrandState = {
