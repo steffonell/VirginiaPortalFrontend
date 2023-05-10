@@ -23,7 +23,7 @@
         console.log('API response: %O', response.data);
         if (response.data.accessToken) {
           const { accessToken, customer, roles } = response.data;
-          localStorage.setItem("user", response.data);
+          localStorage.setItem("user", JSON.stringify(response.data));
           console.log("Customer: %o", customer);
           setAuthToken(accessToken);
           setUserRole(roles[0]);

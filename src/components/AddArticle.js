@@ -1,28 +1,16 @@
-import React, { useState, useEffect } from "react";
-import ArticleDataService from "../services/ArticleService";
+import React, { useState, useEffect } from 'react';
+import { useFormik } from 'formik';
+import axiosInstance from './apiService';
+import * as Yup from 'yup';
+import '../styles/addArticleStyle.css';
 import BrandService from "../services/BrandService";
 
 const AddArticle = () => {
-    const initialArticleState = {
-        article_id: "",
-        barcode: "",
-        brutoMass: "",
-        code: "",
-        imageSource: "",
-        minimumQuantityDemand: "",
-        name: "",
-        quantityPerTransportPackage: "",
-/*         retailPrice: "", */
-        unitOfMeasurement: "",
-        wholesalePrice: "",
-        pdv: "",
-        brandName: "",
-    };
-    const [article, setArticle] = useState(initialArticleState);
-    const [submitted, setSubmitted] = useState(false);
-    const [brands, setBrands] = useState([]);
-    const [brandName, setBrandName] = useState("");
 
+    // Add state for brands
+    const [brands, setBrands] = useState([]);
+
+    // Fetch brands using BrandService
     useEffect(() => {
         retrieveBrands();
     }, []);
@@ -37,223 +25,184 @@ const AddArticle = () => {
             });
     };
 
-    const handleInputChange = event => {
-        const { name, value } = event.target;
-        setArticle({ ...article, [name]: value });
-    };
+    const validationSchema = Yup.object().shape({
+        code: Yup.string().required('Code is required'),
+        name: Yup.string().required('Name is required'),
+        unitOfMeasurement: Yup.string(),
+        quantityPerTransportPackage: Yup.number().integer(),
+        minimumQuantityDemand: Yup.number().integer(),
+        brutoMass: Yup.number(),
+        wholesalePrice: Yup.number().required('Wholesale Price is required'),
+        imageSource: Yup.string(),
+        pdv: Yup.number().required('PDV is required'),
+        brandName: Yup.string().required('Brand Name is required'),
+    });
 
-    const handleBrandChange = event => {
-        setBrandName(event.target.value);
-    };
+    const formik = useFormik({
+        initialValues: {
+            code: '',
+            name: '',
+            unitOfMeasurement: '',
+            quantityPerTransportPackage: '',
+            minimumQuantityDemand: '',
+            brutoMass: '',
+            wholesalePrice: '',
+            imageSource: '',
+            pdv: '',
+            brandName: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            try {
+                const response = await axiosInstance.post('articles', values);
+                console.log('Article created', response.data);
+            } catch (error) {
+                console.error('Error creating article', error);
+            }
+        },
+    });
 
-    //useForm hook https://react-hook-form.com/api/useform/
-    const saveArticle = () => {
-        var data = {
-            barcode: article.barcode,
-            brutoMass: article.brutoMass,
-            code: article.code,
-            imageSource: article.imageSource,
-            minimumQuantityDemand: article.minimumQuantityDemand,
-            name: article.name,
-            quantityPerTransportPackage: article.quantityPerTransportPackage,
-           /*  retailPrice: article.retailPrice, */
-            unitOfMeasurement: article.unitOfMeasurement,
-            wholesalePrice: article.wholesalePrice,
-            pdv: article.pdv,
-            brand: article.brand,
-        };
-
-        ArticleDataService.create(data, brandName)
-        .then(response => {
-            console.log(response); // log the response object
-            setArticle({
-                article_id: response.data,
-            });
-            setSubmitted(true);
-            console.log(response.data);
-        })
-        .catch(e => {
-            console.log(e);
-        });
-    
-    };
-
-    const newArticle = () => {
-        setArticle(initialArticleState);
-        setSubmitted(false);
+    // Add a handler for the brand change
+    const handleBrandChange = (event) => {
+        formik.setFieldValue('brandName', event.target.value);
     };
 
     return (
         <div className="submit-form">
-            {submitted ? (
-                <div>
-                    <h4>You submitted successfully!</h4>
-                    <button className="btn btn-success" onClick={newArticle}>
-                        Add
-                    </button>
+            <form onSubmit={formik.handleSubmit}>
+                {/* Code */}
+                <input
+                    name="code"
+                    placeholder="Code"
+                    value={formik.values.code}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.code && formik.errors.code ? (
+                    <div className="error-message">{formik.errors.code}</div>
+                ) : null}
+
+                {/* Name */}
+                <input
+                    name="name"
+                    placeholder="Name"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.name && formik.errors.name ? (
+                    <div className="error-message">{formik.errors.name}</div>
+                ) : null}
+
+                {/* Unit of Measurement */}
+                <input
+                    name="unitOfMeasurement"
+                    placeholder="Unit of Measurement"
+                    value={formik.values.unitOfMeasurement}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.unitOfMeasurement && formik.errors.unitOfMeasurement ? (
+                    <div className="error-message">{formik.errors.unitOfMeasurement}</div>
+                ) : null}
+
+                {/* Quantity Per Transport Package */}
+                <input
+                    name="quantityPerTransportPackage"
+                    placeholder="Quantity Per Transport Package"
+                    value={formik.values.quantityPerTransportPackage}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.quantityPerTransportPackage && formik.errors.quantityPerTransportPackage ? (
+                    <div className="error-message">{formik.errors.quantityPerTransportPackage}</div>
+                ) : null}
+
+                {/* Minimum Quantity Demand */}
+                <input
+                    name="minimumQuantityDemand"
+                    placeholder="Minimum Quantity Demand"
+                    value={formik.values.minimumQuantityDemand}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.minimumQuantityDemand && formik.errors.minimumQuantityDemand ? (
+                    <div className="error-message">{formik.errors.minimumQuantityDemand}</div>
+                ) : null}
+
+                {/* Bruto Mass */}
+                <input
+                    name="brutoMass"
+                    placeholder="Bruto Mass"
+                    value={formik.values.brutoMass}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.brutoMass && formik.errors.brutoMass ? (
+                    <div className="error-message">{formik.errors.brutoMass}</div>
+                ) : null}
+
+                {/* Wholesale Price */}
+                <input
+                    name="wholesalePrice"
+                    placeholder="Wholesale Price"
+                    value={formik.values.wholesalePrice}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.wholesalePrice && formik.errors.wholesalePrice ? (
+                    <div className="error-message">{formik.errors.wholesalePrice}</div>
+                ) : null}
+
+                {/* Image Source */}
+                <input
+                    name="imageSource"
+                    placeholder="Image Source"
+                    value={formik.values.imageSource}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.imageSource && formik.errors.imageSource ? (
+                    <div className="error-message">{formik.errors.imageSource}</div>
+                ) : null}
+
+                {/* PDV */}
+                <input
+                    name="pdv"
+                    placeholder="PDV"
+                    value={formik.values.pdv}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.pdv && formik.errors.pdv ? (
+                    <div className="error-message">{formik.errors.pdv}</div>
+                ) : null}
+
+                {/* Brand Name */}
+                <div className="form-group">
+                    <label htmlFor="brandName">Brand</label>
+                    <select className="form-control" onChange={handleBrandChange}>
+                        <option key="0" value="">
+                            Izaberite Brend
+                        </option>
+                        {brands.map((brand, index) => {
+                            return (
+                                <option key={index + 1} value={brand.brandName}>
+                                    {brand.brandName}
+                                </option>
+                            );
+                        })}
+                    </select>
                 </div>
-            ) : (
-                <div>
-                    <div className="form-group">
-                        <label htmlFor="barcode">Barcode</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="barcode"
-                            required
-                            value={article.barcode}
-                            onChange={handleInputChange}
-                            name="barcode"
-                        />
-                    </div>
+                {formik.touched.brandName && formik.errors.brandName ? (
+                    <div className="error-message">{formik.errors.brandName}</div>
+                ) : null}
 
-                    <div className="form-group">
-                        <label htmlFor="brutoMass">Bruto Mass</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="brutoMass"
-                            required
-                            value={article.brutoMass}
-                            onChange={handleInputChange}
-                            name="brutoMass"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="code">Code</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="code"
-                            required
-                            value={article.code}
-                            onChange={handleInputChange}
-                            name="code"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="imageSource">Image Source</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="imageSource"
-                            required
-                            value={article.imageSource}
-                            onChange={handleInputChange}
-                            name="imageSource"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="minimumQuantityDemand">Minimum Quantity Demand</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="minimumQuantityDemand"
-                            required
-                            value={article.minimumQuantityDemand}
-                            onChange={handleInputChange}
-                            name="minimumQuantityDemand"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="name">Name</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            required
-                            value={article.name}
-                            onChange={handleInputChange}
-                            name="name"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="quantityPerTransportPackage">Quantity Per Transport Package</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="quantityPerTransportPackage"
-                            required
-                            value={article.quantityPerTransportPackage}
-                            onChange={handleInputChange}
-                            name="quantityPerTransportPackage"
-                        />
-                    </div>
-
-{/*                     <div className="form-group">
-                        <label htmlFor="retailPrice">Retail Price</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="retailPrice"
-                            required
-                            value={article.retailPrice}
-                            onChange={handleInputChange}
-                            name="retailPrice"
-                        />
-                    </div> */}
-
-                    <div className="form-group">
-                        <label htmlFor="unitOfMeasurement">Unit Of Measurement</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="unitOfMeasurement"
-                            required
-                            value={article.unitOfMeasurement}
-                            onChange={handleInputChange}
-                            name="unitOfMeasurement"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="wholesalePrice">Wholesale Price</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="wholesalePrice"
-                            required
-                            value={article.wholesalePrice}
-                            onChange={handleInputChange}
-                            name="wholesalePrice"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="pdv">PDV</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="pdv"
-                            required
-                            value={article.pdv}
-                            onChange={handleInputChange}
-                            name="pdv"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="brandName">Brand</label>
-                        <select className="form-control" onChange={handleBrandChange}>
-                        <option key="0" value="">Izaberite Brend</option>
-                            {brands.map((brand, index) => {
-                                return (
-                                    <option key={index + 1} value={brand.brandName}>
-                                        {brand.brandName}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                    </div>
-
-                    <button onClick={saveArticle} className="btn btn-success">
-                        Submit
-                    </button>
-                </div>
-            )}
-        </div>);
+                {/* Submit Button */}
+                <button type="submit">Add Article</button>
+            </form>
+        </div>
+    );
 };
 
 export default AddArticle;

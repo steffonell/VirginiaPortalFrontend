@@ -1,0 +1,19 @@
+.submit-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  input {
+    margin-bottom: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    margin-top: 20px;
+  }
+  
