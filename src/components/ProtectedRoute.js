@@ -1,20 +1,16 @@
-import React, { useContext } from "react";
-import { Route, useNavigate, Outlet } from "react-router-dom";
-import { ApplicationContext } from "./ApplicationContext";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ path, element, allowedRoles, ...rest }) => {
-  const { authenticated, userRole } = useContext(ApplicationContext);
-  const navigate = useNavigate();
+class ProtectedRoute extends React.Component {
+    render() {
+        const { component: Component, user, ...props } = this.props
 
-  if (!authenticated) {
-    return  <Outlet />;;
-  }
-
-  if (allowedRoles && Array.isArray(allowedRoles) && !allowedRoles.includes(userRole)) {
-    return  <Outlet />;;
-  }
-
-  return <Route path={path} element={element} {...rest} />;
-};
+        return (
+            user && user.role === 'ROLE_USER' ?
+                <Component {...props} /> :
+                <Navigate to="/login" replace />
+        );
+    }
+}
 
 export default ProtectedRoute;

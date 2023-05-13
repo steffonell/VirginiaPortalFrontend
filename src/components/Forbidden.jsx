@@ -1,10 +1,11 @@
 import React from 'react';
+import '../styles/forbidden.css'
 
 const Forbidden = () => {
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>403 Forbidden</h1>
-      <p>You do not have permission to access this resource.</p>
+    <div className="forbidden-container">
+      <h1 className="forbidden-title">Zabranjeno</h1>
+      <p className="forbidden-message">Vaš nalog nema ovlašćenje za pristup ovom resursu.</p>
     </div>
   );
 };

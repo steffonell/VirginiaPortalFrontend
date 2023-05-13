@@ -240,13 +240,13 @@ const ArticlesList = (props) => {
             </div>
 
             <div className="col-md-4">
-                <a href="/articles/add" className="btn btn-sm btn-primary">Add Article</a>
+                <a href="/articles/add" className="btn btn-sm btn-primary">Dodaj Artikal</a>
             </div>
-            <div className="col-12 col-md-8">
+{/*             <div className="col-12 col-md-8">
                 <button className="btn btn-sm btn-danger" onClick={removeAllArticles}>
                     Remove All
                 </button>
-            </div>
+            </div> */}
         </div>
     );
 };

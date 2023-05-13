@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ShopComponent from "./components/ShopComponent";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@fortawesome/fontawesome-free/css/all.css";
@@ -31,34 +31,40 @@ import NavbarComponent from "./components/NavbarComponent";
 
 const App = () => {
 
-  const { authenticated } = useContext(ApplicationContext);
+  const { loggedInClient, userRole, addOrUpdateBasketItem } = useContext(ApplicationContext);
+
+  function ProtectedComponent(Component, userRole, allowedRoles, props) {
+    return allowedRoles.includes(userRole) ?
+      <Component {...props} /> :
+      <Navigate to="/forbidden" replace />;
+  }
 
   return (
     <BrowserRouter>
       <NavbarComponent />
       <div className="main-content">
         <Routes>
-          <Route exact path="/" element={<Login />} />
-          <Route exact path="/shop" element={<ShopComponent />} />
-          <Route exact path="/articles" element={<ArticlesList />} />
-          <Route exact path="/articles/add" element={<AddArticle />} />
-          <Route exact path="/articles/:id" element={<Article />} />
-          <Route exact path="/brands" element={<BrandsList />} />
-          <Route exact path="/brands/add" element={<AddBrand />} />
-          <Route path="/brands/:id" element={<Brand />} />
-          <Route exact path="/clients" element={<ClientsList />} />
-          <Route exact path="/address/add" element={<AddDeliveryAddress />} />
-          <Route exact path="/clients/add" element={<AddClient />} />
-          <Route exact path="/clients/:id" element={<Client />} />
-          <Route exact path="/indents" element={<IndentsList />} />
-          <Route exact path="/indents/add" element={<AddIndent />} />
-          <Route exact path="/indents/:id" element={<Indent />} />
-          <Route exact path="/indentEntry" element={<AddIndentEntry />} />
-          <Route exact path="/indents/entries/:code" element={<IndentEntries />} />
-          <Route exact path="/discount" element={<DiscountList />} />
-          <Route exact path="/discount/add" element={<AddCustomerDiscount />} />
-          <Route exact path="/basket" element={<Basket />} />
-          <Route exact path="/forbidden" element={<Forbidden />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/shop" element={ProtectedComponent(ShopComponent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
+          <Route path="/articles" element={ProtectedComponent(ArticlesList, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/articles/add" element={ProtectedComponent(AddArticle, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/articles/:id" element={ProtectedComponent(Article, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/brands" element={ProtectedComponent(BrandsList, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/brands/add" element={ProtectedComponent(AddBrand, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/brands/:id" element={ProtectedComponent(Brand, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/clients" element={ProtectedComponent(ClientsList, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/address/add" element={ProtectedComponent(AddDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/clients/add" element={ProtectedComponent(AddClient, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/clients/:id" element={ProtectedComponent(Client, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/indents" element={ProtectedComponent(IndentsList, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
+          <Route path="/indents/add" element={ProtectedComponent(AddIndent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
+          <Route path="/indents/:id" element={ProtectedComponent(Indent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
+          < Route path="/indentEntry" element={ProtectedComponent(AddIndentEntry, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
+          <Route path="/indents/entries/:code" element={ProtectedComponent(IndentEntries, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
+          <Route path="/discount" element={ProtectedComponent(DiscountList, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/discount/add" element={ProtectedComponent(AddCustomerDiscount, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/basket" element={ProtectedComponent(Basket, userRole,  ['ROLE_USER', 'ROLE_ADMIN'])} />
+          <Route path="/forbidden" element={<Forbidden />} />
         </Routes>
       </div>
     </BrowserRouter>

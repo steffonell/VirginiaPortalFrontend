@@ -20,6 +20,15 @@ input {
   box-sizing: border-box; /* Ensures padding and border are included in the total width */
 }
 
+.input-group-custom .btn {
+  height: 38px;
+}
+
+.input-group-custom .form-control {
+  height: 38px;
+}
+
+
 .error-message {
   color: red;
   font-size: 0.8em;

@@ -4,16 +4,25 @@ import axiosInstance from './apiService';
 import * as Yup from 'yup';
 import '../styles/addArticleStyle.css';
 import BrandService from "../services/BrandService";
+import ArticleService from '../services/ArticleService';
 
 const AddArticle = () => {
 
     // Dodaj stanje za brendove
     const [brands, setBrands] = useState([]);
+    const [message, setMessage] = useState('');
+    const [isResetForm, setIsResetForm] = useState(false);
+
+    let formik;
 
     // Dobavi brendove koristeći BrandService
     useEffect(() => {
         retrieveBrands();
-    }, []);
+        if (formik && isResetForm) {
+            formik.resetForm();
+            setIsResetForm(false);
+        }
+    }, [isResetForm, formik]);
 
     const retrieveBrands = () => {
         BrandService.getAll()
@@ -38,7 +47,7 @@ const AddArticle = () => {
         brandName: Yup.string().required('Naziv brenda je obavezan'),
     });
 
-    const formik = useFormik({
+    formik = useFormik({
         initialValues: {
             code: '',
             name: '',
@@ -54,18 +63,23 @@ const AddArticle = () => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             try {
-                const response = await axiosInstance.post('articles', values);
+                const response = await ArticleService.create(values, formik.values.brandName);
                 console.log('Artikal kreiran', response.data);
+                setMessage('Artikal uspešno kreiran');
+                setIsResetForm(true);
+                // Show confirmation window upon successful order confirmation
+                window.confirm(message);
             } catch (error) {
                 console.error('Greška prilikom kreiranja artikla', error);
             }
         },
     });
-
     // Dodaj hendler za promenu brenda
+    // Replace your handleBrandChange function with this:
     const handleBrandChange = (event) => {
-        formik.setFieldValue('brandName', event.target.value);
+        formik.handleChange(event);
     };
+
 
     return (
         <div className="submit-form">
@@ -182,7 +196,12 @@ const AddArticle = () => {
                 {/* Naziv brenda */}
                 <div className="form-group">
                     <label htmlFor="brandName">Brend</label>
-                    <select className="form-control" onChange={handleBrandChange}>
+                    <select
+                        name="brandName"
+                        className="form-control"
+                        value={formik.values.brandName} // this is necessary for resetForm to work
+                        onChange={handleBrandChange}
+                    >
                         <option key="0" value="">
                             Izaberite Brend
                         </option>
@@ -202,6 +221,7 @@ const AddArticle = () => {
                 {/* Dugme za dodavanje */}
                 <button type="submit">Dodaj artikal</button>
             </form>
+            {/* {message && <p>{message}</p>} */}
         </div>
     );
 };
