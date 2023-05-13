@@ -10,9 +10,10 @@
 }
 
 input {
-  /* margin-bottom: 10px; */
+  margin-top: 10px;
+  margin-bottom: 10px;
   width: 100%; /* Set the input width to 100% */
-  /* padding: 10px; */ /* Add padding to the input fields */
+  padding: 10px; /* Add padding to the input fields */
   border: 1px solid #ccc; /* Add a border to the input fields */
   border-radius: 4px; /* Add border-radius to the input fields */
   font-size: 16px; /* Increase font size of the input fields */
@@ -26,7 +27,8 @@ input {
 }
 
 button {
-  margin-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   padding: 12px 20px; /* Add padding to the button */
   background-color: #1abc9c; /* Add a background color to the button */
   color: #fff; /* Set the button text color */
