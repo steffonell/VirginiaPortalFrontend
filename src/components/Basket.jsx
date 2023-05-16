@@ -119,7 +119,7 @@ const Basket = () => {
     const allItemsHaveZeroQuantity = basketItems.every((item) => item.quantity === 0);
 
     return (
-        <div className="basket-container clearfix">
+        <div className="table-responsive">
             <h3>Korpa</h3>
             <table className="table table-striped">
                 <thead>

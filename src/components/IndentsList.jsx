@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ApplicationContext } from "./ApplicationContext";
 import logo from './../images/logo.jpg';
 import { formatDate } from "./utils";
+import "../styles/IndentList.css"
 
 const IndentsList = (props) => {
     const [indents, setIndents] = useState([]);
@@ -108,8 +109,6 @@ const IndentsList = (props) => {
         []
     );
 
-
-
     const activateIndent = (rowIndex) => {
         const selectedIndent = indentsRef.current[rowIndex];
         const code = selectedIndent.code;
@@ -129,7 +128,9 @@ const IndentsList = (props) => {
         }
     };
 
+    const confirmDelivery = () => {
 
+    }
 
     const viewIndent = (rowIndex) => {
         const indentCode = indentsRef.current[rowIndex].code;
@@ -143,13 +144,6 @@ const IndentsList = (props) => {
             {
                 Header: "ID Porudzbenice",
                 accessor: "code",
-            },
-            {
-                Header: "Klijent",
-                accessor: "loggedInClient.nameOfTheLegalEntity",
-                Cell: ({ value }) => (
-                    <span>{loggedInClient.nameOfTheLegalEntity}</span>
-                ),
             },
             {
                 Header: "Status Porudzbenice",
@@ -166,28 +160,34 @@ const IndentsList = (props) => {
                 Cell: (props) => {
                     const rowIdx = props.row.id;
                     return (
-                        <div className="d-flex justify-content-between max-width-500">
-                            <span onClick={() => editIndent(rowIdx)} className="btn btn-secondary disabled mx-1">
-                                <i className="far fa-edit mr-2"></i> Izmeni
-                            </span>
-
-                            <span onClick={() => deleteIndent(rowIdx)} className="btn btn-danger mx-1">
+                        <div className="d-flex max-width-500">
+                            <button onClick={() => deleteIndent(rowIdx)} className="btn btn-danger mx-1">
                                 <i className="fas fa-trash"></i> Izbrisi
-                            </span>
-
-                            {props.row.indentStatus !== "ACTIVATED" ? (
-                                <span onClick={() => activateIndent(rowIdx)} className="btn btn-primary mx-1">
-                                    <i className="fas fa-check"></i> Aktiviraj
-                                </span>
-                            ) : null}
+                            </button>
 
                             <button onClick={() => viewIndent(rowIdx)} className="btn btn-primary mx-1">
                                 <i className="far fa-eye mr-2"></i> Pregled
                             </button>
+
+                            {props.row.values.indentStatus == "PENDING" ? (
+                                <React.Fragment>
+                                    <button onClick={() => activateIndent(rowIdx)} className="btn btn-primary mx-1">
+                                        <i className="fas fa-check"></i> Aktiviraj
+                                    </button>
+                                </React.Fragment>
+                            ) : null}
+
+                            {props.row.values.indentStatus == "ACTIVATED" ? (
+                                <button onClick={() => confirmDelivery(rowIdx)} className="btn btn-primary mx-1">
+                                    <i className="fas fa-check"></i> Potvrdi Isporuku
+                                </button>
+                            ) : null}
+
                         </div>
                     );
                 },
             },
+
         ],
         []
     );
@@ -227,10 +227,10 @@ const IndentsList = (props) => {
 
     return (
         <div className="list row">
-            <div className="row">
+            <div className="mx-auto search-criteria">
                 <div className="col-12">
                     <div className="form-row justify-content-center">
-                        <div className="col-12 col-md-auto my-1">
+                        <div className="col-12 col-md-4 my-1">
                             <input
                                 type="text"
                                 className="form-control"
@@ -239,7 +239,7 @@ const IndentsList = (props) => {
                                 onChange={(e) => setSearchCode(e.target.value)}
                             />
                         </div>
-                        <div className="col-12 col-md-auto my-1">
+                        <div className="col-12 col-md-4 my-1">
                             <input
                                 type="date"
                                 className="form-control"
@@ -248,7 +248,7 @@ const IndentsList = (props) => {
                                 onChange={(e) => setSearchDateFrom(e.target.value)}
                             />
                         </div>
-                        <div className="col-12 col-md-auto my-1">
+                        <div className="col-12 col-md-4 my-1">
                             <input
                                 type="date"
                                 className="form-control"
@@ -266,9 +266,9 @@ const IndentsList = (props) => {
                 </div>
             </div>
 
-            <div className="col-md-12 list">
+            <div className="table-responsive">
                 <table
-                    className="table table-striped table-bordered"
+                     className="table table-striped table-bordered table-margin"
                     {...getTableProps()}
                 >
                     <thead>
