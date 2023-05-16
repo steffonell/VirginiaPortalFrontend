@@ -1,3 +1,4 @@
+
 .basket-container {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -87,3 +88,24 @@
   display: table;
   clear: both;
 }
+
+@media (max-width: 767px) {
+  .quantity-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
+  .quantity-buttons .input-group-prepend,
+  .quantity-buttons .input-group-append {
+      width: 100%;
+  }
+  .quantity-buttons .input-group-prepend button,
+  .quantity-buttons .input-group-append button {
+      width: 100%;
+  }
+  .quantity-buttons .form-control.input-width {
+      width: 100%;
+      margin: 10px 0; /* Add some vertical spacing */
+  }
+}
+

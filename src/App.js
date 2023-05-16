@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ShopComponent from "./components/ShopComponent";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -26,18 +26,38 @@ import { ApplicationContext } from "./components/ApplicationContext";
 import Login from "./components/Login";
 import AddDeliveryAddress from "./components/AddDeliveryAddress";
 import Forbidden from './components/Forbidden';
-import Navbar from "./components/NavBar";
 import NavbarComponent from "./components/NavbarComponent";
+import { eventEmitter } from '../src/components/apiService';
 
 const App = () => {
 
-  const { loggedInClient, userRole, addOrUpdateBasketItem } = useContext(ApplicationContext);
+  const { authenticated, userRole, logout  } = useContext(ApplicationContext);
+
+  useEffect(() => {
+    const unauthorizedHandler = () => {
+      logout();
+    };
+    
+    eventEmitter.on('unauthorized', unauthorizedHandler);
+  
+    // cleanup
+    return () => {
+      eventEmitter.off('unauthorized', unauthorizedHandler);
+    };
+  }, []);
 
   function ProtectedComponent(Component, userRole, allowedRoles, props) {
-    return allowedRoles.includes(userRole) ?
-      <Component {...props} /> :
-      <Navigate to="/forbidden" replace />;
-  }
+    const user = JSON.parse(localStorage.getItem('user')); 
+    const token = user ? user.accessToken : null;
+  
+    if (!authenticated) {
+      return <Navigate to="/" replace />;
+    } else if (!allowedRoles.includes(userRole)) {
+      return <Navigate to="/forbidden" replace />;
+    } else {
+      return <Component {...props} />;
+    }
+  }  
 
   return (
     <BrowserRouter>

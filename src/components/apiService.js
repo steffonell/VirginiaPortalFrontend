@@ -1,4 +1,7 @@
 import axios from "axios";
+import EventEmitter from 'events';
+
+export const eventEmitter = new EventEmitter();
 
 /* const API_URL = "https://virginia-portal-backend.herokuapp.com/api/"; */
 
@@ -40,12 +43,13 @@ axiosInstance.interceptors.response.use(
     },
     (error) => {
       if (error.response && error.response.status === 401) {
-        localStorage.removeItem("user");
+        localStorage.clear();
         setAuthToken(null);
+        eventEmitter.emit('unauthorized'); // emit event here
       }
   
       return Promise.reject(error);
     }
-  );
+);
 
 export default axiosInstance;

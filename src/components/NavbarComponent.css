@@ -1,77 +1,81 @@
 /* NavbarComponent.css */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    padding: 10px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  .navbar-brand {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.5rem;
-    padding: 5px;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3f51b5; /* Darker shade of blue */
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12); /* Material UI shadows */
+}
+
+.navbar-brand {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.5rem;
+  padding: 5px;
+  font-weight: 500; /* Medium font weight for brand */
+}
+
+.nav-menu {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin: 0 10px;
+}
+
+.nav-link {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 5px;
+  transition: background-color 0.3s ease; /* Smooth color transition */
+}
+
+.nav-link:hover {
+  background-color: #283593; /* Even darker shade of blue */
+  color: #fff;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
   .nav-menu {
-    display: flex;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .nav-item {
-    margin: 0 10px;
-  }
-  
-  .nav-link {
-    display: block;
-    color: #fff;
-    text-decoration: none;
-    padding: 5px;
-  }
-  
-  .nav-link:hover {
-    background-color: #555;
-    color: #fff;
-  }
-  
-  .menu-toggle {
     display: none;
-    font-size: 1.5rem;
-    color: #fff;
-    cursor: pointer;
   }
-  
-  @media (max-width: 768px) {
-    .nav-menu {
-      display: none;
-    }
-  
-    .menu-toggle {
-      display: block;
-    }
-  
-    .nav-menu.show {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background-color: #333;
-      width: 100%;
-    }
-  
-    .nav-item {
-      margin: 0;
-    }
-  
-    .nav-link {
-      padding: 10px;
-    }
+
+  .menu-toggle {
+    display: block;
   }
-  
+
+  .nav-menu.show {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #3f51b5;
+    width: 100%;
+    box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+  }
+
+  .nav-item {
+    margin: 0;
+    border-bottom: 1px solid #283593; /* Border for separation */
+  }
+
+  .nav-link {
+    padding: 10px;
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import ArticleDataService from "../services/ArticleService";
-import { useTable } from "react-table";
+import { useTable, useSortBy } from "react-table";
 import { Navigate } from "react-router-dom";
 import { Outlet, Link } from "react-router-dom";
 import logo from './../images/logo.jpg';
@@ -141,7 +141,7 @@ const ArticlesList = (props) => {
                 Cell: ({ value }) => (
                     <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
                 ),
-            },    
+            },
             {
                 Header: "Akcije",
                 accessor: "actions",
@@ -169,84 +169,75 @@ const ArticlesList = (props) => {
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({
-        columns,
-        data: articles,
-    });
+        state,
+    } = useTable(
+        {
+            columns,
+            data: articles,
+            initialState: {
+                sortBy: [{ id: "code", desc: true }],
+            },
+        },
+        useSortBy
+    );
+
 
     return (
-        <div className="container-fluid">
-        <div className="row">
-                <div className="input-group mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search by name"
-                        value={searchName}
-                        onChange={onChangeSearchName}
-                    />
-                    <div className="input-group-append">
-                        <button
-                            className="btn btn-outline-secondary"
-                            type="button"
-                            onClick={findByName}
-                        >
-                            Search
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div className="col-12 list">
-            <div className="table-responsive">
-                <table
-                    className="table table-striped table-bordered"
-                    {...getTableProps()}
-                >
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()}>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>
-                                                {cell.column.id === "imageSource" ? (
-                                                    <img src={logo} alt="Logo" />
+        <div className="table-responsive table-striped table-bordered">
+            <table
+                className="table"
+                {...getTableProps()}
+            >
+                <thead>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    <div>
+                                        {column.render("Header")}
+                                        <span>
+                                            {column.isSorted
+                                                ? column.isSortedDesc
+                                                    ? " 🔽"
+                                                    : " 🔼"
+                                                : ""}
+                                        </span>
+                                    </div>
+                                    <div>{column.canFilter ? column.render("Filter") : null}</div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr {...row.getRowProps()}>
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>
+                                            {cell.column.id === "imageSource" ? (
+                                                <img src={logo} alt="Logo" />
+                                            ) : (
+                                                cell.column.id === "wholesalePrice" || cell.column.id === "retailPrice" || cell.column.id === "pdv" ? (
+                                                    cell.render("Cell")
                                                 ) : (
-                                                    cell.column.id === "wholesalePrice" || cell.column.id === "retailPrice" || cell.column.id === "pdv" ? (
-                                                        cell.render("Cell")
-                                                    ) : (
-                                                        cell.value
-                                                    )
-                                                )}
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-                </div>
-            </div>
+                                                    cell.value
+                                                )
+                                            )}
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
 
             <div className="col-md-4">
                 <a href="/articles/add" className="btn btn-sm btn-primary">Dodaj Artikal</a>
             </div>
-{/*             <div className="col-12 col-md-8">
-                <button className="btn btn-sm btn-danger" onClick={removeAllArticles}>
-                    Remove All
-                </button>
-            </div> */}
         </div>
     );
 };

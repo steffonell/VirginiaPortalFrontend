@@ -6,11 +6,23 @@ import IndentEntryService from "../services/IndentEntryService";
 const Basket = () => {
     const { setBasketItems, basketItems, removeAllBasketItems, loggedInClient, removeBasketItem } = useContext(ApplicationContext);
     const [deliveryAddress, setDeliveryAddress] = useState("");
-    const [missingItems, setMissingItems] = useState(0); // Add this state variable
+    const [missingItemQuantities, setMissingItemQuantities] = useState({}); // Add this state variable
 
     useEffect(() => {
-        setMissingItems(requiredQuantityToAdd(basketItems));
+        const newMissingItemQuantities = validateItemQuantities(basketItems);
+        setMissingItemQuantities(newMissingItemQuantities);
     }, [basketItems]); // Watch for changes in the basketItems array
+
+    const validateItemQuantities = (basketItems) => {
+        let missingQuantities = {};
+        for (let item of basketItems) {
+            const remainder = item.quantity % item.article.quantityPerTransportPackage;
+            if (remainder !== 0) {
+                missingQuantities[item.article.name] = item.article.quantityPerTransportPackage - remainder;
+            }
+        }
+        return missingQuantities;
+    };
 
     const confirmOrder = async () => {
         if (basketItems && basketItems.length > 0) {
@@ -30,7 +42,7 @@ const Basket = () => {
                 window.confirm('Uspešno kreirana porudžbina!');
             } catch (error) {
                 console.log(error);
-                window.error('Došlo je do greške!'+error);
+                window.error('Došlo je do greške!' + error);
             }
         }
     };
@@ -108,20 +120,14 @@ const Basket = () => {
         return 0;
     };
 
-    const requiredQuantityToAdd = (basketItems) => {
-        const totalQuantity = basketItems.reduce((acc, item) => acc + item.quantity, 0);
-        const remainder = totalQuantity % 24;
-        return remainder === 0 ? 0 : 24 - remainder;
-    };
-
     const pdv = getPDV(basketItems);
 
     const allItemsHaveZeroQuantity = basketItems.every((item) => item.quantity === 0);
 
     return (
-        <div className="table-responsive">
+        <div className="basket-container">
             <h3>Korpa</h3>
-            <table className="table table-striped">
+            <table className="table-responsive table-striped">
                 <thead>
                     <tr>
                         <th className="hide-on-mobile">Redni Broj</th>
@@ -138,13 +144,13 @@ const Basket = () => {
                 </thead>
                 <tbody>
                     {basketItems ? (
-                        basketItems.map((item) => (
+                        basketItems.map((item, index) => (
                             <tr key={item.article.id}>
-                                <td className="hide-on-mobile">1</td>
+                                <td className="hide-on-mobile">{index + 1}</td>
                                 <td>{item.article.code}</td>
                                 <td>{item.article.name}</td>
                                 <td>
-                                    <div className="input-group">
+                                    <div className="input-group quantity-buttons">
                                         <div className="input-group-prepend">
                                             <button
                                                 type="button"
@@ -174,6 +180,7 @@ const Basket = () => {
                                             </button>
                                         </div>
                                     </div>
+
                                 </td>
                                 <td className="hide-on-mobile">{formatNumber(item.article.wholesalePrice)}</td>
                                 <td className="hide-on-mobile">{brandDiscount(item.article.brand)} %</td>
@@ -208,15 +215,19 @@ const Basket = () => {
                     );
                 })}
             </select>
-            {missingItems !== 0 && (
+            {Object.keys(missingItemQuantities).length !== 0 && (
                 <div className="alert alert-warning" role="alert">
-                    Morate dodati još {missingItems} proizvoda kako biste mogli da potvrdite porudžbinu.
+                    {Object.entries(missingItemQuantities).map(([articleName, missingQuantity]) => (
+                        <p key={articleName}>
+                            Morate dodati jos <strong>{missingQuantity}</strong> komada artikla <strong>{articleName}</strong> da bi potvrdili porudzbinu.
+                        </p>
+                    ))}
                 </div>
             )}
             <button
                 className="btn btn-success"
                 onClick={confirmOrder}
-                disabled={!deliveryAddress || basketItems.length === 0 || allItemsHaveZeroQuantity || requiredQuantityToAdd(basketItems) !== 0}
+                disabled={!deliveryAddress || basketItems.length === 0 || allItemsHaveZeroQuantity || Object.keys(missingItemQuantities).length > 0}
             >
                 Potvrdi porudžbinu
             </button>

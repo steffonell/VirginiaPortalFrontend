@@ -1,184 +1,171 @@
-import React, { useState } from "react";
-import ClientDataService from "../services/CustomerService";
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import ClientDataService from '../services/CustomerService';
 
 const AddClient = () => {
-    const initialClientState = {
-        client_id: null,
-        nameOfTheLegalEntity: "",
-        address: "",
-        pib: "",
-        identificationNumber: "",
-        contactPerson: "",
-        contactNumber: "",
-        email: "",
-        paymentCurrency: ""
-    };
-    const [client, setClient] = useState(initialClientState);
-    const [submitted, setSubmitted] = useState(false);
 
-    const handleInputChange = event => {
-        const { name, value } = event.target;
-        setClient({ ...client, [name]: value });
-    };
+    const validationSchema = Yup.object().shape({
+        nameOfTheLegalEntity: Yup.string().required('Polje "Ime legalnog entiteta" je obavezno.'),
+        address: Yup.string().required('Polje "Adresa" je obavezno.'),
+        pib: Yup.string().required('Polje "PIB" je obavezno.'),
+        identificationNumber: Yup.string().required('Polje "Identifikacioni broj" je obavezno.'),
+        contactPerson: Yup.string().required('Polje "Kontakt osoba" je obavezno.'),
+        contactNumber: Yup.string().required('Polje "Kontakt broj" je obavezno.'),
+        email: Yup.string().email('Nevažeća email adresa.').required('Polje "Email" je obavezno.'),
+        paymentCurrency: Yup.string().required('Polje "Valuta plaćanja" je obavezno.'),
+      });
 
-    const saveClient = () => {
-        var data = {
-            nameOfTheLegalEntity: client.nameOfTheLegalEntity,
-            address: client.address,
-            pib: client.pib,
-            identificationNumber: client.identificationNumber,
-            contactPerson: client.contactPerson,
-            contactNumber: client.contactNumber,
-            email: client.email,
-            paymentCurrency: client.paymentCurrency
-        };
-
-        ClientDataService.create(data)
-            .then(response => {
-                setClient({
-                    client_id: client.client_id,
-                    nameOfTheLegalEntity: client.nameOfTheLegalEntity,
-                    address: client.address,
-                    pib: client.pib,
-                    identificationNumber: client.identificationNumber,
-                    contactPerson: client.contactPerson,
-                    contactNumber: client.contactNumber,
-                    email: client.email,
-                    paymentCurrency: client.paymentCurrency
+    const formik = useFormik({
+        initialValues: {
+            nameOfTheLegalEntity: '',
+            address: '',
+            pib: '',
+            identificationNumber: '',
+            contactPerson: '',
+            contactNumber: '',
+            email: '',
+            paymentCurrency: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values, { resetForm }) => {
+            ClientDataService.create(values)
+                .then((response) => {
+                    console.log(response.data);
+                    resetForm();
+                })
+                .catch((e) => {
+                    console.log(e);
                 });
-                setSubmitted(true);
-                console.log(response.data);
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    };
-
-    const newClient = () => {
-        setClient(initialClientState);
-        setSubmitted(false);
-    };
+        },
+    });
 
     return (
         <div className="submit-form">
-            {submitted ? (
-                <div>
-                    <h4>You submitted successfully!</h4>
-                    <button className="btn btn-success" onClick={newClient}>
-                        Add
-                    </button>
+            <h2>Dodaj Klijenta</h2>
+            <form onSubmit={formik.handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="nameOfTheLegalEntity">Ime Legalnog Entiteta</label>
+                    <input
+                        type="text"
+                        name="nameOfTheLegalEntity"
+                        placeholder="Ime Legalnog Entiteta"
+                        value={formik.values.nameOfTheLegalEntity}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.nameOfTheLegalEntity && formik.errors.nameOfTheLegalEntity ? (
+                        <div className="error-message">{formik.errors.nameOfTheLegalEntity}</div>
+                    ) : null}
                 </div>
-            ) : (
-                <div>
-                    <div className="form-group">
-                        <label htmlFor="nameOfTheLegalEntity">Ime Legalnog Entiteta</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            client_id="nameOfTheLegalEntity"
-                            required
-                            value={client.nameOfTheLegalEntity}
-                            onChange={handleInputChange}
-                            name="nameOfTheLegalEntity"
-                        />
-                    </div>
 
-                    <div className="form-group">
-                        <label htmlFor="address">Adresa</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            client_id="address"
-                            required
-                            value={client.address}
-                            onChange={handleInputChange}
-                            name="address"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="pib">PIB</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            client_id="pib"
-                            required
-                            value={client.pib}
-                            onChange={handleInputChange}
-                            name="pib"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="identificationNumber">Identifikacioni Broj</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            client_id="identificationNumber"
-                            required
-                            value={client.identificationNumber}
-                            onChange={handleInputChange}
-                            name="identificationNumber"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="contactPerson">Kontakt Osoba</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            client_id="contactPerson"
-                            required
-                            value={client.contactPerson}
-                            onChange={handleInputChange}
-                            name="contactPerson"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="contactNumber">Kontakt Broj</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            client_id="contactNumber"
-                            required
-                            value={client.contactNumber}
-                            onChange={handleInputChange}
-                            name="contactNumber"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            client_id="email"
-                            required
-                            value={client.email}
-                            onChange={handleInputChange}
-                            name="email"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="paymentCurrency">Valuta Placanja</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            client_id="paymentCurrency"
-                            required
-                            value={client.paymentCurrency}
-                            onChange={handleInputChange}
-                            name="paymentCurrency"
-                        />
-                    </div>
-
-                    <button onClick={saveClient} className="btn btn-success">
-                        Submit
-                    </button>
+                <div className="form-group">
+                    <label htmlFor="address">Adresa</label>
+                    <input
+                        type="text"
+                        name="address"
+                        placeholder="Adresa"
+                        value={formik.values.address}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.address && formik.errors.address ? (
+                        <div className="error-message">{formik.errors.address}</div>
+                    ) : null}
                 </div>
-            )}
+
+                <div className="form-group">
+                    <label htmlFor="pib">PIB</label>
+                    <input
+                        type="text"
+                        name="pib"
+                        placeholder="PIB"
+                        value={formik.values.pib}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.pib && formik.errors.pib ? (
+                        <div className="error-message">{formik.errors.pib}</div>
+                    ) : null}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="identificationNumber">Identifikacioni Broj</label>
+                    <input
+                        type="text"
+                        name="identificationNumber"
+                        placeholder="Identifikacioni Broj"
+                        value={formik.values.identificationNumber}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.identificationNumber && formik.errors.identificationNumber ? (
+                        <div className="error-message">{formik.errors.identificationNumber}</div>
+                    ) : null}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="contactPerson">Kontakt Osoba</label>
+                    <input
+                        type="text"
+                        name="contactPerson"
+                        placeholder="Kontakt Osoba"
+                        value={formik.values.contactPerson}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.contactPerson && formik.errors.contactPerson ? (
+                        <div className="error-message">{formik.errors.contactPerson}</div>
+                    ) : null}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="contactNumber">Kontakt Broj</label>
+                    <input
+                        type="text"
+                        name="contactNumber"
+                        placeholder="Kontakt Broj"
+                        value={formik.values.contactNumber}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.contactNumber && formik.errors.contactNumber ? (
+                        <div className="error-message">{formik.errors.contactNumber}</div>
+                    ) : null}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                        type="text"
+                        name="email"
+                        placeholder="Email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.email && formik.errors.email ? (
+                        <div className="error-message">{formik.errors.email}</div>
+                    ) : null}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="paymentCurrency">Valuta Placanja</label>
+                    <input
+                        type="text"
+                        name="paymentCurrency"
+                        placeholder="Valuta Placanja"
+                        value={formik.values.paymentCurrency}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.paymentCurrency && formik.errors.paymentCurrency ? (
+                        <div className="error-message">{formik.errors.paymentCurrency}</div>
+                    ) : null}
+                </div>
+
+                <button type="submit">Dodaj Klijenta</button>
+            </form>
         </div>
     );
 };
