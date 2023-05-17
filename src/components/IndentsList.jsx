@@ -110,26 +110,33 @@ const IndentsList = (props) => {
     );
 
     const activateIndent = (rowIndex) => {
-        const selectedIndent = indentsRef.current[rowIndex];
-        const code = selectedIndent.code;
-
-        if (selectedIndent.indentStatus !== "ACTIVATED") {
-            selectedIndent.indentStatus = "ACTIVATED";
-
-            IndentDataService.activateIndent(selectedIndent)
-                .then(() => {
-                    const newIndents = [...indentsRef.current];
-                    newIndents[rowIndex] = selectedIndent;
-                    setIndents(newIndents);
-                })
-                .catch((e) => {
-                    console.log(e);
-                });
-        }
+        const indentCode = indentsRef.current[rowIndex].code;
+        IndentDataService.activateIndent(indentCode)
+            .then((response) => {
+                const newIndents = [...indentsRef.current];
+                newIndents[rowIndex] = response.data;
+                setIndents(newIndents);
+                setDisplayedIndents(indents);
+                window.confirm('Uspešno aktivirana porudžbina! ['+indentCode+']');
+            })
+            .catch((e) => {
+                console.log(e);
+            });
     };
 
-    const confirmDelivery = () => {
-
+    const confirmDelivery = (rowIndex) => {
+        const indentCode = indentsRef.current[rowIndex].code;
+        IndentDataService.confirmIndentDelivery(indentCode)
+            .then((response) => {
+                const newIndents = [...indentsRef.current];
+                newIndents[rowIndex] = response.data;
+                setIndents(newIndents);
+                setDisplayedIndents(indents);
+                window.confirm('Uspešno isporučena porudžbina!! ['+indentCode+']');
+            })
+            .catch((e) => {
+                console.log(e);
+            });
     }
 
     const viewIndent = (rowIndex) => {
@@ -161,9 +168,11 @@ const IndentsList = (props) => {
                     const rowIdx = props.row.id;
                     return (
                         <div className="d-flex max-width-500">
-                            <button onClick={() => deleteIndent(rowIdx)} className="btn btn-danger mx-1">
-                                <i className="fas fa-trash"></i> Izbrisi
-                            </button>
+                            {props.row.values.indentStatus == "PENDING" ? (
+                                <button onClick={() => deleteIndent(rowIdx)} className="btn btn-danger mx-1">
+                                    <i className="fas fa-trash"></i> Izbrisi
+                                </button>
+                            ) : null}
 
                             <button onClick={() => viewIndent(rowIdx)} className="btn btn-primary mx-1">
                                 <i className="far fa-eye mr-2"></i> Pregled
@@ -234,7 +243,7 @@ const IndentsList = (props) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Indent Code"
+                                placeholder="ID porudzbenice"
                                 value={searchCode}
                                 onChange={(e) => setSearchCode(e.target.value)}
                             />
@@ -268,7 +277,7 @@ const IndentsList = (props) => {
 
             <div className="table-responsive">
                 <table
-                     className="table table-striped table-bordered table-margin"
+                    className="table table-striped table-bordered table-margin"
                     {...getTableProps()}
                 >
                     <thead>
@@ -316,11 +325,6 @@ const IndentsList = (props) => {
             </div>
             <div className="col-md-4">
                 <a href="/indents/add" className="btn btn-sm btn-primary">Add Indent</a>
-            </div>
-            <div className="col-md-8">
-                <button className="btn btn-sm btn-danger" onClick={removeAllIndents}>
-                    Remove All
-                </button>
             </div>
         </div>
     );

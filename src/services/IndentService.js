@@ -30,8 +30,12 @@ const remove = (id) => {
   return axiosInstance.delete(`porudzbine/${id}`);
 };
 
-const activateIndent = (indent) => {
-  return axiosInstance.put("porudzbine/aktiviraj", indent);
+const activateIndent = (indentCode) => {
+  return axiosInstance.put("porudzbine/aktiviraj", indentCode);
+};
+
+const confirmIndentDelivery = (indentCode) => {
+  return axiosInstance.put("porudzbine/potvrdiIsporuku", indentCode);
 };
 
 const removeAll = () => {
@@ -55,6 +59,7 @@ const IndentService = {
   removeAll,
   activateIndent,
   findByCode,
+  confirmIndentDelivery
 };
 
 export default IndentService;

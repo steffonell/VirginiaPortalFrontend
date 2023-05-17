@@ -127,7 +127,7 @@ const Basket = () => {
     return (
         <div className="basket-container">
             <h3>Korpa</h3>
-            <table className="table-responsive table-striped">
+            <table className="table table-responsive table-striped table-bordered table-margin">
                 <thead>
                     <tr>
                         <th className="hide-on-mobile">Redni Broj</th>
@@ -205,7 +205,7 @@ const Basket = () => {
             <div className="total-cost">
                 <strong>Ukupna cena :</strong> {formatNumber(totalCost)}
             </div>
-            <select className="form-control" onChange={handleDeliveryAddressChange} style={{ width: '400px' }}>
+            <select className="form-control adresa-slanja" onChange={handleDeliveryAddressChange}>
                 <option key="0" value="">Izaberite Adresu Slanja</option>
                 {loggedInClient && loggedInClient.deliveryAddressList && loggedInClient.deliveryAddressList.map((deliveryAddress, index) => {
                     return (

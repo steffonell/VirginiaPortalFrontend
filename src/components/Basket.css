@@ -6,6 +6,10 @@
   margin-top: 20px;
 }
 
+.table-margin {
+  margin-left: 0px;
+}
+
 .basket-container h3 {
   margin-bottom: 20px;
 }
@@ -28,6 +32,10 @@
   text-align: left;
 }
 
+.form-control.adresa-slanja {
+  max-width: 400px;
+}
+
 .btn-success {
   background-color: green;
   color: white;
@@ -36,9 +44,11 @@
   float: left;
 }
 
+.form-control.input-width
+
 .input-width {
-  min-width: 500px;
-  max-width: 500px;
+  min-width: 300px;
+  max-width: 300px;
   width: 100%;
 }
 

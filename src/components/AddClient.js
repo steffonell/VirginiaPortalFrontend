@@ -33,6 +33,7 @@ const AddClient = () => {
                 .then((response) => {
                     console.log(response.data);
                     resetForm();
+                    window.confirm('Uspešno kreiran klijent!');
                 })
                 .catch((e) => {
                     console.log(e);
