@@ -16,7 +16,7 @@ const AddClient = () => {
     // Dobavi brendove koristeći BrandService
     useEffect(() => {
         retrieveBrands(); // log the modalFormBrandDiscountVisible state whenever it changes
-    }, [modalFormBrandDiscountVisible]);
+    }, []);
 
     const retrieveBrands = () => {
         BrandService.getAll()
@@ -27,6 +27,15 @@ const AddClient = () => {
                 console.log(e);
             });
     };
+
+    const addDeliveryAddress = (deliveryAddress) => {
+        setCustomerDeliveryAddresses(prevCustomerDeliveryAddresses => [...prevCustomerDeliveryAddresses, deliveryAddress]);
+    }
+
+    const addBrandDiscount = (brandDiscount) => {
+        setBrandDiscounts(prevBrandDiscounts => [...prevBrandDiscounts, brandDiscount]);
+    }
+
 
     const validationSchema = Yup.object().shape({
         nameOfTheLegalEntity: Yup.string().required('Polje "Ime legalnog entiteta" je obavezno.'),
@@ -72,8 +81,10 @@ const AddClient = () => {
         validationSchema: deliveryAddressValidationSchema,
         onSubmit: (values, { resetForm }) => {
             console.log(values);
+            addDeliveryAddress(values);
             setModalFormBrandDiscountVisible(false);
             resetForm();
+            console.log(customerDeliveryAddresses);
         },
     });
 
@@ -85,8 +96,10 @@ const AddClient = () => {
         validationSchema: brandValidationSchema,
         onSubmit: (values, { resetForm }) => {
             console.log(values);
+            addBrandDiscount(values);
             setModalFormDeliveryAddressVisible(false);
             resetForm();
+            console.log(brandDiscounts);
         },
     });
 
@@ -103,7 +116,8 @@ const AddClient = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values, { resetForm }) => {
-            ClientDataService.create(values)
+            console.log(values);
+            ClientDataService.createCustomerWithDiscountAndAddresses(values, brandDiscounts, customerDeliveryAddresses)
                 .then((response) => {
                     console.log(response.data);
                     resetForm();
@@ -239,12 +253,11 @@ const AddClient = () => {
                     ) : null}
                 </div>
                 <div className="form-group">
-                    <button type="confirm" onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
-                    <button type="confirm" onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
+                    <button onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
+                    <button onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
                 </div>
+                <button type="submit">Potvrdi Unos Klijenta</button>
             </form>
-
-            <button type="submit">Potvrdi Unos Klijenta</button>
 
             {modalFormDeliveryAddressVisible && (
                 <div className="modal">
@@ -358,7 +371,7 @@ const AddClient = () => {
                             </div>
                             <div className="form-group">
                                 <label>
-                                    Rabat Brenda :
+                                    Rabat Brenda (%) :
                                     <input
                                         type="text"
                                         name="brandDiscount"

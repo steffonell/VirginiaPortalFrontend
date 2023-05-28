@@ -21,6 +21,33 @@ const create = (client, brandName) => {
   });
 };
 
+const createCustomerWithDiscountAndAddresses = async (customer, brandDiscountArray, customerDeliveryAddresses) => {
+  // Convert array to object
+  console.log("customer:" + JSON.stringify(customer));
+  console.log("brandDiscountArray:" + JSON.stringify(brandDiscountArray));
+  console.log("customerDeliveryAddresses:" + JSON.stringify(customerDeliveryAddresses));
+
+  let brandDiscounts = brandDiscountArray.reduce((map, item) => {
+    map[item.selectedBrand] = parseFloat(item.brandDiscount);
+    return map;
+  }, {});
+
+  console.log("brandDiscounts:" + JSON.stringify(brandDiscounts));
+
+  try {
+    const response = await axiosInstance.post('klijenti/kreiraj', {
+      customer,
+      brandByDiscountMap: brandDiscounts,
+      customerDeliveryAddresses,
+    });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 const update = (id, data) => {
   return axiosInstance.put(`klijenti/${id}`, data);
 };
@@ -49,7 +76,8 @@ const ClientService = {
   remove,
   removeAll,
   findByName,
-  findByEmail
+  findByEmail,
+  createCustomerWithDiscountAndAddresses
 };
 
 export default ClientService;
