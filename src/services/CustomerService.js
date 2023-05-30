@@ -27,17 +27,17 @@ const createCustomerWithDiscountAndAddresses = async (customer, brandDiscountArr
   console.log("brandDiscountArray:" + JSON.stringify(brandDiscountArray));
   console.log("customerDeliveryAddresses:" + JSON.stringify(customerDeliveryAddresses));
 
-  let brandDiscounts = brandDiscountArray.reduce((map, item) => {
+/*   let brandDiscounts = brandDiscountArray.reduce((map, item) => {
     map[item.selectedBrand] = parseFloat(item.brandDiscount);
     return map;
-  }, {});
+  }, {}); */
 
-  console.log("brandDiscounts:" + JSON.stringify(brandDiscounts));
+  console.log("brandDiscounts:" + JSON.stringify(brandDiscountArray));
 
   try {
     const response = await axiosInstance.post('klijenti/kreiraj', {
       customer,
-      brandByDiscountMap: brandDiscounts,
+      brandByDiscountMap: brandDiscountArray,
       customerDeliveryAddresses,
     });
     console.log(response);

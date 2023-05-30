@@ -5,6 +5,7 @@ const getAll = () => {
 };
 
 const get = (id) => {
+  console.log("Getting Delivery Address under ID "+id);
   return axiosInstance.get(`adrese/${id}`);
 };
 
@@ -21,15 +22,13 @@ const create = (data, customerName) => {
 };
 
 const update = (id, data) => {
+  console.log("ID "+id);
+  console.log("Data : "+JSON.stringify(data));
   return axiosInstance.put(`adrese/${id}`, data);
 };
 
 const remove = (id) => {
   return axiosInstance.delete(`adrese/${id}`);
-};
-
-const removeAll = () => {
-  return axiosInstance.delete("adrese");
 };
 
 const DeliveryAddressService = {
@@ -38,7 +37,6 @@ const DeliveryAddressService = {
   create,
   update,
   remove,
-  removeAll,
-};
+  };
 
 export default DeliveryAddressService;

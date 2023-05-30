@@ -28,6 +28,8 @@ import AddDeliveryAddress from "./components/AddDeliveryAddress";
 import Forbidden from './components/Forbidden';
 import NavbarComponent from "./components/NavbarComponent";
 import { eventEmitter } from '../src/components/apiService';
+import DeliveryAddressesList from "./components/DeliveryAddressList";
+import EditDeliveryAddress from "./components/EditDeliveryAddress";
 
 const App = () => {
 
@@ -73,7 +75,9 @@ const App = () => {
           <Route path="/brands/add" element={ProtectedComponent(AddBrand, userRole, ['ROLE_ADMIN'])} />
           <Route path="/brands/:id" element={ProtectedComponent(Brand, userRole, ['ROLE_ADMIN'])} />
           <Route path="/clients" element={ProtectedComponent(ClientsList, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/address" element={ProtectedComponent(DeliveryAddressesList, userRole, ['ROLE_ADMIN'])} />
           <Route path="/address/add" element={ProtectedComponent(AddDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/address/edit/:id" element={ProtectedComponent(EditDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
           <Route path="/clients/add" element={ProtectedComponent(AddClient, userRole, ['ROLE_ADMIN'])} />
           <Route path="/clients/:id" element={ProtectedComponent(Client, userRole, ['ROLE_ADMIN'])} />
           <Route path="/indents" element={ProtectedComponent(IndentsList, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />

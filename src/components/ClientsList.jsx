@@ -32,21 +32,6 @@ const ClientsList = (props) => {
             });
     };
 
-    const refreshList = () => {
-        retrieveClients();
-    };
-
-    const removeAllClients = () => {
-        ClientDataService.removeAll()
-            .then((response) => {
-                console.log(response.data);
-                refreshList();
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
     const findByName = () => {
         ClientDataService.findByName(searchName)
             .then((response) => {
@@ -208,12 +193,7 @@ const ClientsList = (props) => {
             </div>
 
             <div className="col-md-4">
-                <a href="/clients/add" className="btn btn-sm btn-primary">Add Client</a>
-            </div>
-            <div className="col-md-8">
-                <button className="btn btn-sm btn-danger" onClick={removeAllClients}>
-                    Remove All
-                </button>
+                <a href="/clients/add" className="btn btn-sm btn-primary">Dodaj Klijenta</a>
             </div>
         </div>
     );

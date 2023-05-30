@@ -32,10 +32,11 @@ const AddClient = () => {
         setCustomerDeliveryAddresses(prevCustomerDeliveryAddresses => [...prevCustomerDeliveryAddresses, deliveryAddress]);
     }
 
-    const addBrandDiscount = (brandDiscount) => {
-        setBrandDiscounts(prevBrandDiscounts => [...prevBrandDiscounts, brandDiscount]);
+    const addBrandDiscount = (brand, discount) => {
+        setBrandDiscounts(prevBrandDiscounts => {
+            return { ...prevBrandDiscounts, [brand]: discount };
+        });
     }
-
 
     const validationSchema = Yup.object().shape({
         nameOfTheLegalEntity: Yup.string().required('Polje "Ime legalnog entiteta" je obavezno.'),
@@ -96,7 +97,7 @@ const AddClient = () => {
         validationSchema: brandValidationSchema,
         onSubmit: (values, { resetForm }) => {
             console.log(values);
-            addBrandDiscount(values);
+            addBrandDiscount(values.selectedBrand, values.brandDiscount);
             setModalFormDeliveryAddressVisible(false);
             resetForm();
             console.log(brandDiscounts);
@@ -253,8 +254,8 @@ const AddClient = () => {
                     ) : null}
                 </div>
                 <div className="form-group">
-                    <button onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
-                    <button onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
+                    <button type="button" onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
+                    <button type="button" onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
                 </div>
                 <button type="submit">Potvrdi Unos Klijenta</button>
             </form>

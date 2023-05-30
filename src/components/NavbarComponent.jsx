@@ -34,7 +34,7 @@ const NavbarComponent = () => {
         <NavLink to="/clients" onClick={toggleMenu} className="nav-link">Klijenti</NavLink>
         </li>
         <li className="nav-item">
-        <NavLink to="/address/add" onClick={toggleMenu} className="nav-link">Adrese</NavLink>
+        <NavLink to="/address" onClick={toggleMenu} className="nav-link">Adrese</NavLink>
         </li>
         <li className="nav-item">
         <NavLink to="/brands" onClick={toggleMenu} className="nav-link">Brendovi</NavLink>
