@@ -34,7 +34,7 @@ const IndentEntries = () => {
             },
             {
                 Header: "Klijent",
-                accessor: "indent.customer.nameOfTheLegalEntity",
+                accessor: "customer.nameOfTheLegalEntity",
             },
             {
                 Header: "Artikal",
@@ -46,7 +46,7 @@ const IndentEntries = () => {
             },
             {
                 Header: "Valuta",
-                accessor: "indent.customer.paymentCurrency",
+                accessor: "customer.paymentCurrency",
             },
             {
                 Header: "Jedinica Mere",

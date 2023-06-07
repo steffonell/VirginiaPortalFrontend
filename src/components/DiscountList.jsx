@@ -6,15 +6,19 @@ import logo from './../images/logo.jpg';
 
 const DiscountDiscount = () => {
     const [discount, setDiscount] = useState([]);
+    const [filter, setFilter] = useState('');
 
     useEffect(() => {
         const fetchDiscount = async () => {
             const response = await DiscountDataService.getAll();
             console.log(response.data);
-            setDiscount(response.data);
+            const filteredData = response.data.filter((entry) =>
+                entry.customer.nameOfTheLegalEntity.toLowerCase().includes(filter.toLowerCase())
+            );
+            setDiscount(filteredData);
         };
         fetchDiscount();
-    }, []);
+    }, [filter]);
 
     const editDiscountEntry = (rowIndex) => {
         console.log("pressed editDiscountEntry");
@@ -36,7 +40,7 @@ const DiscountDiscount = () => {
                 accessor: "brand.brandName",
             },
             {
-                Header: "Rabat",
+                Header: "Rabat (%)",
                 accessor: "discount",
             },
             {
@@ -75,6 +79,15 @@ const DiscountDiscount = () => {
     return (
         <div className="list row">
             <div className="col-md-12 list">
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Ime Klijenta"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    />
+                </div>
                 <table
                     className="table table-striped table-bordered"
                     {...getTableProps()}

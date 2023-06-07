@@ -9,27 +9,36 @@ const ClientsList = (props) => {
     const [clients, setClients] = useState([]);
     const [searchName, setSearchName] = useState("");
     const clientsRef = useRef();
+    const [filter, setFilter] = useState('');
 
     clientsRef.current = clients;
 
+
     useEffect(() => {
         retrieveClients();
-    }, []);
+    }, [filter]);
 
-    const onChangeSearchName = (e) => {
-        const searchName = e.target.value;
-        setSearchName(searchName);
+    const onChangeFilter = (e) => {
+        const filter = e.target.value;
+        setFilter(filter);
     };
 
     const retrieveClients = () => {
         ClientDataService.getAll()
             .then((response) => {
-                setClients(response.data);
-                console.log(response.data);
+                const filteredData = response.data.filter((entry) =>
+                    entry.nameOfTheLegalEntity.toLowerCase().includes(filter.toLowerCase())
+                );
+                setClients(filteredData);
             })
             .catch((e) => {
                 console.log(e);
             });
+    };
+
+    const onChangeSearchName = (e) => {
+        const searchName = e.target.value;
+        setSearchName(searchName);
     };
 
     const findByName = () => {
@@ -140,19 +149,10 @@ const ClientsList = (props) => {
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="Search by name"
-                        value={searchName}
-                        onChange={onChangeSearchName}
+                        placeholder="Ime Klijenta"
+                        value={filter}
+                        onChange={onChangeFilter}
                     />
-                    <div className="input-group-append">
-                        <button
-                            className="btn btn-outline-secondary"
-                            type="button"
-                            onClick={findByName}
-                        >
-                            Search
-                        </button>
-                    </div>
                 </div>
             </div>
             <div className="col-md-12 list">

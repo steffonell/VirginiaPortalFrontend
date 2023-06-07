@@ -15,14 +15,34 @@ const Basket = () => {
 
     const validateItemQuantities = (basketItems) => {
         let missingQuantities = {};
+        let noccoItemsQuantity = 0;
+
         for (let item of basketItems) {
-            const remainder = item.quantity % item.article.quantityPerTransportPackage;
-            if (remainder !== 0) {
-                missingQuantities[item.article.name] = item.article.quantityPerTransportPackage - remainder;
+            if (item.article.brand.brandName === "NOCCO") {
+                noccoItemsQuantity += item.quantity;
+            } else {
+                const remainder = item.quantity % item.article.quantityPerTransportPackage;
+                if (remainder !== 0) {
+                    missingQuantities[item.article.name] = {
+                        article: item.article,
+                        missingQuantity: item.article.quantityPerTransportPackage - remainder
+                    };
+                }
             }
         }
+
+        if (noccoItemsQuantity % 24 !== 0) {
+            const noccoArticle = basketItems.find(item => item.article.brand.brandName === "NOCCO").article;
+            missingQuantities['NOCCO'] = {
+                article: noccoArticle,
+                missingQuantity: 24 - (noccoItemsQuantity % 24)
+            };
+        }
+
         return missingQuantities;
     };
+
+
 
     const confirmOrder = async () => {
         if (basketItems && basketItems.length > 0) {
@@ -217,9 +237,12 @@ const Basket = () => {
             </select>
             {Object.keys(missingItemQuantities).length !== 0 && (
                 <div className="alert alert-warning" role="alert">
-                    {Object.entries(missingItemQuantities).map(([articleName, missingQuantity]) => (
+                    {Object.entries(missingItemQuantities).map(([articleName, { article, missingQuantity }]) => (
                         <p key={articleName}>
-                            Morate dodati jos <strong>{missingQuantity}</strong> komada artikla <strong>{articleName}</strong> da bi potvrdili porudzbinu.
+                            {articleName === 'NOCCO'
+                                ? <>Za brend <strong>{articleName}</strong>, broj poručenih komada mora biti deljiv sa 24. Možete dodati još <strong>{missingQuantity}</strong> komada u korpu da bi ispunili uslov.</>
+                                : <>Za artikal <strong>{articleName}</strong>, broj poručenih komada mora biti deljiv sa <strong>{article.quantityPerTransportPackage}</strong>. Možete dodati još <strong>{missingQuantity}</strong> komada u korpu da bi ispunili uslov.</>
+                            }
                         </p>
                     ))}
                 </div>

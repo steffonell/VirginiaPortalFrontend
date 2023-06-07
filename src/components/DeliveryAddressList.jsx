@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const DeliveryAddressesList = (props) => {
     const [addresses, setAddresses] = useState([]);
     const [searchName, setSearchName] = useState("");
+    const [searchAddressName, setSearchAddressName] = useState("");
     const addressesRef = useRef();
     const navigate = useNavigate();
 
@@ -19,6 +20,18 @@ const DeliveryAddressesList = (props) => {
         const searchName = e.target.value;
         setSearchName(searchName);
     };
+
+    const onChangeSearchAddressName = (e) => {
+        const searchAddressName = e.target.value;
+        setSearchAddressName(searchAddressName);
+    };
+
+    // Filter addresses by the customer name
+    const filteredAddresses = addresses.filter(address =>
+        address?.customerNameOfTheLegalEntity?.toLowerCase().includes(searchName.toLowerCase()) &&
+        address?.name?.toLowerCase().includes(searchAddressName.toLowerCase())
+    );
+
 
     const retrieveAddresses = () => {
         DeliveryAddressService.getAll()
@@ -34,24 +47,24 @@ const DeliveryAddressesList = (props) => {
     const editAddress = (id) => {
         // Navigate to edit address page. 
         // Make sure you have a route defined for this in your application.
-        console.log("ID of address"+id);
+        console.log("ID of address" + id);
         navigate(`/address/edit/${id}`);
-      };
-      const deleteAddress = (id) => {
+    };
+    const deleteAddress = (id) => {
         console.log("clicks");
         const confirmation = window.confirm("Da li ste sigurni da želite da obrišete ovu poslovnu jedinicu?");
-        if(confirmation) {
+        if (confirmation) {
             DeliveryAddressService.remove(id)
-            .then(response => {
-                // after deletion, we filter out the deleted address
-                const newAddresses = addressesRef.current.filter(address => address.id !== id);
-                setAddresses(newAddresses);
-                alert('Poslovna jedinica izbrisana uspešno!'); // Show success alert
-            })
-            .catch(e => {
-                console.log(e);
-                alert('Poslovna jedinica nije izbrisana uspešno.'); // Show failure alert
-            });
+                .then(response => {
+                    // after deletion, we filter out the deleted address
+                    const newAddresses = addressesRef.current.filter(address => address.id !== id);
+                    setAddresses(newAddresses);
+                    alert('Poslovna jedinica izbrisana uspešno!'); // Show success alert
+                })
+                .catch(e => {
+                    console.log(e);
+                    alert('Poslovna jedinica nije izbrisana uspešno.'); // Show failure alert
+                });
         }
     };
 
@@ -59,19 +72,27 @@ const DeliveryAddressesList = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "City",
+                Header: "Klijent",
+                accessor: "customerNameOfTheLegalEntity",
+            },
+            {
+                Header: "Naziv Poslovne Jedinice",
+                accessor: "name",
+            },
+            {
+                Header: "Grad",
                 accessor: "city",
             },
             {
-                Header: "Address",
+                Header: "Adresa",
                 accessor: "address",
             },
             {
-                Header: "Contact Person",
+                Header: "Kontakt Osoba",
                 accessor: "contactPerson",
             },
             {
-                Header: "Contact Number",
+                Header: "Kontakt Broj",
                 accessor: "contactNumber",
             },
             {
@@ -88,15 +109,16 @@ const DeliveryAddressesList = (props) => {
                             <span onClick={() => editAddress(deliveryAddressID)} class="btn btn-secondary mx-1">
                                 <i className="far fa-edit mr-2"></i> Izmeni
                             </span>
-            
-                            <span onClick={() => deleteAddress(deliveryAddressID)} className="btn btn-danger mx-1">
+
+                            <span /* onClick={() => deleteAddress(deliveryAddressID)} */ className="btn btn-danger disabled mx-1">
+                                {/* Ne radi sa java strane brisanje, jos moram da provalim sto */}
                                 <i className="fas fa-trash"></i> Izbrisi
                             </span>
                         </div>
                     );
                 },
             },
-            
+
         ],
         []
     );
@@ -109,16 +131,34 @@ const DeliveryAddressesList = (props) => {
         prepareRow,
     } = useTable({
         columns,
-        data: addresses,
+        data: filteredAddresses,
     });
 
     return (
         <div className="list row">
             <div className="col-md-8">
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Ime Klijenta"
+                        value={searchName}
+                        onChange={onChangeSearchName}
+                    />
+                </div>
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Ime Poslovne Jedinice"
+                        value={searchAddressName}
+                        onChange={onChangeSearchAddressName}
+                    />
+                </div>
             </div>
             <div className="col-md-12 list">
                 <table
-                    className="table table-striped table-bordered"
+                    className="table table-responsive table-striped table-bordered table-margin"
                     {...getTableProps()}
                 >
                     <thead>
@@ -150,7 +190,7 @@ const DeliveryAddressesList = (props) => {
             </div>
 
             <div className="col-md-4">
-                <a href="/addresses/add" className="btn btn-sm btn-primary">Add Address</a>
+                <a href="/addresses/add" className="btn btn-sm btn-primary">Dodaj Adresu</a>
             </div>
         </div>
     );

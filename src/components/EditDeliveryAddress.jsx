@@ -25,6 +25,7 @@ const EditDeliveryAddress = () => {
   const formik = useFormik({
     enableReinitialize: true, // Add this line
     initialValues: {
+      name: address.name || "",
       city: address.city || "",
       address: address.address || "",
       contactPerson: address.contactPerson || "",
@@ -32,7 +33,8 @@ const EditDeliveryAddress = () => {
       email: address.email || "",
     },
     validationSchema: Yup.object({
-      city: Yup.string().required('Polje "Grad" je obavezno.'),
+        name: Yup.string().required('Polje "Naziv Poslovne Jedinice" je obavezno.'),
+        city: Yup.string().required('Polje "Grad" je obavezno.'),
         address: Yup.string().required('Polje "Adresa" je obavezno.'),
         contactPerson: Yup.string(),
         contactNumber: Yup.string()
@@ -59,6 +61,20 @@ const EditDeliveryAddress = () => {
     <form onSubmit={formik.handleSubmit} className="submit-form">
       <ToastContainer />
       <div className="form-group">
+      <label>
+          Name :
+          <input
+            type="text"
+            name="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.name && formik.errors.name ? (
+            <div className="error-message">{formik.errors.name}</div>
+          ) : null}
+        </label>
+
         <label>
           Grad :
           <input

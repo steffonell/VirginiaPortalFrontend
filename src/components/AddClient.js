@@ -63,6 +63,7 @@ const AddClient = () => {
     });
 
     const deliveryAddressValidationSchema = Yup.object().shape({
+        name: Yup.string().required('Polje "Naziv Poslovne Jedinice" je obavezno.'),
         city: Yup.string().required('Polje "Grad" je obavezno.'),
         address: Yup.string().required('Polje "Adresa" je obavezno.'),
         contactPerson: Yup.string(),
@@ -73,6 +74,7 @@ const AddClient = () => {
 
     const deliveryAddressFormik = useFormik({
         initialValues: {
+            name: '',
             city: '',
             address: '',
             contactPerson: '',
@@ -268,6 +270,19 @@ const AddClient = () => {
                         </span>
                         <form onSubmit={deliveryAddressFormik.handleSubmit} className="submit-form">
                             <div className="form-group">
+                                <label>
+                                    Name :
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={deliveryAddressFormik.values.name}
+                                        onChange={deliveryAddressFormik.handleChange}
+                                        onBlur={deliveryAddressFormik.handleBlur}
+                                    />
+                                    {deliveryAddressFormik.touched.name && deliveryAddressFormik.errors.name ? (
+                                        <div className="error-message">{deliveryAddressFormik.errors.name}</div>
+                                    ) : null}
+                                </label>
                                 <label>
                                     Grad :
                                     <input

@@ -19,6 +19,7 @@ const IndentsList = (props) => {
     const [searchDateFrom, setSearchDateFrom] = useState("");
     const [searchDateTo, setSearchDateTo] = useState("");
     const [displayedIndents, setDisplayedIndents] = useState([]);
+    const [searchCustomerName, setSearchCustomerName] = useState("");
 
 
     useEffect(() => {
@@ -41,6 +42,15 @@ const IndentsList = (props) => {
                 console.log(e);
             });
     };
+
+    const handleResetClick = () => {
+        setSearchCustomerName("");
+        setSearchCode("");
+        setSearchDateFrom("");
+        setSearchDateTo("");
+        setDisplayedIndents(indentsRef.current);
+    };
+
 
     const refreshList = () => {
         retrieveIndents();
@@ -117,7 +127,7 @@ const IndentsList = (props) => {
                 newIndents[rowIndex] = response.data;
                 setIndents(newIndents);
                 setDisplayedIndents(indents);
-                window.confirm('Uspešno aktivirana porudžbina! ['+indentCode+']');
+                window.confirm('Uspešno aktivirana porudžbina! [' + indentCode + ']');
             })
             .catch((e) => {
                 console.log(e);
@@ -132,7 +142,7 @@ const IndentsList = (props) => {
                 newIndents[rowIndex] = response.data;
                 setIndents(newIndents);
                 setDisplayedIndents(indents);
-                window.confirm('Uspešno isporučena porudžbina!! ['+indentCode+']');
+                window.confirm('Uspešno isporučena porudžbina!! [' + indentCode + ']');
             })
             .catch((e) => {
                 console.log(e);
@@ -145,12 +155,53 @@ const IndentsList = (props) => {
         navigate(`/indents/entries/${indentCode}`);
     };
 
+    const DateInputWithPlaceholder = ({ placeholder, value, onChange }) => {
+        const [isFocused, setIsFocused] = useState(false);
+
+        return isFocused ? (
+            <input
+                type="date"
+                className="form-control"
+                value={value}
+                onChange={onChange}
+                onBlur={() => setIsFocused(false)}
+            />
+        ) : (
+            <input
+                type="text"
+                className="form-control"
+                value={value || placeholder}
+                onFocus={() => setIsFocused(true)}
+            />
+        );
+    };
+
+    // usage in your form
+    <DateInputWithPlaceholder
+        placeholder="Date From"
+        value={searchDateFrom}
+        onChange={(e) => setSearchDateFrom(e.target.value)}
+    />
+
+
 
     const columns = useMemo(
         () => [
             {
+                Header: "Klijent",
+                accessor: "customerNameOfTheLegalEntity",
+            },
+            {
+                Header: "Adresa Dostave",
+                accessor: row => `${row.deliveryAddressCity}, ${row.deliveryAddressLocation}`,
+            },
+            {
                 Header: "ID Porudzbenice",
                 accessor: "code",
+            },
+            {
+                Header: "Poručena količina",
+                accessor: "orderedQuantity",
             },
             {
                 Header: "Status Porudzbenice",
@@ -209,12 +260,14 @@ const IndentsList = (props) => {
             const isCodeMatch = !searchCode || indent.code.includes(searchCode);
             const isDateFromMatch = !searchDateFrom || indentDate >= new Date(searchDateFrom);
             const isDateToMatch = !searchDateTo || indentDate <= new Date(searchDateTo);
+            const isCustomerNameMatch = !searchCustomerName || indent.customerNameOfTheLegalEntity.toLowerCase().includes(searchCustomerName.toLowerCase());
 
-            return isCodeMatch && isDateFromMatch && isDateToMatch;
+            return isCodeMatch && isDateFromMatch && isDateToMatch && isCustomerNameMatch;
         });
 
         setDisplayedIndents(filteredIndents);
     };
+
 
     const {
         getTableProps,
@@ -243,41 +296,59 @@ const IndentsList = (props) => {
                             <input
                                 type="text"
                                 className="form-control"
+                                placeholder="Ime Klijenta"
+                                value={searchCustomerName}
+                                onChange={(e) => setSearchCustomerName(e.target.value)}
+                            />
+                        </div>
+                        <div className="col-12 col-md-4 my-1">
+                            <input
+                                type="text"
+                                className="form-control"
                                 placeholder="ID porudzbenice"
                                 value={searchCode}
                                 onChange={(e) => setSearchCode(e.target.value)}
                             />
                         </div>
                         <div className="col-12 col-md-4 my-1">
-                            <input
-                                type="date"
-                                className="form-control"
-                                placeholder="Date From"
-                                value={searchDateFrom}
-                                onChange={(e) => setSearchDateFrom(e.target.value)}
-                            />
-                        </div>
-                        <div className="col-12 col-md-4 my-1">
-                            <input
-                                type="date"
-                                className="form-control"
-                                placeholder="Date To"
-                                value={searchDateTo}
-                                onChange={(e) => setSearchDateTo(e.target.value)}
-                            />
+                            <div className="form-row">
+                                <div className="col-6">
+                                    <input
+                                        type="date"
+                                        className="form-control"
+                                        placeholder="Date From"
+                                        value={searchDateFrom}
+                                        onChange={(e) => setSearchDateFrom(e.target.value)}
+                                    />
+                                </div>
+                                <div className="col-6">
+                                    <input
+                                        type="date"
+                                        className="form-control"
+                                        placeholder="Date To"
+                                        value={searchDateTo}
+                                        onChange={(e) => setSearchDateTo(e.target.value)}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div className="col-12 col-md-auto my-1">
                             <button className="btn btn-outline-secondary" type="button" onClick={handleSearchClick}>
-                                Search
+                                Pretraga
+                            </button>
+                        </div>
+                        <div className="col-12 col-md-auto my-1">
+                            <button className="btn btn-outline-secondary" type="button" onClick={handleResetClick}>
+                                Reset
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="table-responsive">
+            <div className="table-responsive table-striped table-bordered">
                 <table
-                    className="table table-striped table-bordered table-margin"
+                    className="table"
                     {...getTableProps()}
                 >
                     <thead>
@@ -323,9 +394,9 @@ const IndentsList = (props) => {
                     </tbody>
                 </table>
             </div>
-            <div className="col-md-4">
+            {/*             <div className="col-md-4">
                 <a href="/indents/add" className="btn btn-sm btn-primary">Add Indent</a>
-            </div>
+            </div> */}
         </div>
     );
 };
