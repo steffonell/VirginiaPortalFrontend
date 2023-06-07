@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import ClientDataService from "../services/CustomerService";
 import { useTable } from "react-table";
 import { Navigate } from "react-router-dom";
-import { Outlet, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logo from './../images/logo.jpg';
 
 const ClientsList = (props) => {
@@ -10,6 +10,7 @@ const ClientsList = (props) => {
     const [searchName, setSearchName] = useState("");
     const clientsRef = useRef();
     const [filter, setFilter] = useState('');
+    const navigate = useNavigate();
 
     clientsRef.current = clients;
 
@@ -51,12 +52,13 @@ const ClientsList = (props) => {
             });
     };
 
-    const editClient = (rowIndex) => {
-        console.log("pressed");
-        const id = clientsRef.current[rowIndex].id;
-        console.log(id);
-        <Link to={`/clients/${id}`} />
+    const editClient = (id) => {
+        // Navigate to edit address page. 
+        // Make sure you have a route defined for this in your application.
+        console.log("ID of client" + id);
+        navigate(`/clients/edit/${id}`);
     };
+
 
     const deleteClient = (rowIndex) => {
         const id = clientsRef.current[rowIndex].id;
@@ -113,14 +115,14 @@ const ClientsList = (props) => {
                 Header: "Akcije",
                 accessor: "actions",
                 Cell: (props) => {
-                    const rowIdx = props.row.id;
+                    const rowIdx = props.row.original.customer_id;
                     return (
                         <div class="d-flex justify-content-between max-width-150">
-                            <span onClick={() => editClient(rowIdx)} class="btn btn-secondary disabled mx-1">
+                            <span onClick={() => editClient(rowIdx)} class="btn btn-secondary mx-1">
                                 <i className="far fa-edit mr-2"></i> Izmeni
                             </span>
 
-                            <span onClick={() => deleteClient(rowIdx)} className="btn btn-danger mx-1">
+                            <span onClick={() => deleteClient(rowIdx)} className="btn btn-danger disabled mx-1">
                                 <i className="fas fa-trash"></i> Izbrisi
                             </span>
                         </div>

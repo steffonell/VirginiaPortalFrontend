@@ -190,7 +190,7 @@ const DeliveryAddressesList = (props) => {
             </div>
 
             <div className="col-md-4">
-                <a href="/addresses/add" className="btn btn-sm btn-primary">Dodaj Adresu</a>
+                <a href="/address/add" className="btn btn-sm btn-primary">Dodaj Adresu</a>
             </div>
         </div>
     );

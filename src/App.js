@@ -30,6 +30,7 @@ import NavbarComponent from "./components/NavbarComponent";
 import { eventEmitter } from '../src/components/apiService';
 import DeliveryAddressesList from "./components/DeliveryAddressList";
 import EditDeliveryAddress from "./components/EditDeliveryAddress";
+import EditClient from "./components/EditClient";
 
 const App = () => {
 
@@ -79,7 +80,7 @@ const App = () => {
           <Route path="/address/add" element={ProtectedComponent(AddDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
           <Route path="/address/edit/:id" element={ProtectedComponent(EditDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
           <Route path="/clients/add" element={ProtectedComponent(AddClient, userRole, ['ROLE_ADMIN'])} />
-          <Route path="/clients/:id" element={ProtectedComponent(Client, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/clients/edit/:id" element={ProtectedComponent(EditClient, userRole, ['ROLE_ADMIN'])} />
           <Route path="/indents" element={ProtectedComponent(IndentsList, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
           <Route path="/indents/add" element={ProtectedComponent(AddIndent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
           <Route path="/indents/:id" element={ProtectedComponent(Indent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
