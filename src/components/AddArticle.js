@@ -35,8 +35,8 @@ const AddArticle = () => {
     };
 
     const validationSchema = Yup.object().shape({
-        code: Yup.string().required('Kod je obavezan'),
-        name: Yup.string().required('Ime je obavezno'),
+        code: Yup.string().required('Šifra Artikla je obavezna.'),
+        name: Yup.string().required('Naziv Artikla je obavezno.'),
         unitOfMeasurement: Yup.string(),
         quantityPerTransportPackage: Yup.number().integer(),
         minimumQuantityDemand: Yup.number().integer(),
@@ -57,7 +57,7 @@ const AddArticle = () => {
             brutoMass: '',
             wholesalePrice: '',
             imageSource: '',
-            pdv: '',
+            pdv: '20',
             brandName: '',
         },
         validationSchema: validationSchema,
@@ -85,10 +85,11 @@ const AddArticle = () => {
         <div className="submit-form">
             <h2>Dodaj Artikal</h2>
             <form onSubmit={formik.handleSubmit}>
-                {/* Kod */}
+                {/* Šifra Artikla */}
+                <label htmlFor="code">Šifra Artikla</label>
                 <input
                     name="code"
-                    placeholder="Kod"
+                    placeholder="Šifra Artikla"
                     value={formik.values.code}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -97,10 +98,11 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.code}</div>
                 ) : null}
 
-                {/* Ime */}
+                {/* Naziv Artikla */}
+                <label htmlFor="name">Naziv Artikla</label>
                 <input
                     name="name"
-                    placeholder="Ime"
+                    placeholder="Naziv Artikla"
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -110,6 +112,7 @@ const AddArticle = () => {
                 ) : null}
 
                 {/* Jedinica mere */}
+                <label htmlFor="unitOfMeasurement">Jedinica mere</label>
                 <input
                     name="unitOfMeasurement"
                     placeholder="Jedinica mere"
@@ -122,6 +125,7 @@ const AddArticle = () => {
                 ) : null}
 
                 {/* Količina po transportnom paketu */}
+                <label htmlFor="quantityPerTransportPackage">Količina po transportnom paketu</label>
                 <input
                     name="quantityPerTransportPackage"
                     placeholder="Količina po transportnom paketu"
@@ -134,6 +138,7 @@ const AddArticle = () => {
                 ) : null}
 
                 {/* Minimalna tražena količina */}
+                <label htmlFor="minimumQuantityDemand">Minimalna tražena količina</label>
                 <input
                     name="minimumQuantityDemand"
                     placeholder="Minimalna tražena količina"
@@ -146,9 +151,10 @@ const AddArticle = () => {
                 ) : null}
 
                 {/* Bruto masa */}
+                <label htmlFor="minimumQuantityDemand">Bruto masa</label>
                 <input
                     name="brutoMass"
-                    placeholder="Bruto masa"
+                    placeholder="Bruto masa (Mg)"
                     value={formik.values.brutoMass}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -158,6 +164,7 @@ const AddArticle = () => {
                 ) : null}
 
                 {/* Veleprodajna cena */}
+                <label htmlFor="wholesalePrice">Veleprodajna cena</label>
                 <input
                     name="wholesalePrice"
                     placeholder="Veleprodajna cena"
@@ -170,6 +177,7 @@ const AddArticle = () => {
                 ) : null}
 
                 {/* Izvor slike */}
+                <label htmlFor="imageSource">Izvor slike</label>
                 <input
                     name="imageSource"
                     placeholder="Izvor slike"
@@ -182,9 +190,10 @@ const AddArticle = () => {
                 ) : null}
 
                 {/* PDV */}
+                <label htmlFor="pdv">PDV</label>
                 <input
                     name="pdv"
-                    placeholder="PDV"
+                    placeholder="PDV (%)"
                     value={formik.values.pdv}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}

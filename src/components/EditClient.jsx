@@ -23,6 +23,7 @@ const EditClient = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
+      customerCode: client.customerCode || "",
       nameOfTheLegalEntity: client.nameOfTheLegalEntity || "",
       address: client.address || "",
       pib: client.pib || "",
@@ -40,9 +41,9 @@ const EditClient = () => {
         .matches(/^[0-9]+$/, 'Polje "PIB" mora sadržati samo brojeve.')
         .required('Polje "PIB" je obavezno.'),
       identificationNumber: Yup.string()
-        .length(9, 'Polje "Identifikacioni broj" mora imati tačno 9 brojeva.')
-        .matches(/^[0-9]+$/, 'Polje "Identifikacioni broj" mora sadržati samo brojeve.')
-        .required('Polje "Identifikacioni broj" je obavezno.'),
+        .length(8, 'Polje "Matični broj" mora imati tačno 8 brojeva.')
+        .matches(/^[0-9]+$/, 'Polje "Matični broj" mora sadržati samo brojeve.')
+        .required('Polje "Matični broj" je obavezno.'),
       contactPerson: Yup.string().required('Polje "Kontakt osoba" je obavezno.'),
       contactNumber: Yup.string().required('Polje "Kontakt broj" je obavezno.'),
       email: Yup.string().email('Nevažeća email adresa.').required('Polje "Email" je obavezno.'),
@@ -67,7 +68,20 @@ const EditClient = () => {
       <ToastContainer />
       <div className="form-group">
         <label>
-          Name of the Legal Entity :
+          Šifra Klijenta :
+          <input
+            type="text"
+            name="customerCode"
+            value={formik.values.customerCode}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.customerCode && formik.errors.customerCode ? (
+            <div className="error-message">{formik.errors.customerCode}</div>
+          ) : null}
+        </label>
+        <label>
+          Naziv Legalnog Entiteta :
           <input
             type="text"
             name="nameOfTheLegalEntity"
@@ -81,7 +95,7 @@ const EditClient = () => {
         </label>
 
         <label>
-          Address :
+          Adresa :
           <input
             type="text"
             name="address"
@@ -109,7 +123,7 @@ const EditClient = () => {
         </label>
 
         <label>
-          Identification Number :
+          Matični Broj :
           <input
             type="text"
             name="identificationNumber"
@@ -123,7 +137,7 @@ const EditClient = () => {
         </label>
 
         <label>
-          Contact Person :
+          Kontakt Osoba :
           <input
             type="text"
             name="contactPerson"
@@ -137,7 +151,7 @@ const EditClient = () => {
         </label>
 
         <label>
-          Contact Number :
+          Kontakt Broj :
           <input
             type="text"
             name="contactNumber"
@@ -165,7 +179,7 @@ const EditClient = () => {
         </label>
 
         <label>
-          Payment Currency :
+          Valuta Plaćanja :
           <input
             type="text"
             name="paymentCurrency"

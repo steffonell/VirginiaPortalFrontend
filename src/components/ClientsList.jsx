@@ -7,7 +7,7 @@ import logo from './../images/logo.jpg';
 
 const ClientsList = (props) => {
     const [clients, setClients] = useState([]);
-    const [searchName, setSearchName] = useState("");
+    const [clientCode, setClientCode] = useState("");
     const clientsRef = useRef();
     const [filter, setFilter] = useState('');
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ const ClientsList = (props) => {
 
     useEffect(() => {
         retrieveClients();
-    }, [filter]);
+    }, [filter, clientCode]);
 
     const onChangeFilter = (e) => {
         const filter = e.target.value;
@@ -28,7 +28,8 @@ const ClientsList = (props) => {
         ClientDataService.getAll()
             .then((response) => {
                 const filteredData = response.data.filter((entry) =>
-                    entry.nameOfTheLegalEntity.toLowerCase().includes(filter.toLowerCase())
+                    entry.nameOfTheLegalEntity.toLowerCase().includes(filter.toLowerCase()) ||
+                    (entry.customerCode && entry.customerCode.toLowerCase().includes(clientCode.toLowerCase()))
                 );
                 setClients(filteredData);
             })
@@ -37,20 +38,6 @@ const ClientsList = (props) => {
             });
     };
 
-    const onChangeSearchName = (e) => {
-        const searchName = e.target.value;
-        setSearchName(searchName);
-    };
-
-    const findByName = () => {
-        ClientDataService.findByName(searchName)
-            .then((response) => {
-                setClients(JSON.stringify(response.data));
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
 
     const editClient = (id) => {
         // Navigate to edit address page. 
@@ -79,6 +66,10 @@ const ClientsList = (props) => {
 
     const columns = useMemo(
         () => [
+            {
+                Header: "Šifra Klijenta",
+                accessor: "customerCode",
+            },
             {
                 Header: "Ime Legalnog Entiteta",
                 accessor: "nameOfTheLegalEntity",
@@ -154,6 +145,16 @@ const ClientsList = (props) => {
                         placeholder="Ime Klijenta"
                         value={filter}
                         onChange={onChangeFilter}
+                    />
+                </div>
+
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Šifra Klijenta"
+                        value={clientCode}
+                        onChange={e => setClientCode(e.target.value)}
                     />
                 </div>
             </div>

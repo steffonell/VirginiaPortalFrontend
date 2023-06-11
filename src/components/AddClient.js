@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import ClientDataService from '../services/CustomerService';
 import BrandService from "../services/BrandService";
 import '../styles/addClientStyle.css';
+import { getAllowedRoles } from './utils';
 
 const AddClient = () => {
 
@@ -12,6 +13,7 @@ const AddClient = () => {
     const [brands, setBrands] = useState([]);
     const [brandDiscounts, setBrandDiscounts] = useState([]);
     const [customerDeliveryAddresses, setCustomerDeliveryAddresses] = useState([]);
+    const [role, setRole] = useState([]);
 
     // Dobavi brendove koristeći BrandService
     useEffect(() => {
@@ -28,14 +30,21 @@ const AddClient = () => {
             });
     };
 
+    const addRole = (role) => {
+        setRole(prevRole => [...prevRole, role]);
+        window.confirm('Uspešno Dodata Privilegija!');
+    }
+
     const addDeliveryAddress = (deliveryAddress) => {
         setCustomerDeliveryAddresses(prevCustomerDeliveryAddresses => [...prevCustomerDeliveryAddresses, deliveryAddress]);
+        window.confirm('Uspešno Dodata Poslovna Jedinica!');
     }
 
     const addBrandDiscount = (brand, discount) => {
         setBrandDiscounts(prevBrandDiscounts => {
             return { ...prevBrandDiscounts, [brand]: discount };
         });
+        window.confirm('Uspešno Dodat Rabat!');
     }
 
     const validationSchema = Yup.object().shape({
@@ -46,13 +55,14 @@ const AddClient = () => {
             .matches(/^[0-9]+$/, 'Polje "PIB" mora sadržati samo brojeve.')
             .required('Polje "PIB" je obavezno.'),
         identificationNumber: Yup.string()
-            .length(9, 'Polje "Identifikacioni broj" mora imati tačno 9 brojeva.')
-            .matches(/^[0-9]+$/, 'Polje "Identifikacioni broj" mora sadržati samo brojeve.')
-            .required('Polje "Identifikacioni broj" je obavezno.'),
+            .length(8, 'Polje "Matični broj" mora imati tačno 8 brojeva.')
+            .matches(/^[0-9]+$/, 'Polje "Matični broj" mora sadržati samo brojeve.')
+            .required('Polje "Matični broj" je obavezno.'),
         contactPerson: Yup.string().required('Polje "Kontakt osoba" je obavezno.'),
         contactNumber: Yup.string().required('Polje "Kontakt broj" je obavezno.'),
         email: Yup.string().email('Nevažeća email adresa.').required('Polje "Email" je obavezno.'),
         paymentCurrency: Yup.string().required('Polje "Valuta plaćanja" je obavezno.'),
+        role: Yup.string().required('Izaberite privilegije novog klijenta.'),
     });
 
     const brandValidationSchema = Yup.object().shape({
@@ -87,7 +97,7 @@ const AddClient = () => {
         onSubmit: (values, { resetForm }) => {
             console.log(values);
             addDeliveryAddress(values);
-            setModalFormBrandDiscountVisible(false);
+            setModalFormDeliveryAddressVisible(false);
             resetForm();
             console.log(customerDeliveryAddresses);
         },
@@ -102,7 +112,7 @@ const AddClient = () => {
         onSubmit: (values, { resetForm }) => {
             console.log(values);
             addBrandDiscount(values.selectedBrand, values.brandDiscount);
-            setModalFormDeliveryAddressVisible(false);
+            setModalFormBrandDiscountVisible(false);
             resetForm();
             console.log(brandDiscounts);
         },
@@ -110,6 +120,7 @@ const AddClient = () => {
 
     const formik = useFormik({
         initialValues: {
+            customerCode: '',
             nameOfTheLegalEntity: '',
             address: '',
             pib: '',
@@ -118,11 +129,16 @@ const AddClient = () => {
             contactNumber: '',
             email: '',
             paymentCurrency: '',
+            role: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values, { resetForm }) => {
-            console.log(values);
-            ClientDataService.createCustomerWithDiscountAndAddresses(values, brandDiscounts, customerDeliveryAddresses)
+            // separate the clientData and role from the form values
+            const { role, ...clientData } = values;
+
+            console.log(clientData);
+            // You can use role and clientData separately in your request
+            ClientDataService.createCustomerWithDiscountAndAddresses(clientData, role, brandDiscounts, customerDeliveryAddresses)
                 .then((response) => {
                     console.log(response.data);
                     resetForm();
@@ -136,8 +152,19 @@ const AddClient = () => {
 
     return (
         <div className="submit-form">
-            <h2>Dodaj Klijenta</h2>
+            <h2>Forma Za Dodavanje Klijenta</h2>
             <form onSubmit={formik.handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="customerCode">Šifra Klijenta</label>
+                    <input
+                        type="text"
+                        name="customerCode"
+                        placeholder="Šifra Klijenta"
+                        value={formik.values.customerCode}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                </div>
                 <div className="form-group">
                     <label htmlFor="nameOfTheLegalEntity">Ime Legalnog Entiteta</label>
                     <input
@@ -152,6 +179,25 @@ const AddClient = () => {
                         <div className="error-message">{formik.errors.nameOfTheLegalEntity}</div>
                     ) : null}
                 </div>
+
+                <div className="form-group">
+                    <label htmlFor="role">Uloga</label>
+                    <select
+                        name="role"
+                        value={formik.values.role}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    >
+                        {getAllowedRoles().map((role, index) => (
+                            <option key={index} value={role}>
+                                {role}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                {formik.touched.brandName && formik.errors.brandName ? (
+                    <div className="error-message">{formik.errors.brandName}</div>
+                ) : null}
 
                 <div className="form-group">
                     <label htmlFor="address">Adresa</label>
@@ -184,11 +230,11 @@ const AddClient = () => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="identificationNumber">Identifikacioni Broj</label>
+                    <label htmlFor="identificationNumber">Matični Broj</label>
                     <input
                         type="text"
                         name="identificationNumber"
-                        placeholder="Identifikacioni Broj"
+                        placeholder="Matični Broj"
                         value={formik.values.identificationNumber}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}

@@ -226,7 +226,7 @@ const Basket = () => {
                 <strong>Ukupna cena :</strong> {formatNumber(totalCost)}
             </div>
             <select className="form-control adresa-slanja" onChange={handleDeliveryAddressChange}>
-                <option key="0" value="">Izaberite Adresu Slanja</option>
+                <option key="0" value="">Izaberite Adresu Dostave</option>
                 {loggedInClient && loggedInClient.deliveryAddressList && loggedInClient.deliveryAddressList.map((deliveryAddress, index) => {
                     return (
                         <option key={index + 1} value={JSON.stringify(deliveryAddress)}>
@@ -235,6 +235,11 @@ const Basket = () => {
                     );
                 })}
             </select>
+            {!deliveryAddress && Object.keys(missingItemQuantities).length === 0 && basketItems.length > 0 && (
+                <div className="alert alert-warning" role="alert">
+                    Morate izabrati <strong>adresu dostave</strong> kako bi aktivirali narudžbinu!
+                </div>
+            )}
             {Object.keys(missingItemQuantities).length !== 0 && (
                 <div className="alert alert-warning" role="alert">
                     {Object.entries(missingItemQuantities).map(([articleName, { article, missingQuantity }]) => (

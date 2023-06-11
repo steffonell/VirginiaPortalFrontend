@@ -21,32 +21,40 @@ const create = (client, brandName) => {
   });
 };
 
-const createCustomerWithDiscountAndAddresses = async (customer, brandDiscountArray, customerDeliveryAddresses) => {
-  // Convert array to object
-  console.log("customer:" + JSON.stringify(customer));
-  console.log("brandDiscountArray:" + JSON.stringify(brandDiscountArray));
-  console.log("customerDeliveryAddresses:" + JSON.stringify(customerDeliveryAddresses));
+const createCustomerWithDiscountAndAddresses = async (customer, role, brandDiscountArray, customerDeliveryAddresses) => {
+    // Convert array to object
+    console.log("customer:" + JSON.stringify(customer));
+    console.log("brandDiscountArray:" + JSON.stringify(brandDiscountArray));
+    console.log("customerDeliveryAddresses:" + JSON.stringify(customerDeliveryAddresses));
 
-/*   let brandDiscounts = brandDiscountArray.reduce((map, item) => {
-    map[item.selectedBrand] = parseFloat(item.brandDiscount);
-    return map;
-  }, {}); */
+    let brandDiscounts = brandDiscountArray.reduce((map, item) => {
+        map[item.selectedBrand] = parseFloat(item.brandDiscount);
+        return map;
+    }, {});
 
-  console.log("brandDiscounts:" + JSON.stringify(brandDiscountArray));
+    console.log("brandDiscounts:" + JSON.stringify(brandDiscounts));
 
-  try {
-    const response = await axiosInstance.post('klijenti/kreiraj', {
-      customer,
-      brandByDiscountMap: brandDiscountArray,
-      customerDeliveryAddresses,
-    });
-    console.log(response);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+    try {
+        const requestData = {
+            customer,
+            userRole: role,
+            customerDeliveryAddresses,
+        };
+        
+        // Only include brandDiscounts in the request data if it's not empty
+        if (Object.keys(brandDiscounts).length > 0) {
+            requestData.brandByDiscountMap = brandDiscounts;
+        }
+
+        const response = await axiosInstance.post('klijenti/kreiraj', requestData);
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 };
+
 
 const update = (id, data) => {
   return axiosInstance.put(`klijenti/${id}`, data);
