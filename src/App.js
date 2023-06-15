@@ -87,6 +87,7 @@ const App = () => {
           <Route path="/indentEntry" element={ProtectedComponent(AddIndentEntry, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
           <Route path="/indents/entries/:code" element={ProtectedComponent(IndentEntries, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />
           <Route path="/discount" element={ProtectedComponent(DiscountList, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/discount/:id" element={ProtectedComponent(DiscountList, userRole, ['ROLE_ADMIN'])} />
           <Route path="/discount/add" element={ProtectedComponent(AddCustomerDiscount, userRole, ['ROLE_ADMIN'])} />
           <Route path="/basket" element={ProtectedComponent(Basket, userRole,  ['ROLE_USER', 'ROLE_ADMIN'])} />
           <Route path="/forbidden" element={<Forbidden />} />

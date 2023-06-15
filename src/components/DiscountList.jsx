@@ -28,7 +28,6 @@ const DiscountDiscount = () => {
         console.log("pressed deleteDiscountEntry");
     };
 
-
     const columns = useMemo(
         () => [
             {
