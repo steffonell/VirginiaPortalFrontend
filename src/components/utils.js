@@ -12,6 +12,6 @@ export function formatDate(timestamp) {
 }
 
 export function getAllowedRoles() {
-  return ["ROLE_ADMIN", "ROLE_USER", "ROLE_MODERATOR", "ROLE_FAKTURISTA",];
+  return ["ROLE_ADMIN", "ROLE_USER", "ROLE_MODERATOR", "ROLE_FAKTURISTA", "ROLE_MAGACIONER"];
 }
 

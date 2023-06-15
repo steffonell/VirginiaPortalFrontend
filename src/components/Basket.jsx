@@ -42,8 +42,6 @@ const Basket = () => {
         return missingQuantities;
     };
 
-
-
     const confirmOrder = async () => {
         if (basketItems && basketItems.length > 0) {
             const itemsToCreate = basketItems
@@ -67,7 +65,6 @@ const Basket = () => {
         }
     };
 
-
     const brandDiscount = (brand) => {
         const brandName = brand.brandName;
         const discountForTheBrand = loggedInClient?.discounts?.find((item) => item.brand.brandName === brandName);
@@ -81,7 +78,6 @@ const Basket = () => {
     const articlePriceWithDiscount = (article) => {
         return (Number(article.retailPrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
     }
-
 
     const discountedPrice = (price, discount) => {
         return (Number(price) * (1 - Number(discount / 100)).toFixed(2));
