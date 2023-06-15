@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import ClientDataService from "../services/CustomerService";
 import { useTable } from "react-table";
-import { Navigate } from "react-router-dom";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import logo from './../images/logo.jpg';
 
 const ClientsList = (props) => {
@@ -40,6 +39,21 @@ const ClientsList = (props) => {
 
 
     const editClient = (id) => {
+        // Navigate to edit address page. 
+        // Make sure you have a route defined for this in your application.
+        console.log("ID of client" + id);
+        navigate(`/clients/edit/${id}`);
+    };
+
+    const clientDiscounts = (id) => {
+        // Navigate to edit address page. 
+        // Make sure you have a route defined for this in your application.
+        console.log("ID of client" + id);
+        navigate(`/clients/edit/${id}`);
+    };
+
+
+    const deliveryAddressesOfClient = (id) => {
         // Navigate to edit address page. 
         // Make sure you have a route defined for this in your application.
         console.log("ID of client" + id);
@@ -109,11 +123,19 @@ const ClientsList = (props) => {
                     const rowIdx = props.row.original.customer_id;
                     return (
                         <div class="d-flex justify-content-between max-width-150">
-                            <span onClick={() => editClient(rowIdx)} class="btn btn-secondary mx-1">
+                            <span onClick={() => editClient(rowIdx)} class="btn btn-secondary btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="far fa-edit mr-2"></i> Izmeni
                             </span>
 
-                            <span onClick={() => deleteClient(rowIdx)} className="btn btn-danger disabled mx-1">
+                            <span onClick={() => clientDiscounts(rowIdx)} className="btn btn-info btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                                <i className="fas fa-percent"></i> Rabat
+                            </span>
+
+                            <span onClick={() => deliveryAddressesOfClient(rowIdx)} className="btn btn-info btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                                <i className="fas fa-building"></i> Poslovne Jedinice
+                            </span>
+
+                            <span onClick={() => deleteClient(rowIdx)} className="btn btn-danger btn-sm disabled mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="fas fa-trash"></i> Izbrisi
                             </span>
                         </div>

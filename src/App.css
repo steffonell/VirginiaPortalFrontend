@@ -18,7 +18,9 @@
 
 .max-width-150 {
   max-width: 150px;
+  overflow: auto;
 }
+
 .home-container {
   display: flex;
   flex-direction: column;
