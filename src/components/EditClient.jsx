@@ -25,6 +25,7 @@ const EditClient = () => {
     initialValues: {
       customerCode: client.customerCode || "",
       nameOfTheLegalEntity: client.nameOfTheLegalEntity || "",
+      city: client.city || "",
       address: client.address || "",
       pib: client.pib || "",
       identificationNumber: client.identificationNumber || "",
@@ -35,6 +36,7 @@ const EditClient = () => {
     },
     validationSchema: Yup.object().shape({
       nameOfTheLegalEntity: Yup.string().required('Polje "Ime legalnog entiteta" je obavezno.'),
+      city: Yup.string().required('Polje "Grad" je obavezno.'),
       address: Yup.string().required('Polje "Adresa" je obavezno.'),
       pib: Yup.string()
         .length(9, 'Polje "PIB" mora imati tačno 9 brojeva.')
@@ -91,6 +93,20 @@ const EditClient = () => {
           />
           {formik.touched.nameOfTheLegalEntity && formik.errors.nameOfTheLegalEntity ? (
             <div className="error-message">{formik.errors.nameOfTheLegalEntity}</div>
+          ) : null}
+        </label>
+
+        <label>
+          Grad :
+          <input
+            type="text"
+            name="city"
+            value={formik.values.city}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.city && formik.errors.city ? (
+            <div className="error-message">{formik.errors.city}</div>
           ) : null}
         </label>
 

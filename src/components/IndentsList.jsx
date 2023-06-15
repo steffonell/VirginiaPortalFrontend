@@ -14,7 +14,7 @@ const IndentsList = (props) => {
     const indentsRef = useRef();
     const navigate = useNavigate();
     indentsRef.current = indents;
-    const { loggedInClient } = useContext(ApplicationContext);
+    const { loggedInClient, userRole } = useContext(ApplicationContext);
     const [searchCode, setSearchCode] = useState("");
     const [searchDateFrom, setSearchDateFrom] = useState("");
     const [searchDateTo, setSearchDateTo] = useState("");
@@ -123,10 +123,13 @@ const IndentsList = (props) => {
         const indentCode = indentsRef.current[rowIndex].code;
         IndentDataService.activateIndent(indentCode)
             .then((response) => {
+                console.log("Aktiviran indent:"+response);
                 const newIndents = [...indentsRef.current];
+                console.log("newIndents:"+newIndents);
                 newIndents[rowIndex] = response.data;
+                console.log("newIndents2:"+newIndents);
                 setIndents(newIndents);
-                setDisplayedIndents(indents);
+                setDisplayedIndents(newIndents);
                 window.confirm('Uspešno aktivirana porudžbina! [' + indentCode + ']');
             })
             .catch((e) => {
@@ -141,7 +144,7 @@ const IndentsList = (props) => {
                 const newIndents = [...indentsRef.current];
                 newIndents[rowIndex] = response.data;
                 setIndents(newIndents);
-                setDisplayedIndents(indents);
+                setDisplayedIndents(newIndents);
                 window.confirm('Uspešno isporučena porudžbina!! [' + indentCode + ']');
             })
             .catch((e) => {
@@ -182,8 +185,6 @@ const IndentsList = (props) => {
         value={searchDateFrom}
         onChange={(e) => setSearchDateFrom(e.target.value)}
     />
-
-
 
     const columns = useMemo(
         () => [
@@ -229,7 +230,7 @@ const IndentsList = (props) => {
                                 <i className="far fa-eye mr-2"></i> Pregled
                             </button>
 
-                            {props.row.values.indentStatus == "PENDING" ? (
+                            {props.row.values.indentStatus == "PENDING" && (userRole == "ROLE_FAKTURISTA" || userRole == "ROLE_ADMIN") ? (
                                 <React.Fragment>
                                     <button onClick={() => activateIndent(rowIdx)} className="btn btn-primary mx-1">
                                         <i className="fas fa-check"></i> Aktiviraj
@@ -237,7 +238,7 @@ const IndentsList = (props) => {
                                 </React.Fragment>
                             ) : null}
 
-                            {props.row.values.indentStatus == "ACTIVATED" ? (
+                            {props.row.values.indentStatus == "ACTIVATED" && (userRole == "ROLE_MAGACIONER" || userRole == "ROLE_ADMIN") ? (
                                 <button onClick={() => confirmDelivery(rowIdx)} className="btn btn-primary mx-1">
                                     <i className="fas fa-check"></i> Potvrdi Isporuku
                                 </button>

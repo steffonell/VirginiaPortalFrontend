@@ -49,6 +49,7 @@ const AddClient = () => {
 
     const validationSchema = Yup.object().shape({
         nameOfTheLegalEntity: Yup.string().required('Polje "Ime legalnog entiteta" je obavezno.'),
+        city: Yup.string().required('Polje "Grad" je obavezno.'),
         address: Yup.string().required('Polje "Adresa" je obavezno.'),
         pib: Yup.string()
             .length(9, 'Polje "PIB" mora imati tačno 9 brojeva.')
@@ -122,6 +123,7 @@ const AddClient = () => {
         initialValues: {
             customerCode: '',
             nameOfTheLegalEntity: '',
+            city: '',
             address: '',
             pib: '',
             identificationNumber: '',
@@ -198,6 +200,21 @@ const AddClient = () => {
                 {formik.touched.brandName && formik.errors.brandName ? (
                     <div className="error-message">{formik.errors.brandName}</div>
                 ) : null}
+
+                <div className="form-group">
+                    <label htmlFor="city">Grad</label>
+                    <input
+                        type="text"
+                        name="city"
+                        placeholder="Grad"
+                        value={formik.values.city}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.city && formik.errors.city ? (
+                        <div className="error-message">{formik.errors.city}</div>
+                    ) : null}
+                </div>
 
                 <div className="form-group">
                     <label htmlFor="address">Adresa</label>
