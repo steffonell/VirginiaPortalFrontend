@@ -175,7 +175,7 @@ const BrandsList = (props) => {
             </div>
 
             <div className="col-md-4">
-                <a href="/brands/add" className="btn btn-sm btn-primary">Add Brand</a>
+                <a href="/brands/add" className="btn btn-sm btn-primary">Dodaj Brend</a>
             </div>
             <div className="col-md-8">
                 <button className="btn btn-sm btn-danger" onClick={removeAllBrands}>

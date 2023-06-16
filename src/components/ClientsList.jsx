@@ -26,16 +26,19 @@ const ClientsList = (props) => {
     const retrieveClients = () => {
         ClientDataService.getAll()
             .then((response) => {
-                const filteredData = response.data.filter((entry) =>
-                    entry.nameOfTheLegalEntity.toLowerCase().includes(filter.toLowerCase()) ||
-                    (entry.customerCode && entry.customerCode.toLowerCase().includes(clientCode.toLowerCase()))
-                );
-                setClients(filteredData);
+                if (response && response.data) {
+                    const filteredData = response.data.filter((entry) =>
+                        entry.nameOfTheLegalEntity.toLowerCase().includes(filter.toLowerCase()) ||
+                        (entry.customerCode && entry.customerCode.toLowerCase().includes(clientCode.toLowerCase()))
+                    );
+                    setClients(filteredData);
+                }
             })
             .catch((e) => {
                 console.log(e);
             });
     };
+    
 
 
     const editClient = (id) => {
@@ -49,7 +52,7 @@ const ClientsList = (props) => {
         // Navigate to edit address page. 
         // Make sure you have a route defined for this in your application.
         console.log("ID of client" + id);
-        navigate(`/clients/edit/${id}`);
+        navigate(`/discount/${id}`);
     };
 
 
@@ -57,7 +60,7 @@ const ClientsList = (props) => {
         // Navigate to edit address page. 
         // Make sure you have a route defined for this in your application.
         console.log("ID of client" + id);
-        navigate(`/clients/edit/${id}`);
+        navigate(`/address/${id}`);
     };
 
 

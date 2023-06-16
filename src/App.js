@@ -31,6 +31,8 @@ import { eventEmitter } from '../src/components/apiService';
 import DeliveryAddressesList from "./components/DeliveryAddressList";
 import EditDeliveryAddress from "./components/EditDeliveryAddress";
 import EditClient from "./components/EditClient";
+import ClientDiscounts from "./components/ClientDiscounts";
+import ClientDeliveryAddresses from "./components/ClientDeliveryAddresses";
 
 const App = () => {
 
@@ -79,6 +81,7 @@ const App = () => {
           <Route path="/address" element={ProtectedComponent(DeliveryAddressesList, userRole, ['ROLE_ADMIN'])} />
           <Route path="/address/add" element={ProtectedComponent(AddDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
           <Route path="/address/edit/:id" element={ProtectedComponent(EditDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/address/:id" element={ProtectedComponent(ClientDeliveryAddresses, userRole, ['ROLE_ADMIN'])} />
           <Route path="/clients/add" element={ProtectedComponent(AddClient, userRole, ['ROLE_ADMIN'])} />
           <Route path="/clients/edit/:id" element={ProtectedComponent(EditClient, userRole, ['ROLE_ADMIN'])} />
           <Route path="/indents" element={ProtectedComponent(IndentsList, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />
@@ -87,7 +90,7 @@ const App = () => {
           <Route path="/indentEntry" element={ProtectedComponent(AddIndentEntry, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
           <Route path="/indents/entries/:code" element={ProtectedComponent(IndentEntries, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />
           <Route path="/discount" element={ProtectedComponent(DiscountList, userRole, ['ROLE_ADMIN'])} />
-          <Route path="/discount/:id" element={ProtectedComponent(DiscountList, userRole, ['ROLE_ADMIN'])} />
+          <Route path="/discount/:id" element={ProtectedComponent(ClientDiscounts, userRole, ['ROLE_ADMIN'])} />
           <Route path="/discount/add" element={ProtectedComponent(AddCustomerDiscount, userRole, ['ROLE_ADMIN'])} />
           <Route path="/basket" element={ProtectedComponent(Basket, userRole,  ['ROLE_USER', 'ROLE_ADMIN'])} />
           <Route path="/forbidden" element={<Forbidden />} />

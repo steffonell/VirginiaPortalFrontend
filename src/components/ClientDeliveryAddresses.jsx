@@ -1,40 +1,40 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
-import DiscountService from "../services/DiscountService";
+import DeliveryAddressService from "../services/DeliveryAddressService";
 import { useTable } from "react-table";
 
-const ClientDiscounts = () => {
+const ClientDeliveryAddresses = () => {
     const { id: clientID } = useParams();
-    const [discounts, setDiscounts] = useState([]);
+    const[deliveryAddresses, setDeliveryAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchClientDiscounts();
+        fetchClientDeliveryAddresses();
     }, [clientID]);
 
-    const fetchClientDiscounts = async () => {
+    const fetchClientDeliveryAddresses = async () => {
         try {
-            const response = await DiscountService.findClientsDiscounts(clientID);
-            if (response) {
+            const response = await DeliveryAddressService.findClientsDeliveryAddresses(clientID);
+            if(Array.isArray(response)) {
                 console.log('Component Response:', response); // Added for debugging
-                setDiscounts(response);
+                setDeliveryAddresses(response);
             } else {
-                console.log('No response received from the service.');
+                console.log('Response is not an array.', response);
             }
         } catch (error) {
-            console.error('An error occurred while fetching client discounts:', error);
+            console.error('An error occurred while fetching client DeliveryAddresss:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const editDiscount = (id) => {
+    const editDeliveryAddress = (id) => {
         console.log("ID of client" + id);
         navigate(`/clients/edit/${id}`);
     };
 
-    const deleteDiscount = (id) => {
+    const deleteDeliveryAddress = (id) => {
         console.log("ID of client" + id);
         navigate(`/clients/edit/${id}`);
     };
@@ -42,31 +42,53 @@ const ClientDiscounts = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "Brend",
-                accessor: "brand.brandName",
+                Header: "Klijent",
+                accessor: "customerNameOfTheLegalEntity",
             },
             {
-                Header: "Rabat",
-                accessor: "discount",
+                Header: "Naziv Poslovne Jedinice",
+                accessor: "name",
+            },
+            {
+                Header: "Grad",
+                accessor: "city",
+            },
+            {
+                Header: "Adresa",
+                accessor: "address",
+            },
+            {
+                Header: "Kontakt Osoba",
+                accessor: "contactPerson",
+            },
+            {
+                Header: "Kontakt Broj",
+                accessor: "contactNumber",
+            },
+            {
+                Header: "Email",
+                accessor: "email",
             },
             {
                 Header: "Akcije",
                 accessor: "actions",
                 Cell: (props) => {
-                    const rowIdx = props.row.id;
+                    const deliveryAddressID = props.row.original.delivery_address_id;
                     return (
-                        <div>
-                            <span onClick={() => editDiscount(rowIdx)}>
-                                <i className="far fa-edit action mr-2"></i>
+                        <div class="d-flex justify-content-between max-width-150">
+                            <span onClick={() => editDeliveryAddress(deliveryAddressID)} class="btn btn-secondary mx-1">
+                                <i className="far fa-edit mr-2"></i> Izmeni
                             </span>
 
-                            <span onClick={() => deleteDiscount(rowIdx)}>
-                                <i className="fas fa-trash action"></i>
+                            <span /* onClick={() => deleteAddress(deliveryAddressID)} */ className="btn btn-danger disabled mx-1">
+                                {/* Ne radi sa java strane brisanje, jos moram da provalim sto */}
+                                <i className="fas fa-trash"></i> Izbrisi
                             </span>
                         </div>
                     );
                 },
             },
+
         ],
         []
     );
@@ -79,7 +101,7 @@ const ClientDiscounts = () => {
         prepareRow,
     } = useTable({
         columns,
-        data: discounts,
+        data: deliveryAddresses,
     });
 
     if (loading) {
@@ -122,10 +144,10 @@ const ClientDiscounts = () => {
             </div>
 
             <div className="col-md-4">
-                <a href="/brands/add" className="btn btn-sm btn-primary">Dodaj Rabat</a>
+                <a href="/brands/add" className="btn btn-sm btn-primary">Dodaj Poslovnu Jedinicu</a>
             </div>
         </div>
     );
 };
 
-export default ClientDiscounts;
+export default ClientDeliveryAddresses;
