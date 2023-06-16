@@ -30,9 +30,9 @@ const createCustomerDiscount = async (customerId, brandName, discount) => {
   }
 };
 
-const findClientsDiscounts = async (customerId) => {
+const findClientsDiscounts = async () => {
   try {
-    const response = await axiosInstance.get(`rabat/${customerId}`);
+    const response = await axiosInstance.get(`rabat/client`);
     console.log('Service Response:', response.data); // Added for debugging
     return response.data;
   } catch (error) {

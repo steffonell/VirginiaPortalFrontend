@@ -9,9 +9,9 @@ const get = (id) => {
   return axiosInstance.get(`adrese/${id}`);
 };
 
-const findClientsDeliveryAddresses = async (customerId) => {
+const findClientsDeliveryAddresses = async () => {
   try {
-    const response = await axiosInstance.get(`adrese/client/${customerId}`);
+    const response = await axiosInstance.get(`adrese/client`);
     console.log('Service Response:', response.data); // Added for debugging
     return response.data;
   } catch (error) {
