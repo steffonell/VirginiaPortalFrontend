@@ -30,6 +30,18 @@ const createCustomerDiscount = async (customerId, brandName, discount) => {
   }
 };
 
+const findClientsDiscounts = async (customerId) => {
+  try {
+    const response = await axiosInstance.get(`rabat/${customerId}`);
+    console.log('Service Response:', response.data); // Added for debugging
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+
 const update = (id, data) => {
   return axiosInstance.put(`rabat/${id}`, data);
 };
@@ -50,6 +62,7 @@ const BrandService = {
   remove,
   removeAll,
   createCustomerDiscount,
+  findClientsDiscounts
 };
 
 export default BrandService;
