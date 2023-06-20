@@ -4,6 +4,7 @@ import DeliveryAddressService from "../services/DeliveryAddressService";
 import { useTable } from "react-table";
 
 const ClientDeliveryAddresses = () => {
+    
     const { id: clientID } = useParams();
     const[deliveryAddresses, setDeliveryAddresses] = useState([]);
     const [loading, setLoading] = useState(true);

@@ -30,7 +30,6 @@ export const ApplicationContextProvider = (props) => {
   };
 
   const initialState = loadStateFromLocalStorage();
-
   const [loggedInClient, setLoggedInClient] = useState(initialState.loggedInClient);
   const [basketItems, setBasketItems] = useState(initialState.basketItems);
   const [token, setToken] = useState(initialState.token);
@@ -61,6 +60,10 @@ export const ApplicationContextProvider = (props) => {
 
   const logout = () => {
     setAuthenticated(false);
+    setLoggedInClient({});
+    setBasketItems([]);
+    setToken(null);
+    setUserRole(null);
   }
 
   // kada nema autentifikacije da se brise kontekst
@@ -110,7 +113,7 @@ export const ApplicationContextProvider = (props) => {
     authenticated,
     setAuthenticated,
     userRole,
-    setUserRole, 
+    setUserRole,
     logout
   };
 

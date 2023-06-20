@@ -1,4 +1,16 @@
 /* NavbarComponent.css */
+@media (min-width: 768px) { /* Adjust this breakpoint as needed */
+  .nav-item.user-data.mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) { /* Adjust this breakpoint as needed */
+  .nav-item.user-data.desktop {
+    display: none;
+  }
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -79,3 +91,83 @@
     padding: 10px;
   }
 }
+
+.nav-item .dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.nav-item:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  display: block;
+}
+
+.nav-item-wrapper {
+  position: relative;
+}
+
+.button-secondary {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  margin-top: 5px;
+  padding: 0.375rem 0.75rem;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  color: #fff;
+  background-color: #56d46b;
+  border-color: #007bff;
+  text-decoration: none; /* Removes underline */
+}
+
+.button-secondary:hover {
+  color: #fff;
+  background-color: #1c6d23;
+  border-color: #004a99;
+}
+
+
+
+.button-primary {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  margin-top: 5px;
+  padding: 0.375rem 0.75rem;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  text-decoration: none; /* Removes underline */
+}
+
+.button-primary:hover {
+  color: #fff;
+  background-color: #0056b3;
+  border-color: #004a99;
+}
+
+

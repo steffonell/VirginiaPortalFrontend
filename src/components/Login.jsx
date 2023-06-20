@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ApplicationContext } from "./ApplicationContext";
-import ClientDataService from "../services/CustomerService";
 import axiosInstance, { setAuthToken } from "./apiService";
 import "./Login.css";
 
