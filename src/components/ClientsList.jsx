@@ -49,18 +49,16 @@ const ClientsList = (props) => {
     };
 
     const clientDiscounts = (id) => {
-        // Navigate to edit address page. 
-        // Make sure you have a route defined for this in your application.
-        console.log("ID of client" + id);
-        navigate(`/discount/${id}`);
+        navigate(`/discountsOfClient`, { state: { clientID: id } });
     };
-
+    
+/*     const clientDiscounts = (nameOfTheLegalEntity, city, address, pib, identificationNumber, email, customerCode) => {
+        // Pass the customer id to the discount page as state
+        navigate(`/discount`, { state: { nameOfTheLegalEntity: nameOfTheLegalEntity, city: city, address: address, pib: pib, identificationNumber: identificationNumber, email: email, customerCode: customerCode } });
+    }; */
 
     const deliveryAddressesOfClient = (id) => {
-        // Navigate to edit address page. 
-        // Make sure you have a route defined for this in your application.
-        console.log("ID of client" + id);
-        navigate(`/address/${id}`);
+        navigate(`/address`, { state: { clientID: id } });
     };
 
 
@@ -123,22 +121,22 @@ const ClientsList = (props) => {
                 Header: "Akcije",
                 accessor: "actions",
                 Cell: (props) => {
-                    const rowIdx = props.row.original.customer_id;
+                    const customerId = props.row.original.customer_id;
                     return (
                         <div class="d-flex justify-content-between max-width-150">
-                            <span onClick={() => editClient(rowIdx)} class="btn btn-secondary btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                            <span onClick={() => editClient(customerId)} class="btn btn-secondary btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="far fa-edit mr-2"></i> Izmeni
                             </span>
 
-                            <span onClick={() => clientDiscounts(rowIdx)} className="btn btn-info btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                            <span onClick={() => clientDiscounts(customerId)} className="btn btn-info btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="fas fa-percent"></i> Rabat
                             </span>
 
-                            <span onClick={() => deliveryAddressesOfClient(rowIdx)} className="btn btn-info btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                            <span onClick={() => deliveryAddressesOfClient(customerId)} className="btn btn-info btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="fas fa-building"></i> Poslovne Jedinice
                             </span>
 
-                            <span onClick={() => deleteClient(rowIdx)} className="btn btn-danger btn-sm disabled mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                            <span onClick={() => deleteClient(customerId)} className="btn btn-danger btn-sm disabled mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="fas fa-trash"></i> Izbrisi
                             </span>
                         </div>

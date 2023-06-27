@@ -20,6 +20,17 @@ const findClientsDeliveryAddresses = async () => {
   }
 };
 
+const findDeliveryAddressesOfSpecificClient = async (customerId) => {
+  try {
+    const response = await axiosInstance.get(`adrese/selectedClient/${customerId}`);
+    console.log('Service Response:', response.data); // Added for debugging
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 const create = (data, customerName) => {
   return axiosInstance.post("adrese", data, {
     params: {
@@ -49,6 +60,7 @@ const DeliveryAddressService = {
   update,
   remove,
   findClientsDeliveryAddresses,
+  findDeliveryAddressesOfSpecificClient,
   };
 
 export default DeliveryAddressService;

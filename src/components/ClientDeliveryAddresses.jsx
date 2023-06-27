@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DeliveryAddressService from "../services/DeliveryAddressService";
 import { useTable } from "react-table";
 
 const ClientDeliveryAddresses = () => {
-    
-    const { id: clientID } = useParams();
+    const location = useLocation();
+    const { clientID } = location.state || {};
     const[deliveryAddresses, setDeliveryAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -16,7 +16,7 @@ const ClientDeliveryAddresses = () => {
 
     const fetchClientDeliveryAddresses = async () => {
         try {
-            const response = await DeliveryAddressService.findClientsDeliveryAddresses(clientID);
+            const response = await DeliveryAddressService.findDeliveryAddressesOfSpecificClient(clientID);
             if(Array.isArray(response)) {
                 console.log('Component Response:', response); // Added for debugging
                 setDeliveryAddresses(response);
@@ -143,7 +143,6 @@ const ClientDeliveryAddresses = () => {
                     </tbody>
                 </table>
             </div>
-
             <div className="col-md-4">
                 <a href="/brands/add" className="btn btn-sm btn-primary">Dodaj Poslovnu Jedinicu</a>
             </div>
@@ -151,4 +150,4 @@ const ClientDeliveryAddresses = () => {
     );
 };
 
-export default ClientDeliveryAddresses;
+export default ClientDeliveryAddresses; 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import DiscountService from "../services/DiscountService";
 import { useTable } from "react-table";
 
 const ClientDiscounts = () => {
-    const { id: clientID } = useParams();
+    const location = useLocation();
+    const { clientID } = location.state || {};
     const [discounts, setDiscounts] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ const ClientDiscounts = () => {
 
     const fetchClientDiscounts = async () => {
         try {
-            const response = await DiscountService.findClientsDiscounts(clientID);
+            const response = await DiscountService.findDiscountsOfSpecificClient(clientID);
             if (response) {
                 console.log('Component Response:', response); // Added for debugging
                 setDiscounts(response);
