@@ -1,23 +1,37 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import DeliveryAddressService from "../services/DeliveryAddressService";
+import CustomerService from "../services/CustomerService";
 import { useTable } from "react-table";
 
 const ClientDeliveryAddresses = () => {
     const location = useLocation();
     const { clientID } = location.state || {};
-    const[deliveryAddresses, setDeliveryAddresses] = useState([]);
+    const [customer, setCustomer] = useState([]);
+    const [deliveryAddresses, setDeliveryAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchClientDeliveryAddresses();
+        retreiveClient(clientID);
     }, [clientID]);
+
+    const retreiveClient = (id) => {
+        CustomerService.get(id)
+            .then(response => {
+                setCustomer(response.data);
+                console.log(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
 
     const fetchClientDeliveryAddresses = async () => {
         try {
             const response = await DeliveryAddressService.findDeliveryAddressesOfSpecificClient(clientID);
-            if(Array.isArray(response)) {
+            if (Array.isArray(response)) {
                 console.log('Component Response:', response); // Added for debugging
                 setDeliveryAddresses(response);
             } else {
@@ -31,8 +45,8 @@ const ClientDeliveryAddresses = () => {
     };
 
     const editDeliveryAddress = (id) => {
-        console.log("ID of client" + id);
-        navigate(`/clients/edit/${id}`);
+        console.log("Fetched ADdress ID "+id);
+        navigate(`/editAddressOfSpecifiedClient`, { state: { deliveryAddressID: id, clientID } });
     };
 
     const deleteDeliveryAddress = (id) => {
@@ -112,6 +126,7 @@ const ClientDeliveryAddresses = () => {
     return (
         <div className="list row">
             <div className="col-md-12 list">
+                <h3>Poslovne Jedinice Klijenta <strong style={{ textDecoration: 'underline' }}>{customer.nameOfTheLegalEntity}</strong></h3>
                 <table
                     className="table table-striped table-bordered"
                     {...getTableProps()}

@@ -89,6 +89,7 @@ const AddArticle = () => {
                 <label htmlFor="code">Šifra Artikla</label>
                 <input
                     name="code"
+                    className='add-article-field'
                     placeholder="Šifra Artikla"
                     value={formik.values.code}
                     onChange={formik.handleChange}
@@ -97,11 +98,12 @@ const AddArticle = () => {
                 {formik.touched.code && formik.errors.code ? (
                     <div className="error-message">{formik.errors.code}</div>
                 ) : null}
-
+                <br></br>
                 {/* Naziv Artikla */}
                 <label htmlFor="name">Naziv Artikla</label>
                 <input
                     name="name"
+                    className='add-article-field'
                     placeholder="Naziv Artikla"
                     value={formik.values.name}
                     onChange={formik.handleChange}
@@ -110,11 +112,12 @@ const AddArticle = () => {
                 {formik.touched.name && formik.errors.name ? (
                     <div className="error-message">{formik.errors.name}</div>
                 ) : null}
-
+                <br></br>
                 {/* Jedinica mere */}
                 <label htmlFor="unitOfMeasurement">Jedinica mere</label>
                 <input
                     name="unitOfMeasurement"
+                    className='add-article-field'
                     placeholder="Jedinica mere"
                     value={formik.values.unitOfMeasurement}
                     onChange={formik.handleChange}
@@ -123,11 +126,12 @@ const AddArticle = () => {
                 {formik.touched.unitOfMeasurement && formik.errors.unitOfMeasurement ? (
                     <div className="error-message">{formik.errors.unitOfMeasurement}</div>
                 ) : null}
-
+                <br></br>
                 {/* Količina po transportnom paketu */}
                 <label htmlFor="quantityPerTransportPackage">Količina po transportnom paketu</label>
                 <input
                     name="quantityPerTransportPackage"
+                    className='add-article-field'
                     placeholder="Količina po transportnom paketu"
                     value={formik.values.quantityPerTransportPackage}
                     onChange={formik.handleChange}
@@ -136,11 +140,12 @@ const AddArticle = () => {
                 {formik.touched.quantityPerTransportPackage && formik.errors.quantityPerTransportPackage ? (
                     <div className="error-message">{formik.errors.quantityPerTransportPackage}</div>
                 ) : null}
-
+                <br></br>    
                 {/* Minimalna tražena količina */}
                 <label htmlFor="minimumQuantityDemand">Minimalna tražena količina</label>
                 <input
                     name="minimumQuantityDemand"
+                    className='add-article-field'
                     placeholder="Minimalna tražena količina"
                     value={formik.values.minimumQuantityDemand}
                     onChange={formik.handleChange}
@@ -149,11 +154,13 @@ const AddArticle = () => {
                 {formik.touched.minimumQuantityDemand && formik.errors.minimumQuantityDemand ? (
                     <div className="error-message">{formik.errors.minimumQuantityDemand}</div>
                 ) : null}
+                <br></br>
 
                 {/* Bruto masa */}
                 <label htmlFor="minimumQuantityDemand">Bruto masa</label>
                 <input
                     name="brutoMass"
+                    className='add-article-field'
                     placeholder="Bruto masa (Mg)"
                     value={formik.values.brutoMass}
                     onChange={formik.handleChange}
@@ -162,11 +169,13 @@ const AddArticle = () => {
                 {formik.touched.brutoMass && formik.errors.brutoMass ? (
                     <div className="error-message">{formik.errors.brutoMass}</div>
                 ) : null}
+                <br></br>
 
                 {/* Veleprodajna cena */}
                 <label htmlFor="wholesalePrice">Veleprodajna cena</label>
                 <input
                     name="wholesalePrice"
+                    className='add-article-field'
                     placeholder="Veleprodajna cena"
                     value={formik.values.wholesalePrice}
                     onChange={formik.handleChange}
@@ -175,11 +184,13 @@ const AddArticle = () => {
                 {formik.touched.wholesalePrice && formik.errors.wholesalePrice ? (
                     <div className="error-message">{formik.errors.wholesalePrice}</div>
                 ) : null}
+                <br></br>
 
                 {/* Izvor slike */}
                 <label htmlFor="imageSource">Izvor slike</label>
                 <input
                     name="imageSource"
+                    className='add-article-field'
                     placeholder="Izvor slike"
                     value={formik.values.imageSource}
                     onChange={formik.handleChange}
@@ -188,12 +199,14 @@ const AddArticle = () => {
                 {formik.touched.imageSource && formik.errors.imageSource ? (
                     <div className="error-message">{formik.errors.imageSource}</div>
                 ) : null}
+                <br></br>
 
                 {/* PDV */}
                 <label htmlFor="pdv">PDV</label>
                 <input
                     name="pdv"
                     placeholder="PDV (%)"
+                    className='add-article-field'
                     value={formik.values.pdv}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -201,13 +214,14 @@ const AddArticle = () => {
                 {formik.touched.pdv && formik.errors.pdv ? (
                     <div className="error-message">{formik.errors.pdv}</div>
                 ) : null}
+                <br></br>
 
                 {/* Naziv brenda */}
                 <div className="form-group">
                     <label htmlFor="brandName">Brend</label>
                     <select
                         name="brandName"
-                        className="form-control"
+                        className='add-article-field'
                         value={formik.values.brandName} // this is necessary for resetForm to work
                         onChange={handleBrandChange}
                     >
@@ -226,6 +240,7 @@ const AddArticle = () => {
                 {formik.touched.brandName && formik.errors.brandName ? (
                     <div className="error-message">{formik.errors.brandName}</div>
                 ) : null}
+                <br></br>
 
                 {/* Dugme za dodavanje */}
                 <button type="submit">Dodaj artikal</button>

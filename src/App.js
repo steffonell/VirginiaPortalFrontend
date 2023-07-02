@@ -6,7 +6,6 @@ import "@fortawesome/fontawesome-free/js/all.js";
 import "./App.css";
 import { ApplicationContext } from "./components/ApplicationContext";
 import Login from "./components/Login";
-import Forbidden from './components/Forbidden';
 import { eventEmitter } from '../src/components/apiService';
 import ProtectedRoutes from "./components/ProtectedRoutes";
 

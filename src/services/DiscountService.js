@@ -30,6 +30,43 @@ const createCustomerDiscount = async (customerId, brandName, discount) => {
   }
 };
 
+const updateCustomerDiscount = async (customerId, brandName, discount) => {
+  console.log("customerId:" + customerId);
+  console.log("brandName:" + brandName);
+  console.log("discount:" + discount);
+  try {
+    const response = await axiosInstance.put('rabat', {
+      customerId: Number(customerId),
+      brandName,
+      discount: Number(discount),
+    });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const deleteCustomerDiscount = async (customerId, brandName) => {
+  console.log("customerId:" + customerId);
+  console.log("brandName:" + brandName);
+  try {
+    const response = await axiosInstance.delete('rabat', {
+      data: {
+        customerId: Number(customerId),
+        brandName,
+        discount: Number(0),
+      },
+    });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 const findClientsDiscounts = async () => {
   try {
     const response = await axiosInstance.get(`rabat/client`);
@@ -74,7 +111,9 @@ const BrandService = {
   removeAll,
   createCustomerDiscount,
   findClientsDiscounts,
-  findDiscountsOfSpecificClient
+  findDiscountsOfSpecificClient,
+  updateCustomerDiscount,
+  deleteCustomerDiscount,
 };
 
 export default BrandService;

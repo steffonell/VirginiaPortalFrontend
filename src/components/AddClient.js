@@ -135,6 +135,7 @@ const AddClient = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values, { resetForm }) => {
+            console.log("PRESSED");
             // separate the clientData and role from the form values
             const { role, ...clientData } = values;
 

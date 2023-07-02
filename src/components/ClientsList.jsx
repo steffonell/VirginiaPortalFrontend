@@ -58,7 +58,7 @@ const ClientsList = (props) => {
     }; */
 
     const deliveryAddressesOfClient = (id) => {
-        navigate(`/address`, { state: { clientID: id } });
+        navigate(`/addressesOfClient`, { state: { clientID: id } });
     };
 
 

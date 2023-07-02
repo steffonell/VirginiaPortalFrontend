@@ -2,22 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import DeliveryAddressService from "../services/DeliveryAddressService";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const EditDeliveryAddress = () => {
+  const location = useLocation();
+  const { deliveryAddressID, clientID } = location.state || {};
   const [address, setAddress] = useState({});
-  const { id: deliveryAddressID } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch the address data when the component mounts
+    console.log("PROVIDED ADDRES ID " + deliveryAddressID);
     DeliveryAddressService.get(deliveryAddressID)
       .then(response => {
-        console.log("odgovovor: "+JSON.stringify(response.data));
+        console.log("odgovovor: " + JSON.stringify(response.data));
         setAddress(response.data)
-        console.log("Adresas : "+JSON.stringify(address));
+        console.log("Adresas : " + JSON.stringify(address));
       })
       .catch(e => console.log(e));
   }, []);
@@ -33,22 +35,22 @@ const EditDeliveryAddress = () => {
       email: address.email || "",
     },
     validationSchema: Yup.object({
-        name: Yup.string().required('Polje "Naziv Poslovne Jedinice" je obavezno.'),
-        city: Yup.string().required('Polje "Grad" je obavezno.'),
-        address: Yup.string().required('Polje "Adresa" je obavezno.'),
-        contactPerson: Yup.string(),
-        contactNumber: Yup.string()
-            .matches(/^[0-9]+$/, 'Polje "Rabat Brenda" mora sadržati samo brojeve.'),
-        email: Yup.string().email('Nevažeća email adresa.'),
+      name: Yup.string().required('Polje "Naziv Poslovne Jedinice" je obavezno.'),
+      city: Yup.string().required('Polje "Grad" je obavezno.'),
+      address: Yup.string().required('Polje "Adresa" je obavezno.'),
+      contactPerson: Yup.string(),
+      contactNumber: Yup.string()
+        .matches(/^[0-9]+$/, 'Polje "Rabat Brenda" mora sadržati samo brojeve.'),
+      email: Yup.string().email('Nevažeća email adresa.'),
     }),
     onSubmit: values => {
-      console.log("id "+deliveryAddressID);
-      console.log("values "+JSON.stringify(values));
+      console.log("id " + deliveryAddressID);
+      console.log("values " + JSON.stringify(values));
       DeliveryAddressService.update(deliveryAddressID, values)
         .then(response => {
           console.log(response.data);
           toast.success('Update successful!'); // Display success notification
-          navigate(`/address`);
+          navigate(`/addressesOfClient`, { state: { clientID } });
         })
         .catch(e => {
           console.log(e);
@@ -61,7 +63,7 @@ const EditDeliveryAddress = () => {
     <form onSubmit={formik.handleSubmit} className="submit-form">
       <ToastContainer />
       <div className="form-group">
-      <label>
+        <label>
           Name :
           <input
             type="text"
@@ -88,7 +90,7 @@ const EditDeliveryAddress = () => {
             <div className="error-message">{formik.errors.city}</div>
           ) : null}
         </label>
-  
+
         <label>
           Adresa :
           <input
@@ -102,7 +104,7 @@ const EditDeliveryAddress = () => {
             <div className="error-message">{formik.errors.address}</div>
           ) : null}
         </label>
-  
+
         <label>
           Kontakt Osoba :
           <input
@@ -116,7 +118,7 @@ const EditDeliveryAddress = () => {
             <div className="error-message">{formik.errors.contactPerson}</div>
           ) : null}
         </label>
-  
+
         <label>
           Kontakt Broj :
           <input
@@ -130,7 +132,7 @@ const EditDeliveryAddress = () => {
             <div className="error-message">{formik.errors.contactNumber}</div>
           ) : null}
         </label>
-  
+
         <label>
           Email :
           <input
@@ -147,7 +149,7 @@ const EditDeliveryAddress = () => {
       </div>
       <button type="submit">Azuriraj Poslovnu Jedinicu</button>
     </form>
-  );  
+  );
 };
 
 export default EditDeliveryAddress;
