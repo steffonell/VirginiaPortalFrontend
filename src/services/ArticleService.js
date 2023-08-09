@@ -4,6 +4,10 @@ const getAll = () => {
   return axiosInstance.get(`artikli`);
 };
 
+const getAllActiveArticles = () => {
+  return axiosInstance.get(`artikli/aktivni`);
+};
+
 const get = (id) => {
   return axiosInstance.get(`artikli/${id}`);
 };
@@ -38,6 +42,7 @@ const findByName = (articleName) => {
 
 const ArticleService = {
   getAll,
+  getAllActiveArticles,
   get,
   create,
   update,

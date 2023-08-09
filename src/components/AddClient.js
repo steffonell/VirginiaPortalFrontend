@@ -134,7 +134,11 @@ const AddClient = () => {
             role: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values, { resetForm }) => {
+        onSubmit: (values, { setSubmitting, resetForm }) => {
+            if (!formik.isValid) {
+                setSubmitting(false);
+                return;
+            }        
             console.log("PRESSED");
             // separate the clientData and role from the form values
             const { role, ...clientData } = values;
@@ -157,6 +161,8 @@ const AddClient = () => {
         <div className="submit-form">
             <h2>Forma Za Dodavanje Klijenta</h2>
             <form onSubmit={formik.handleSubmit}>
+            {/* <form onSubmit={(e) => { e.preventDefault(); console.log("Form Submitted!"); }}> */}
+            {/* <form onSubmit={handleFormSubmit}> */}
                 <div className="form-group">
                     <label htmlFor="customerCode">Šifra Klijenta</label>
                     <input
@@ -191,16 +197,17 @@ const AddClient = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                     >
+                        <option value="" disabled hidden>Odaberite ulogu</option> {/* This is the default empty option */}
                         {getAllowedRoles().map((role, index) => (
                             <option key={index} value={role}>
                                 {role}
                             </option>
                         ))}
                     </select>
+                    {formik.touched.role && formik.errors.role ? (
+                        <div className="error-message">{formik.errors.role}</div>
+                    ) : null}
                 </div>
-                {formik.touched.brandName && formik.errors.brandName ? (
-                    <div className="error-message">{formik.errors.brandName}</div>
-                ) : null}
 
                 <div className="form-group">
                     <label htmlFor="city">Grad</label>

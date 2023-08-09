@@ -18,7 +18,7 @@ const Login = () => {
         username,
         password,
       });
-
+  
       console.log('API response: %O', response.data);
       if (response.data.accessToken) {
         const { accessToken, customer, roles } = response.data;
@@ -26,22 +26,27 @@ const Login = () => {
         setAuthToken(accessToken);
         setUserRole(roles[0]);
         setAuthenticated(true);
-
+  
         if (roles[0] === "ROLE_FAKTURISTA" || roles[0] === "ROLE_MAGACIONER") {
           navigate("/indents");
         } else {
           setLoggedInClient(customer);
           navigate("/shop");
         }
-
       } else {
         setError("Netačni kredencijali");
       }
-    } catch (error) {
-      console.error("Greška prilikom prijavljivanja", error);
-      setError("Netačni kredencijali");
+    } catch (error) {      
+      // Check for bad request
+      if (error.response && error.response.status === 400) {
+        setError(error.response.data); // Set the error message from the API response
+      } else {
+        console.error("Greška prilikom prijavljivanja", error);
+        setError("Greška prilikom prijavljivanja");
+      }
     }
   };
+  
 
   return (
     <div className="login-container">

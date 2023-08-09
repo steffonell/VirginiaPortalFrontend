@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import ArticleDataService from "../services/ArticleService";
-import ClientDataService from "../services/CustomerService";
 import logo from "./../images/logo.jpg";
 import { ApplicationContext } from "./ApplicationContext";
 import './ShopComponent.css';
-import { setAuthToken } from "../components/apiService";
 const images = require.context("./../images/", true);
 
 const ShopComponent = (props) => {
   const [articles, setArticles] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState('');
   const { loggedInClient, setLoggedInClient, addOrUpdateBasketItem } = useContext(ApplicationContext);
   const [quantities, setQuantities] = useState({});
 
@@ -114,7 +112,7 @@ const ShopComponent = (props) => {
 
   return (
     <div className="d-flex shop-main-container">
-      <div class="filter-container">
+      <div className="filter-container">
         <div className="brand-filter">
           <h5>Filtriranje po brendu</h5>
           <select

@@ -123,8 +123,8 @@ const ClientsList = (props) => {
                 Cell: (props) => {
                     const customerId = props.row.original.customer_id;
                     return (
-                        <div class="d-flex justify-content-between max-width-150">
-                            <span onClick={() => editClient(customerId)} class="btn btn-secondary btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                        <div className="d-flex justify-content-between max-width-150">
+                            <span onClick={() => editClient(customerId)} className="btn btn-secondary btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="far fa-edit mr-2"></i> Izmeni
                             </span>
 
