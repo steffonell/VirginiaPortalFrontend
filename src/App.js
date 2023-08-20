@@ -8,6 +8,7 @@ import { ApplicationContext } from "./components/ApplicationContext";
 import Login from "./components/Login";
 import { eventEmitter } from '../src/components/apiService';
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import './index.css';  // Or whatever you named the output file
 
 const App = () => {
 

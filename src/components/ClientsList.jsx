@@ -1,29 +1,21 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import ClientDataService from "../services/CustomerService";
 import { useTable } from "react-table";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import logo from './../images/logo.jpg';
 
 const ClientsList = (props) => {
     const [clients, setClients] = useState([]);
+    const [cachedClients, setCachedClients] = useState([]);
     const [clientCode, setClientCode] = useState("");
+    const [clientName, setClientName] = useState("");
     const clientsRef = useRef();
     const [filter, setFilter] = useState('');
     const navigate = useNavigate();
 
     clientsRef.current = clients;
 
-
-    useEffect(() => {
-        retrieveClients();
-    }, [filter, clientCode]);
-
-    const onChangeFilter = (e) => {
-        const filter = e.target.value;
-        setFilter(filter);
-    };
-
-    const retrieveClients = () => {
+    const retrieveClients = useCallback(() => {
         ClientDataService.getAll()
             .then((response) => {
                 if (response && response.data) {
@@ -37,32 +29,50 @@ const ClientsList = (props) => {
             .catch((e) => {
                 console.log(e);
             });
-    };
-    
+    }, [filter, clientCode]);
 
+    useEffect(() => {
+        // Fetch all clients once on component mount
+        ClientDataService.getAll()
+            .then((response) => {
+                if (response && response.data) {
+                    setCachedClients(response.data);
+                    setClients(response.data);  // Initially display all clients
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }, []);
 
-    const editClient = (id) => {
-        // Navigate to edit address page. 
-        // Make sure you have a route defined for this in your application.
+    const filterClientsBasedOnCriteria = useCallback(() => {
+
+        const filteredData = cachedClients.filter((entry) =>
+            (entry.nameOfTheLegalEntity && entry.nameOfTheLegalEntity.toLowerCase().includes(filter.toLowerCase())) ||
+            (entry.customerCode && entry.customerCode.toLowerCase().includes(clientCode.toLowerCase()))
+        );
+        setClients(filteredData);
+    }, [cachedClients, filter, clientCode]);
+
+    const onChangeFilter = useCallback((e) => {
+        const filterValue = e.target.value;
+        setFilter(filterValue);
+    }, []);
+
+    const editClient = useCallback((id) => {
         console.log("ID of client" + id);
         navigate(`/clients/edit/${id}`);
-    };
+    }, [navigate]);
 
-    const clientDiscounts = (id) => {
+    const clientDiscounts = useCallback((id) => {
         navigate(`/discountsOfClient`, { state: { clientID: id } });
-    };
-    
-/*     const clientDiscounts = (nameOfTheLegalEntity, city, address, pib, identificationNumber, email, customerCode) => {
-        // Pass the customer id to the discount page as state
-        navigate(`/discount`, { state: { nameOfTheLegalEntity: nameOfTheLegalEntity, city: city, address: address, pib: pib, identificationNumber: identificationNumber, email: email, customerCode: customerCode } });
-    }; */
+    }, [navigate]);
 
-    const deliveryAddressesOfClient = (id) => {
+    const deliveryAddressesOfClient = useCallback((id) => {
         navigate(`/addressesOfClient`, { state: { clientID: id } });
-    };
+    }, [navigate]);
 
-
-    const deleteClient = (rowIndex) => {
+    const deleteClient = useCallback((rowIndex) => {
         const id = clientsRef.current[rowIndex].id;
 
         ClientDataService.remove(id)
@@ -77,7 +87,7 @@ const ClientsList = (props) => {
             .catch((e) => {
                 console.log(e);
             });
-    };
+    }, [clientsRef, setClients]);
 
     const columns = useMemo(
         () => [
@@ -159,38 +169,34 @@ const ClientsList = (props) => {
     });
 
     return (
-        <div className="list row">
-            <div className="col-md-8">
-                <div className="input-group mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Ime Klijenta"
-                        value={filter}
-                        onChange={onChangeFilter}
-                    />
-                </div>
-
-                <div className="input-group mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Šifra Klijenta"
-                        value={clientCode}
-                        onChange={e => setClientCode(e.target.value)}
-                    />
-                </div>
+        <div className="container mx-auto p-6">
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+                <input
+                    type="text"
+                    className="flex-1 p-2 border rounded-md"
+                    placeholder="Ime Klijenta"
+                    value={clientName}
+                    onChange={e => setClientName(e.target.value)}
+                />
+                <input
+                    type="text"
+                    className="flex-1 p-2 border rounded-md"
+                    placeholder="Šifra Klijenta"
+                    value={clientCode}
+                    onChange={e => setClientCode(e.target.value)}
+                />
+                <button onClick={filterClientsBasedOnCriteria} className="bg-blue-500 text-white p-2 rounded-md">
+                    Pretraga
+                </button>
             </div>
-            <div className="col-md-12 list">
-                <table
-                    className="table table-striped table-bordered"
-                    {...getTableProps()}
-                >
+
+            <div className="overflow-x-auto bg-white rounded-lg shadow">
+                <table className="min-w-full">
                     <thead>
                         {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
+                            <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-300">
                                 {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                                    <th {...column.getHeaderProps()} className="p-2 border">{column.render("Header")}</th>
                                 ))}
                             </tr>
                         ))}
@@ -199,18 +205,16 @@ const ClientsList = (props) => {
                         {rows.map((row, i) => {
                             prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()}>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>
-                                                {cell.column.id === "imageSource" ? (
-                                                    <img src={logo} alt="Logo" />
-                                                ) : (
-                                                    cell.render("Cell")
-                                                )}
-                                            </td>
-                                        );
-                                    })}
+                                <tr {...row.getRowProps()} className="hover:bg-gray-100">
+                                    {row.cells.map((cell) => (
+                                        <td {...cell.getCellProps()} className="p-2 border">
+                                            {cell.column.id === "imageSource" ? (
+                                                <img src={logo} alt="Logo" className="w-6 h-6" />
+                                            ) : (
+                                                cell.render("Cell")
+                                            )}
+                                        </td>
+                                    ))}
                                 </tr>
                             );
                         })}
@@ -218,13 +222,16 @@ const ClientsList = (props) => {
                 </table>
             </div>
 
-            <div className="col-md-4">
-                <a href="/clients/add" className="btn btn-sm btn-primary">Dodaj Klijenta</a>
+            <div className="mt-4">
+                <Link
+                    to="/clients/add"
+                    className="inline-block bg-blue-600 hover:bg-blue-700 text-black py-2 px-4 rounded-md transition duration-200 ease-in-out shadow-md"
+                >
+                    Dodaj Klijenta
+                </Link>
             </div>
         </div>
     );
 };
-
-{/* <img src={cell.value} alt="Client" /> */ }
 
 export default ClientsList;
