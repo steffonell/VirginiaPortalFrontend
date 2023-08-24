@@ -159,7 +159,7 @@ const ClientDeliveryAddresses = () => {
                 </table>
             </div>
             <div className="col-md-4">
-                <a href="/brands/add" className="btn btn-sm btn-primary">Dodaj Poslovnu Jedinicu</a>
+                <a href="/address/add" className="btn btn-sm btn-primary">Dodaj Poslovnu Jedinicu</a>
             </div>
         </div>
     );
