@@ -31,6 +31,54 @@ const findDeliveryAddressesOfSpecificClient = async (customerId) => {
   }
 };
 
+const createCustomerWithDiscountAndAddresses = async (customer, role, brandDiscountArray, customerDeliveryAddresses) => {
+  // Convert array to object
+  let brandDiscounts = {};
+  
+  if (typeof brandDiscountArray === 'object' && brandDiscountArray !== null) {
+      for (const [brand, discount] of Object.entries(brandDiscountArray)) {
+          brandDiscounts[brand] = parseFloat(discount);
+      }
+  }
+
+  try {
+      const requestData = {
+          customer,
+          userRole: role,
+          customerDeliveryAddresses,
+      };
+      
+      // Only include brandDiscounts in the request data if it's not empty
+      if (Object.keys(brandDiscounts).length > 0) {
+          requestData.brandByDiscountMap = brandDiscounts;
+      }
+
+      const response = await axiosInstance.post('klijenti/kreiraj', requestData);
+      console.log(response);
+      return response.data;
+  } catch (error) {
+      console.error(error);
+      return null;
+  }
+};
+
+const addDeliveryAddressForClient = async ( deliveryAddress,customerId) => {
+  console.log("1 Arghument : "+deliveryAddress);
+  console.log("2 Arghument : "+customerId);
+  try {
+    const requestData = {
+      deliveryAddressDTO: deliveryAddress,
+      customerId,
+    };
+    const response = await axiosInstance.post('adrese', requestData);
+    console.log(response);
+    return response.data;
+} catch (error) {
+    console.error(error);
+    return null;
+}
+};
+
 const create = (data, customerName) => {
   return axiosInstance.post("adrese", data, {
     params: {
@@ -61,6 +109,7 @@ const DeliveryAddressService = {
   remove,
   findClientsDeliveryAddresses,
   findDeliveryAddressesOfSpecificClient,
+  addDeliveryAddressForClient,
   };
 
 export default DeliveryAddressService;

@@ -23,19 +23,13 @@ const create = (client, brandName) => {
 
 const createCustomerWithDiscountAndAddresses = async (customer, role, brandDiscountArray, customerDeliveryAddresses) => {
     // Convert array to object
-    console.log("customer:" + JSON.stringify(customer));
-    console.log("brandDiscountArray:" + JSON.stringify(brandDiscountArray));
-    console.log("customerDeliveryAddresses:" + JSON.stringify(customerDeliveryAddresses));
-
     let brandDiscounts = {};
-
+    
     if (typeof brandDiscountArray === 'object' && brandDiscountArray !== null) {
         for (const [brand, discount] of Object.entries(brandDiscountArray)) {
             brandDiscounts[brand] = parseFloat(discount);
         }
     }
-
-    console.log("brandDiscounts:" + JSON.stringify(brandDiscounts));
 
     try {
         const requestData = {

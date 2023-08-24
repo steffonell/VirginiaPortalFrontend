@@ -45,12 +45,14 @@ const ClientDeliveryAddresses = () => {
     };
 
     const editDeliveryAddress = (id) => {
-        console.log("Fetched ADdress ID "+id);
         navigate(`/editAddressOfSpecifiedClient`, { state: { deliveryAddressID: id, clientID } });
     };
 
+    const addDeliveryAddress = () => {
+        navigate(`/addDeliveryAddressToSpecifiedClient`, { state: { clientID } });
+    }
+
     const deleteDeliveryAddress = (id) => {
-        console.log("ID of client" + id);
         navigate(`/clients/edit/${id}`);
     };
 
@@ -120,24 +122,23 @@ const ClientDeliveryAddresses = () => {
     });
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
     }
 
     return (
-        <div className="list row">
-            <div className="col-md-12 list">
-                <h3>Poslovne Jedinice Klijenta <strong style={{ textDecoration: 'underline' }}>{customer.nameOfTheLegalEntity}</strong></h3>
-                <table
-                    className="table table-striped table-bordered"
-                    {...getTableProps()}
-                >
+        <div className="container mx-auto p-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h3 className="text-xl leading-6 font-semibold text-gray-900 mb-4">
+                    Poslovne Jedinice Klijenta 
+                    <span className="text-blue-600 underline ml-2">{customer.nameOfTheLegalEntity}</span>
+                </h3>
+                <div className="overflow-x-auto bg-white rounded-lg shadow">
+                <table className="min-w-full">
                     <thead>
                         {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
+                            <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-300">
                                 {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()}>
-                                        {column.render("Header")}
-                                    </th>
+                                    <th {...column.getHeaderProps()} className="p-2 border">{column.render("Header")}</th>
                                 ))}
                             </tr>
                         ))}
@@ -146,23 +147,24 @@ const ClientDeliveryAddresses = () => {
                         {rows.map((row, i) => {
                             prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()}>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
+                                <tr {...row.getRowProps()} className="hover:bg-gray-100">
+                                    {row.cells.map((cell) => (
+                                        <td {...cell.getCellProps()} className="p-2 border">
+                                            {cell.render("Cell")}
+                                        </td>
+                                    ))}
                                 </tr>
                             );
                         })}
                     </tbody>
                 </table>
             </div>
-            <div className="col-md-4">
-                <a href="/address/add" className="btn btn-sm btn-primary">Dodaj Poslovnu Jedinicu</a>
+                <button onClick={() => addDeliveryAddress()} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                    <i className="far fa-edit mr-2"></i> Dodaj Poslovnu Jedinicu
+                </button>
             </div>
         </div>
     );
 };
 
-export default ClientDeliveryAddresses; 
+export default ClientDeliveryAddresses;

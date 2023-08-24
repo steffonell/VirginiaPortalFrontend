@@ -26,6 +26,7 @@ import ClientDeliveryAddresses from "./ClientDeliveryAddresses";
 import ShopComponent from "./ShopComponent";
 import Forbidden from "./Forbidden";
 import ChangePasswordForm from "./ChangePasswordForm";
+import AddClientDeliveryAddress from "./AddClientDeliveryAddress";
 
 const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
     return (
@@ -49,6 +50,7 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
                     <Route path="/address/:id" element={ProtectedComponent(ClientDeliveryAddresses, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/clients/add" element={ProtectedComponent(AddClient, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/editAddressOfSpecifiedClient" element={ProtectedComponent(EditDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
+                    <Route path="/addDeliveryAddressToSpecifiedClient" element={ProtectedComponent(AddClientDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/indents" element={ProtectedComponent(IndentsList, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />
                     <Route path="/change-password" element={ProtectedComponent(ChangePasswordForm, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />
                     <Route path="/indents/add" element={ProtectedComponent(AddIndent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />

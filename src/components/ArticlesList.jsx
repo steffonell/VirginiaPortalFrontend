@@ -184,59 +184,65 @@ const ArticlesList = (props) => {
 
     return (
         <div className="table-responsive table-striped table-bordered">
-            <table
-                className="table"
-                {...getTableProps()}
-            >
-                <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    <div>
-                                        {column.render("Header")}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? " 🔽"
-                                                    : " 🔼"
-                                                : ""}
-                                        </span>
-                                    </div>
-                                    <div>{column.canFilter ? column.render("Filter") : null}</div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>
-                                            {cell.column.id === "imageSource" ? (
-                                                <img src={logo} alt="Logo" />
-                                            ) : (
-                                                cell.column.id === "wholesalePrice" || cell.column.id === "retailPrice" || cell.column.id === "pdv" ? (
-                                                    cell.render("Cell")
-                                                ) : (
-                                                    cell.value
-                                                )
-                                            )}
-                                        </td>
-                                    );
-                                })}
+            <div className="mx-auto my-4 p-4 bg-white shadow rounded" style={{ maxWidth: "80%" }}>
+                <table
+                    className="table"
+                    {...getTableProps()}
+                >
+                    <thead className="bg-gray-50">
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map((column) => (
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <div>
+                                            {column.render("Header")}
+                                            <span>
+                                                {column.isSorted
+                                                    ? column.isSortedDesc
+                                                        ? " 🔽"
+                                                        : " 🔼"
+                                                    : ""}
+                                            </span>
+                                        </div>
+                                        <div>{column.canFilter ? column.render("Filter") : null}</div>
+                                    </th>
+                                ))}
                             </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-
-            <div className="col-md-4">
-                <a href="/articles/add" className="btn btn-sm btn-primary">Dodaj Artikal</a>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td className="px-6 py-3 whitespace-nowrap" {...cell.getCellProps()}>
+                                                {cell.column.id === "imageSource" ? (
+                                                    <img src={logo} alt="Logo" />
+                                                ) : (
+                                                    cell.column.id === "wholesalePrice" || cell.column.id === "retailPrice" || cell.column.id === "pdv" ? (
+                                                        cell.render("Cell")
+                                                    ) : (
+                                                        cell.value
+                                                    )
+                                                )}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+            <div className="mt-4">
+                <Link
+                    to="/articles/add"
+                    className="inline-block bg-blue-600 hover:bg-blue-700 text-green py-2 px-4 rounded-md transition duration-200 ease-in-out shadow-md"
+                >
+                    Dodaj Artikal
+                </Link>
             </div>
         </div>
     );

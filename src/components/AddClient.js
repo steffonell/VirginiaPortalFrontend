@@ -161,8 +161,6 @@ const AddClient = () => {
         <div className="submit-form">
             <h2>Forma Za Dodavanje Klijenta</h2>
             <form onSubmit={formik.handleSubmit}>
-            {/* <form onSubmit={(e) => { e.preventDefault(); console.log("Form Submitted!"); }}> */}
-            {/* <form onSubmit={handleFormSubmit}> */}
                 <div className="form-group">
                     <label htmlFor="customerCode">Šifra Klijenta</label>
                     <input

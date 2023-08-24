@@ -170,7 +170,7 @@ const ClientsList = (props) => {
 
     return (
         <div className="container mx-auto p-6">
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
+            <div className="container mx-auto p-6">
                 <input
                     type="text"
                     className="flex-1 p-2 border rounded-md"
@@ -190,7 +190,7 @@ const ClientsList = (props) => {
                 </button>
             </div>
 
-            <div className="overflow-x-auto bg-white rounded-lg shadow">
+            <div className="table-responsive table-striped table-bordered">
                 <table className="min-w-full">
                     <thead>
                         {headerGroups.map((headerGroup) => (
@@ -225,7 +225,7 @@ const ClientsList = (props) => {
             <div className="mt-4">
                 <Link
                     to="/clients/add"
-                    className="inline-block bg-blue-600 hover:bg-blue-700 text-black py-2 px-4 rounded-md transition duration-200 ease-in-out shadow-md"
+                    className="inline-block bg-blue-600 hover:bg-blue-700 text-green py-2 px-4 rounded-md transition duration-200 ease-in-out shadow-md"
                 >
                     Dodaj Klijenta
                 </Link>
