@@ -344,7 +344,7 @@ const AddClient = () => {
                         <form onSubmit={deliveryAddressFormik.handleSubmit} className="submit-form">
                             <div className="form-group">
                                 <label>
-                                    Name :
+                                    Naziv poslovne jedinice :
                                     <input
                                         type="text"
                                         name="name"
