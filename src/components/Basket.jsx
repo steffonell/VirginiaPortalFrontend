@@ -141,7 +141,7 @@ const Basket = () => {
     const allItemsHaveZeroQuantity = basketItems.every((item) => item.quantity === 0);
 
     return (
-        <div className="basket-container">
+        <div className="container mx-auto p-6">
             <h3>Korpa</h3>
             <table className="table table-responsive table-striped table-bordered table-margin">
                 <thead>

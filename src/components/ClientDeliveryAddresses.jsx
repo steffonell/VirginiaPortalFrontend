@@ -130,7 +130,7 @@ const ClientDeliveryAddresses = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 className="text-xl leading-6 font-semibold text-gray-900 mb-4">
                     Poslovne Jedinice Klijenta 
-                    <span className="text-blue-600 underline ml-2">{customer.nameOfTheLegalEntity}</span>
+                    <span className="font-bold underline ml-2">{customer.nameOfTheLegalEntity}</span>
                 </h3>
                 <div className="overflow-x-auto bg-white rounded-lg shadow">
                 <table className="min-w-full">
