@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
-import axiosInstance from './apiService';
 import * as Yup from 'yup';
 import '../styles/addArticleStyle.css';
 import BrandService from "../services/BrandService";

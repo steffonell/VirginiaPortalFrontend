@@ -13,7 +13,6 @@ const AddClient = () => {
     const [brands, setBrands] = useState([]);
     const [brandDiscounts, setBrandDiscounts] = useState([]);
     const [customerDeliveryAddresses, setCustomerDeliveryAddresses] = useState([]);
-    const [role, setRole] = useState([]);
 
     // Dobavi brendove koristeći BrandService
     useEffect(() => {
@@ -29,11 +28,6 @@ const AddClient = () => {
                 console.log(e);
             });
     };
-
-    const addRole = (role) => {
-        setRole(prevRole => [...prevRole, role]);
-        window.confirm('Uspešno Dodata Privilegija!');
-    }
 
     const addDeliveryAddress = (deliveryAddress) => {
         setCustomerDeliveryAddresses(prevCustomerDeliveryAddresses => [...prevCustomerDeliveryAddresses, deliveryAddress]);

@@ -126,7 +126,7 @@ const BrandsList = (props) => {
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="Search by name"
+                        placeholder="Ime Brenda"
                         value={searchName}
                         onChange={onChangeSearchName}
                     />
@@ -136,7 +136,7 @@ const BrandsList = (props) => {
                             type="button"
                             onClick={findByName}
                         >
-                            Search
+                            Pretraga
                         </button>
                     </div>
                 </div>

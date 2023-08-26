@@ -52,18 +52,6 @@ const AddCustomerDiscount = () => {
         var customerId = selectedCustomer.customer_id;
         var brandName = selectedBrand.brandName;
         var discount = customerDiscount.discount;
-        console.log(customerId);
-        console.log(brandName);
-        console.log(discount);
-        var data = {
- /*            customer: selectedCustomer,
-            brand: selectedBrand,
-            discount: customerDiscount.discount */
-            customerId: selectedCustomer.customer_id,
-            brandName: selectedBrand.brandName,
-            discount: customerDiscount.discount
-        };
-
         DiscountDataService.createCustomerDiscount(customerId, brandName, discount)
             .then(response => {
                 setCustomerDiscount({

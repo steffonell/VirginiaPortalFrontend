@@ -51,37 +51,8 @@ const IndentsList = (props) => {
         setDisplayedIndents(indentsRef.current);
     };
 
-
     const refreshList = () => {
         retrieveIndents();
-    };
-
-    const removeAllIndents = () => {
-        IndentDataService.removeAll()
-            .then((response) => {
-                console.log(response.data);
-                refreshList();
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
-    const findByName = () => {
-        IndentDataService.findByName(searchName)
-            .then((response) => {
-                setIndents(JSON.stringify(response.data));
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
-    const editIndent = (rowIndex) => {
-        console.log("pressed");
-        const id = indentsRef.current[rowIndex].id;
-        console.log(id);
-        <Link to={`/indents/${id}`} />
     };
 
     const deleteIndent = (rowIndex) => {
