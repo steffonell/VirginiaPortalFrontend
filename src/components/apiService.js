@@ -3,10 +3,9 @@ import EventEmitter from 'events';
 
 export const eventEmitter = new EventEmitter();
 
-/* const API_URL = "https://virginia-portal-backend.herokuapp.com/api/"; */
 
-/* const API_URL = "http://3.74.1.110:9191/api/"; */
-const API_URL = "http://localhost:9191/api/";
+const API_URL = "https://virdzinijaportal.com/api/auth/signin";
+/* const API_URL = "http://localhost:9191/api/"; */
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
