@@ -183,7 +183,7 @@ const ArticlesList = (props) => {
 
 
     return (
-        <div className="table-responsive table-striped table-bordered">
+        <div className="container mx-auto p-6">
             <div className="mx-auto my-4 p-4 bg-white shadow rounded" style={{ maxWidth: "80%" }}>
                 <table
                     className="table"

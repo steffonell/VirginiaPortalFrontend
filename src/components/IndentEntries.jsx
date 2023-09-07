@@ -90,7 +90,7 @@ const IndentEntries = () => {
     });
 
     return (
-        <div className="list row">
+        <div className="container mx-auto p-6">
             <div className="col-md-12 list">
                 <table
                     className="table table-striped table-bordered"
