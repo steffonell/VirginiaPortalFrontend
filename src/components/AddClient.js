@@ -321,8 +321,9 @@ const AddClient = () => {
                     ) : null}
                 </div>
                 <div className="form-group">
-                    <button type="button" onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
-                    <button type="button" onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
+                <button type="button" className="custom-button" onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
+<button type="button" className="custom-button" onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
+
                 </div>
                 <button type="submit">Potvrdi Unos Klijenta</button>
             </form>

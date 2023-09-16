@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import ClientDataService from "../services/CustomerService";
 import { useTable } from "react-table";
@@ -15,7 +16,17 @@ const ClientsList = (props) => {
 
     clientsRef.current = clients;
 
-    const retrieveClients = useCallback(() => {
+    const handleSearch = () => {
+        const filteredData = cachedClients.filter((entry) => {
+            const nameMatches = clientName ? entry.nameOfTheLegalEntity.toLowerCase().includes(clientName.toLowerCase()) : true;
+            const codeMatches = clientCode ? (entry.customerCode && entry.customerCode.toLowerCase().includes(clientCode.toLowerCase())) : true;
+            return nameMatches && codeMatches;
+        });
+        setClients(filteredData);
+    };
+
+    useEffect(() => {
+        // Fetch all clients once on component mount
         ClientDataService.getAll()
             .then((response) => {
                 if (response && response.data) {
@@ -45,6 +56,7 @@ const ClientsList = (props) => {
             });
     }, []);
 
+    // ... rest of the code remains unchanged
     const filterClientsBasedOnCriteria = useCallback(() => {
 
         const filteredData = cachedClients.filter((entry) =>
@@ -133,7 +145,7 @@ const ClientsList = (props) => {
                 Cell: (props) => {
                     const customerId = props.row.original.customer_id;
                     return (
-                        <div className="d-flex justify-content-between max-width-150">
+                        <div className="d-flex justify-content-between max-width-500">
                             <span onClick={() => editClient(customerId)} className="btn btn-secondary btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="far fa-edit mr-2"></i> Izmeni
                             </span>
@@ -157,6 +169,12 @@ const ClientsList = (props) => {
         []
     );
 
+    const containerStyle = {
+    width: '100%',
+    margin: '0 10px 10px 10px'
+};
+
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -169,7 +187,7 @@ const ClientsList = (props) => {
     });
 
     return (
-        <div className="container mx-auto p-6">
+        <div className="w-full mx-4 my-4">
             <div className="container mx-auto p-6">
                 <input
                     type="text"
@@ -185,12 +203,11 @@ const ClientsList = (props) => {
                     value={clientCode}
                     onChange={e => setClientCode(e.target.value)}
                 />
-                <button onClick={filterClientsBasedOnCriteria} className="bg-blue-500 text-white p-2 rounded-md">
+                <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded-md">
                     Pretraga
                 </button>
             </div>
-
-            <div className="table-responsive table-striped table-bordered">
+            <div className="w-full mx-4 my-4 text-center">
                 <table className="min-w-full">
                     <thead>
                         {headerGroups.map((headerGroup) => (

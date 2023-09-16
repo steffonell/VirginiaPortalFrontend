@@ -183,17 +183,14 @@ const ArticlesList = (props) => {
 
 
     return (
-        <div className="container mx-auto p-6">
-            <div className="mx-auto my-4 p-4 bg-white shadow rounded" style={{ maxWidth: "80%" }}>
-                <table
-                    className="table"
-                    {...getTableProps()}
-                >
+        <div>
+            <div className="w-full mx-4 my-4 text-center">
+                <table className="min-w-full" {...getTableProps()}>
                     <thead className="bg-gray-50">
                         {headerGroups.map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-lg font-medium text-gray-500 uppercase tracking-wider border border-gray-300">
                                         <div>
                                             {column.render("Header")}
                                             <span>
@@ -217,9 +214,9 @@ const ArticlesList = (props) => {
                                 <tr {...row.getRowProps()}>
                                     {row.cells.map((cell) => {
                                         return (
-                                            <td className="px-6 py-3 whitespace-nowrap" {...cell.getCellProps()}>
+                                            <td className="px-6 py-3 border border-gray-300 whitespace-nowrap" {...cell.getCellProps()}>
                                                 {cell.column.id === "imageSource" ? (
-                                                    <img src={logo} alt="Logo" />
+                                                    <img src={logo} alt="Logo" className="w-6 h-6" />
                                                 ) : (
                                                     cell.column.id === "wholesalePrice" || cell.column.id === "retailPrice" || cell.column.id === "pdv" ? (
                                                         cell.render("Cell")
