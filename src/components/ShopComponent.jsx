@@ -61,7 +61,11 @@ const ShopComponent = (props) => {
   const handleBrandFilterChange = (brandName) => {
     setSelectedBrand(brandName);
     if (brandName) {
-      setFilteredArticles(articles.filter(article => article.brand.brandName === brandName));
+      if (brandName === "ACTIVE PHARMA") {
+        setFilteredArticles(articles.filter(article => article.brand.brandName.startsWith(brandName)));
+      } else {
+        setFilteredArticles(articles.filter(article => article.brand.brandName === brandName));
+      }
     } else {
       setFilteredArticles(articles);
     }
@@ -100,7 +104,7 @@ const ShopComponent = (props) => {
         return false;
       }
     };
-  
+
     if (checkFileExists(`./${code}.jpg`)) {
       return images(`./${code}.jpg`);
     } else if (checkFileExists(`./${code}.png`)) {
@@ -109,6 +113,8 @@ const ShopComponent = (props) => {
       return logo;
     }
   };
+
+  const addedBrands = new Set();
 
   return (
     <div className="d-flex shop-main-container">
@@ -121,11 +127,29 @@ const ShopComponent = (props) => {
             onChange={(e) => handleBrandFilterChange(e.target.value)}
           >
             <option value="">Svi brendovi</option>
-            {brands.map((brandName, index) => (
-              <option key={index} value={brandName}>
-                {brandName}
-              </option>
-            ))}
+            {brands.map((brandName, index) => {
+              if (brandName.toLowerCase().includes("active pharma")) {
+                if (addedBrands.has("ACTIVE PHARMA")) {
+                  // Skip adding the option if Active Pharma is already added
+                  return null;
+                } else {
+                  // Add Active Pharma to the set and return the option
+                  addedBrands.add("ACTIVE PHARMA");
+                  return (
+                    <option key={index} value="ACTIVE PHARMA">
+                      ACTIVE PHARMA
+                    </option>
+                  );
+                }
+              } else {
+                // For non-Active Pharma brands, add them normally
+                return (
+                  <option key={index} value={brandName}>
+                    {brandName}
+                  </option>
+                );
+              }
+            })}
           </select>
         </div>
       </div>
