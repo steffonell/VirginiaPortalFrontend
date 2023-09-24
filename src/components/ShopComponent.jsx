@@ -27,7 +27,7 @@ const ShopComponent = (props) => {
   }, []);
 
   const retrieveArticles = () => {
-    ArticleDataService.getAll()
+    ArticleDataService.getAllActiveArticles()
       .then((response) => {
         setArticles(response.data);
         setFilteredArticles(response.data);

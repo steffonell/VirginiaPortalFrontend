@@ -260,8 +260,8 @@ const IndentsList = (props) => {
     );
 
     return (
-        <div className="container mx-auto p-6">
-            <div className="mx-auto search-criteria">
+        <div className="w-full mx-4 my-4">
+          <div className="container mx-auto p-6">
                 <div className="col-12">
                     <div className="form-row justify-content-center">
                         <div className="col-12 col-md-4 my-1">

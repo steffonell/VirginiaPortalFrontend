@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import ArticleDataService from "../services/ArticleService";
 import { useTable, useSortBy } from "react-table";
 import { Navigate } from "react-router-dom";
-import { Outlet, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logo from './../images/logo.jpg';
 
 const ArticlesList = (props) => {
     const [articles, setArticles] = useState([]);
     const [searchName, setSearchName] = useState("");
     const articlesRef = useRef();
+    const navigate = useNavigate();
 
     articlesRef.current = articles;
 
@@ -57,30 +58,35 @@ const ArticlesList = (props) => {
             });
     };
 
-    const openArticle = (rowIndex) => {
-        console.log("pressed");
-        const id = articlesRef.current[rowIndex].id;
-        console.log(id);
-        <Link to={`/articles/${id}`} />
-        /*         <Navigate to="/articles/${id}" replace={true} />
-                <Link to={`contacts/${contact.id}`}/> */
-        /* props.history.push("/articles/" + id); */
-    };
+    const editArticle = useCallback((id) => {
+        console.log("ID of client" + id);
+        navigate(`/clients/edit/${id}`);
+    }, [navigate]);
 
-    const deleteArticle = (rowIndex) => {
+    const activateArticle = useCallback((id) => {
+        navigate(`/discountsOfClient`, { state: { clientID: id } });
+    }, [navigate]);
+
+    const deactivateArticle = useCallback((id) => {
+        navigate(`/discountsOfClient`, { state: { clientID: id } });
+    }, [navigate]);
+
+    const deleteArticle = useCallback((rowIndex) => {
         const id = articlesRef.current[rowIndex].id;
 
         ArticleDataService.remove(id)
             .then((response) => {
                 <Navigate to="/articles" replace={true} />
+
                 let newArticles = [...articlesRef.current];
                 newArticles.splice(rowIndex, 1);
+
                 setArticles(newArticles);
             })
             .catch((e) => {
                 console.log(e);
             });
-    };
+    }, [articlesRef, setArticles]);
 
     const columns = useMemo(
         () => [
@@ -146,13 +152,18 @@ const ArticlesList = (props) => {
                 Header: "Akcije",
                 accessor: "actions",
                 Cell: (props) => {
-                    const rowIdx = props.row.id;
+                    const customerId = props.row.original.article_id;
+                    console.log(props.row.original);
+                    console.log(customerId);
                     return (
-                        <div class="d-flex justify-content-between max-width-500">
-                            <span onClick={() => openArticle(rowIdx)} class="btn btn-secondary disabled mx-1">
+                        <div className="d-flex justify-content-between max-width-500">
+                            <button onClick={() => activateArticle(customerId)} className="btn btn-secondary btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="far fa-edit mr-2"></i> Izmeni
+                            </button>
+                            <span onClick={() => deactivateArticle(customerId)} className="btn btn-info btn-sm mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                                <i className="fas fa-percent"></i> Rabat
                             </span>
-                            <span onClick={() => deleteArticle(rowIdx)} className="btn btn-danger mx-1">
+                            <span onClick={() => deleteArticle(customerId)} className="btn btn-danger btn-sm disabled mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="fas fa-trash"></i> Izbrisi
                             </span>
                         </div>
