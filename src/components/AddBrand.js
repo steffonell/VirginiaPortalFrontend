@@ -18,7 +18,7 @@ const AddBrand = () => {
   });
 
   return (
-    <div className="max-w-xs mx-auto mt-10 p-4">
+    <div className="submit-form">
       <form onSubmit={formik.handleSubmit} className="space-y-4">
         <div>
           <input
@@ -27,7 +27,7 @@ const AddBrand = () => {
             value={formik.values.brandName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className={`w-full p-2 border rounded-md ${formik.touched.brandName && formik.errors.brandName ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full p-2 border rounded-md ${formik.touched.brandName && formik.errors.brandName ? 'border-red-500' : 'border-gray-300'} lg:max-w-[200px]`}
           />
           {formik.touched.brandName && formik.errors.brandName ? (
             <div className="text-red-500 mt-1">{formik.errors.brandName}</div>

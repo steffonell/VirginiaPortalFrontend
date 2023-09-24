@@ -29,15 +29,35 @@ const ShopComponent = (props) => {
   const retrieveArticles = () => {
     ArticleDataService.getAllActiveArticles()
       .then((response) => {
-        setArticles(response.data);
-        setFilteredArticles(response.data);
-        setBrands([...new Set(response.data.map((article) => article.brand.brandName))]);
+        const articles = response.data;
+  
+        // First, sort articles by ID treating ID as a number
+        articles.sort((a, b) => Number(a.id) - Number(b.id));
+  
+        // Next, group sorted articles by brandName
+        let groups = articles.reduce((acc, article) => {
+          const brandName = article.brand.brandName;
+          if (!acc[brandName]) {
+            acc[brandName] = [];
+          }
+          acc[brandName].push(article);
+          return acc;
+        }, {});
+  
+        // Flatten the grouped articles to get the final sorted list
+        const sortedArticles = Object.keys(groups)
+          .sort()
+          .flatMap(brandName => groups[brandName]);
+  
+        setArticles(sortedArticles);
+        setFilteredArticles(sortedArticles);
+        setBrands(Object.keys(groups).sort());
       })
       .catch((e) => {
         console.log(e);
       });
   };
-
+  
   const addToBasket = (article, quantity) => {
     if (quantity > 0) {
       addOrUpdateBasketItem(article, quantity);
