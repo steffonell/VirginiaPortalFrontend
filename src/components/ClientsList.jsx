@@ -170,9 +170,9 @@ const ClientsList = (props) => {
     );
 
     const containerStyle = {
-    width: '100%',
-    margin: '0 10px 10px 10px'
-};
+        width: '100%',
+        margin: '0 10px 10px 10px'
+    };
 
 
     const {
@@ -207,29 +207,31 @@ const ClientsList = (props) => {
                     Pretraga
                 </button>
             </div>
-            <div className="w-full mx-4 my-4 text-center">
-                <table className="min-w-full">
+            <div className="overflow-x-auto">
+                <table {...getTableProps()} className="min-w-full">
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-300">
-                                {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()} className="p-2 border">{column.render("Header")}</th>
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps()} className="px-4 py-2 border-b border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                        {column.render('Header')}
+                                    </th>
                                 ))}
                             </tr>
                         ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
+                        {rows.map(row => {
                             prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()} className="hover:bg-gray-100">
-                                    {row.cells.map((cell) => (
-                                        <td {...cell.getCellProps()} className="p-2 border">
-                                            {cell.column.id === "imageSource" ? (
-                                                <img src={logo} alt="Logo" className="w-6 h-6" />
-                                            ) : (
-                                                cell.render("Cell")
-                                            )}
+                                <tr {...row.getRowProps({
+                                    style: {
+                                        backgroundColor: row.original.isActive ? 'white' : '#FFD1D1',
+                                    }
+                                })}>
+                                    {row.cells.map(cell => (
+                                        <td {...cell.getCellProps()} className="px-4 py-2 border-b border-gray-300 text-sm leading-5 text-gray-900">
+                                            {cell.render('Cell')}
                                         </td>
                                     ))}
                                 </tr>
@@ -238,7 +240,6 @@ const ClientsList = (props) => {
                     </tbody>
                 </table>
             </div>
-
             <div className="mt-4">
                 <Link
                     to="/clients/add"

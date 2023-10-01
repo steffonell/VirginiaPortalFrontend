@@ -20,7 +20,25 @@ const create = (article, brandName) => {
   }).then(response => {
     return response.data;
   }).catch(error => {
-    throw new Error("Brand not found");
+    throw new Error(error);
+  });
+};
+
+const activateArticle = (id) => {
+  return axiosInstance.post("artikli/aktiviraj", id)  // send id directly
+    .then(response => {
+      return response.data;
+    }).catch(error => {
+      throw new Error(error);
+    });
+};
+
+const deactivateArticle = (id) => {
+  return axiosInstance.post("artikli/deaktiviraj", id)  // send id directly
+  .then(response => {
+    return response.data;
+  }).catch(error => {
+    throw new Error(error);
   });
 };
 
@@ -49,6 +67,8 @@ const ArticleService = {
   remove,
   removeAll,
   findByName,
+  activateArticle,
+  deactivateArticle
 };
 
 export default ArticleService;

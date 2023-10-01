@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTable } from 'react-table';
 import ArticleDataService from '../services/ArticleService';
-import { useNavigate, Link } from "react-router-dom"; 
-import 'tailwindcss/tailwind.css';
+import { useNavigate, Navigate, Link } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ArticleTable = () => {
   const [articles, setArticles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     retrieveArticles();
@@ -26,6 +28,35 @@ const ArticleTable = () => {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  const editArticle = useCallback((id) => {
+    console.log("ARTICLE ID :" + id)
+    navigate(`/articles/edit/${id}`);
+  }, [navigate]);
+
+  const activateArticle = useCallback((id) => {
+    ArticleDataService.activateArticle(id)
+      .then(() => {
+        retrieveArticles();
+        toast.success('Uspešno aktiviran artikal!');
+      })
+      .catch(e => {
+        console.log(e);
+        toast.error('Neuspešna aktivacija artikla!');
+      });
+  });
+
+  const deactivateArticle = useCallback((id) => {
+    ArticleDataService.deactivateArticle(id)
+      .then(() => {
+        retrieveArticles();
+        toast.success('Uspešno deaktiviran artikal!');
+      })
+      .catch(e => {
+        console.log(e);
+        toast.error('Neuspešna deaktivacija artikla!');
+      });
+  });
 
   const filteredArticles = useMemo(() => {
     return articles.filter(article =>
@@ -87,6 +118,11 @@ const ArticleTable = () => {
         accessor: 'imageSource',
       },
       {
+        Header: 'Status',
+        accessor: 'isActive',
+        Cell: ({ value }) => value ? 'Aktivan' : 'Neaktivan',  // Custom cell rendering
+      },
+      {
         Header: 'Maloprodajna Cena',
         accessor: 'retailPrice',
         Cell: ({ value }) => (
@@ -96,13 +132,33 @@ const ArticleTable = () => {
       {
         Header: 'Akcije',
         accessor: 'actions',
-        Cell: () => (
-          <div className="flex space-x-2">
-            <button className="px-2 py-1 bg-blue-500 text-white rounded">Izmeni</button>
-            <button className="px-2 py-1 bg-yellow-500 text-white rounded">Deaktiviraj</button>
-            <button className="px-2 py-1 bg-green-500 text-white rounded">Aktiviraj</button>
-          </div>
-        ),
+        Cell: (props) => {
+          const articleID = props.row.original.article_id;
+          const isActive = props.row.original.isActive;
+          return (
+            <div className="flex space-x-2">
+              <button onClick={() => editArticle(articleID)} className="px-2 py-1 bg-blue-500 text-white rounded">Izmeni</button>
+              {
+                Boolean(isActive) &&
+                <button
+                  onClick={() => deactivateArticle(articleID)}
+                  className="px-2 py-1 bg-yellow-500 text-white rounded"
+                >
+                  Deaktiviraj
+                </button>
+              }
+              {
+                !Boolean(isActive) &&
+                <button
+                  onClick={() => activateArticle(articleID)}
+                  className="px-2 py-1 bg-green-500 text-white rounded"
+                >
+                  Aktiviraj
+                </button>
+              }
+            </div>
+          );
+        },
       },
     ],
     []
@@ -142,7 +198,11 @@ const ArticleTable = () => {
             {rows.map(row => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps({
+                  style: {
+                    backgroundColor: row.original.isActive ? 'white' : '#FFD1D1',  
+                  }
+                })}>
                   {row.cells.map(cell => (
                     <td {...cell.getCellProps()} className="px-4 py-2 border-b border-gray-300 text-sm leading-5 text-gray-900">
                       {cell.render('Cell')}
@@ -154,13 +214,13 @@ const ArticleTable = () => {
           </tbody>
         </table>
         <div className="mt-4">
-                <Link
-                    to="/articles/add"
-                    className="inline-block bg-blue-600 hover:bg-blue-700 text-green py-2 px-4 rounded-md transition duration-200 ease-in-out shadow-md"
-                >
-                    Dodaj Artikal
-                </Link>
-            </div>
+          <Link
+            to="/articles/add"
+            className="inline-block bg-blue-600 hover:bg-blue-700 text-green py-2 px-4 rounded-md transition duration-200 ease-in-out shadow-md"
+          >
+            Dodaj Artikal
+          </Link>
+        </div>
       </div>
     </div>
   );

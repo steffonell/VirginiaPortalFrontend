@@ -94,11 +94,11 @@ const IndentsList = (props) => {
         const indentCode = indentsRef.current[rowIndex].code;
         IndentDataService.activateIndent(indentCode)
             .then((response) => {
-                console.log("Aktiviran indent:"+response);
+                console.log("Aktiviran indent:" + response);
                 const newIndents = [...indentsRef.current];
-                console.log("newIndents:"+newIndents);
+                console.log("newIndents:" + newIndents);
                 newIndents[rowIndex] = response.data;
-                console.log("newIndents2:"+newIndents);
+                console.log("newIndents2:" + newIndents);
                 setIndents(newIndents);
                 setDisplayedIndents(newIndents);
                 window.confirm('Uspešno aktivirana porudžbina! [' + indentCode + ']');
@@ -172,8 +172,11 @@ const IndentsList = (props) => {
                 accessor: "code",
             },
             {
-                Header: "Poručena količina",
-                accessor: "orderedQuantity",
+                Header: "Cena",
+                accessor: "bill",
+                Cell: ({ value }) => (
+                    <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
+                ),
             },
             {
                 Header: "Status Porudzbenice",
@@ -185,7 +188,7 @@ const IndentsList = (props) => {
                 Cell: ({ value }) => formatDate(value),
             },
             {
-                Header: "Actions",
+                Header: "Akcije",
                 accessor: "actions",
                 Cell: (props) => {
                     const rowIdx = props.row.id;
@@ -261,7 +264,7 @@ const IndentsList = (props) => {
 
     return (
         <div className="w-full mx-4 my-4">
-          <div className="container mx-auto p-6">
+            <div className="container mx-auto p-6">
                 <div className="col-12">
                     <div className="form-row justify-content-center">
                         <div className="col-12 col-md-4 my-1">
@@ -318,48 +321,33 @@ const IndentsList = (props) => {
                 </div>
             </div>
 
-            <div className="table-responsive table-striped table-bordered">
-                <table
-                    className="table"
-                    {...getTableProps()}
-                >
+            <div className="overflow-x-auto">
+                <table {...getTableProps()} className="min-w-full">
                     <thead>
-                        {headerGroups.map((headerGroup) => (
+                        {headerGroups.map(headerGroup => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        <div>
-                                            {column.render("Header")}
-                                            <span>
-                                                {column.isSorted
-                                                    ? column.isSortedDesc
-                                                        ? " 🔽"
-                                                        : " 🔼"
-                                                    : ""}
-                                            </span>
-                                        </div>
-                                        <div>{column.canFilter ? column.render("Filter") : null}</div>
+                                {headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps()} className="px-4 py-2 border-b border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                        {column.render('Header')}
                                     </th>
                                 ))}
                             </tr>
                         ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
+                        {rows.map(row => {
                             prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()}>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>
-                                                {cell.column.id === "imageSource" ? (
-                                                    <img src={logo} alt="Logo" />
-                                                ) : (
-                                                    cell.render("Cell")
-                                                )}
-                                            </td>
-                                        );
-                                    })}
+                                <tr {...row.getRowProps({
+                                    /*                style: {
+                                                       backgroundColor: row.original.isActive ? 'white' : '#FFD1D1',
+                                                   } */
+                                })}>
+                                    {row.cells.map(cell => (
+                                        <td {...cell.getCellProps()} className="px-4 py-2 border-b border-gray-300 text-sm leading-5 text-gray-900">
+                                            {cell.render('Cell')}
+                                        </td>
+                                    ))}
                                 </tr>
                             );
                         })}

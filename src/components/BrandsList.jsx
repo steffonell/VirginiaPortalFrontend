@@ -31,21 +31,6 @@ const BrandsList = (props) => {
             });
     };
 
-    const refreshList = () => {
-        retrieveBrands();
-    };
-
-    const removeAllBrands = () => {
-        BrandDataService.removeAll()
-            .then((response) => {
-                console.log(response.data);
-                refreshList();
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
     const findByName = () => {
         BrandDataService.findByName(searchName)
             .then((response) => {
@@ -176,11 +161,6 @@ const BrandsList = (props) => {
 
             <div className="col-md-4">
                 <a href="/brands/add" className="btn btn-sm btn-primary">Dodaj Brend</a>
-            </div>
-            <div className="col-md-8">
-                <button className="btn btn-sm btn-danger" onClick={removeAllBrands}>
-                    Remove All
-                </button>
             </div>
         </div>
     );

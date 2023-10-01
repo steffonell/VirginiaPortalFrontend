@@ -77,8 +77,6 @@ const AddClient = () => {
         email: Yup.string().email('Nevažeća email adresa.'),
     });
 
-    //TWILLIO I MESSAGE BIRD ZA PORUKE DA PROUCIM
-
     const deliveryAddressFormik = useFormik({
         initialValues: {
             name: '',

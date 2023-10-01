@@ -2,6 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import "./Basket.css";
 import { ApplicationContext } from "./ApplicationContext";
 import IndentEntryService from "../services/IndentEntryService";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Basket = () => {
     const { setBasketItems, basketItems, removeAllBasketItems, loggedInClient, removeBasketItem } = useContext(ApplicationContext);
@@ -56,11 +58,10 @@ const Basket = () => {
                 const response = await IndentEntryService.createIndentEntries(itemsToCreate);
                 console.log(response);
                 removeAllBasketItems();
-                // Show confirmation window upon successful order confirmation
-                window.confirm('Uspešno kreirana porudžbina!');
+                toast.success('Uspešno kreirana porudžbina!');
             } catch (error) {
                 console.log(error);
-                window.error('Došlo je do greške!' + error);
+                toast.error('Neuspešno ažuriranje!'+error);
             }
         }
     };
@@ -142,6 +143,7 @@ const Basket = () => {
 
     return (
         <div className="container mx-auto p-6">
+            <ToastContainer />
             <h3>Korpa</h3>
             <table className="table table-responsive table-striped table-bordered table-margin">
                 <thead>

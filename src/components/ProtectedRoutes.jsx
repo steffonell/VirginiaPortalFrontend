@@ -27,6 +27,7 @@ import ShopComponent from "./ShopComponent";
 import Forbidden from "./Forbidden";
 import ChangePasswordForm from "./ChangePasswordForm";
 import AddClientDeliveryAddress from "./AddClientDeliveryAddress";
+import EditArticle from "./EditArticle";
 
 const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
     return (
@@ -38,6 +39,7 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
                     <Route path="/articles" element={ProtectedComponent(ArticlesList, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/articles/add" element={ProtectedComponent(AddArticle, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/articles/:id" element={ProtectedComponent(Article, userRole, ['ROLE_ADMIN'])} />
+                    <Route path="/articles/edit/:id" element={ProtectedComponent(EditArticle, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/brands" element={ProtectedComponent(BrandsList, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/brands/add" element={ProtectedComponent(AddBrand, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/brands/:id" element={ProtectedComponent(Brand, userRole, ['ROLE_ADMIN'])} />

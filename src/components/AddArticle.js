@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import '../styles/addArticleStyle.css';
 import BrandService from "../services/BrandService";
 import ArticleService from '../services/ArticleService';
+import { ToastContainer, toast } from 'react-toastify';  // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css';  // Import the CSS for react-toastify
 
 const AddArticle = () => {
 
@@ -35,20 +37,23 @@ const AddArticle = () => {
 
     const validationSchema = Yup.object().shape({
         code: Yup.string().required('Šifra Artikla je obavezna.'),
+        barcode: Yup.string().required('Barkod Artikla je obavezan.'),
         name: Yup.string().required('Naziv Artikla je obavezno.'),
         unitOfMeasurement: Yup.string(),
         quantityPerTransportPackage: Yup.number().integer(),
         minimumQuantityDemand: Yup.number().integer(),
         brutoMass: Yup.number(),
-        wholesalePrice: Yup.number().required('Veleprodajna cena je obavezna'),
+        wholesalePrice: Yup.number().required('Veleprodajna cena je obavezna.'),
         imageSource: Yup.string(),
-        pdv: Yup.number().required('PDV je obavezan'),
-        brandName: Yup.string().required('Naziv brenda je obavezan'),
+        pdv: Yup.number().required('PDV je obavezan.'),
+        isActive: Yup.string().required('Obavezno biranje statusa artikla.'),
+        brandName: Yup.string().required('Naziv brenda je obavezan.'),
     });
 
     formik = useFormik({
         initialValues: {
             code: '',
+            barcode: '',
             name: '',
             unitOfMeasurement: '',
             quantityPerTransportPackage: '',
@@ -57,19 +62,21 @@ const AddArticle = () => {
             wholesalePrice: '',
             imageSource: '',
             pdv: '20',
+            isActive: 'true',
             brandName: '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             try {
                 const response = await ArticleService.create(values, formik.values.brandName);
-                console.log('Artikal kreiran', response.data);
                 setMessage('Artikal uspešno kreiran');
                 setIsResetForm(true);
-                // Show confirmation window upon successful order confirmation
-                window.confirm(message);
+                // Notify success
+                toast.success('Artikal uspešno kreiran!');
             } catch (error) {
                 console.error('Greška prilikom kreiranja artikla', error);
+                // Notify error
+                toast.error('Greška prilikom kreiranja artikla!');
             }
         },
     });
@@ -83,6 +90,7 @@ const AddArticle = () => {
     return (
         <div className="submit-form">
             <h2>Dodaj Artikal</h2>
+            <ToastContainer />
             <form onSubmit={formik.handleSubmit}>
                 {/* Šifra Artikla */}
                 <label htmlFor="code">Šifra Artikla</label>
@@ -96,6 +104,20 @@ const AddArticle = () => {
                 />
                 {formik.touched.code && formik.errors.code ? (
                     <div className="error-message">{formik.errors.code}</div>
+                ) : null}
+                <br></br>
+                {/* Barkod Artikla */}
+                <label htmlFor="barcode">Barkod Artikla</label>
+                <input
+                    name="barcode"
+                    className='add-article-field'
+                    placeholder="Barkod Artikla"
+                    value={formik.values.barcode}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.barcode && formik.errors.barcode ? (
+                    <div className="error-message">{formik.errors.barcode}</div>
                 ) : null}
                 <br></br>
                 {/* Naziv Artikla */}
@@ -139,7 +161,7 @@ const AddArticle = () => {
                 {formik.touched.quantityPerTransportPackage && formik.errors.quantityPerTransportPackage ? (
                     <div className="error-message">{formik.errors.quantityPerTransportPackage}</div>
                 ) : null}
-                <br></br>    
+                <br></br>
                 {/* Minimalna tražena količina */}
                 <label htmlFor="minimumQuantityDemand">Minimalna tražena količina</label>
                 <input
@@ -214,15 +236,44 @@ const AddArticle = () => {
                     <div className="error-message">{formik.errors.pdv}</div>
                 ) : null}
                 <br></br>
-
+                <label>
+                    Aktivan Artikal:
+                    <div className="radio-group">
+                        <label>
+                            <input
+                                type="radio"
+                                name="isActive"
+                                value="true"
+                                checked={formik.values.isActive === 'true'}
+                                onChange={formik.handleChange}
+                            />
+                            Aktivan
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="isActive"
+                                value="false"
+                                checked={formik.values.isActive === 'false'}
+                                onChange={formik.handleChange}
+                            />
+                            Neaktivan
+                        </label>
+                    </div>
+                    {formik.touched.isActive && formik.errors.isActive ? (
+                        <div className="error-message">{formik.errors.isActive}</div>
+                    ) : null}
+                </label>
+                <br></br>
                 {/* Naziv brenda */}
                 <div className="form-group">
                     <label htmlFor="brandName">Brend</label>
                     <select
                         name="brandName"
                         className='add-article-field'
-                        value={formik.values.brandName} // this is necessary for resetForm to work
+                        value={formik.values.brandName}
                         onChange={handleBrandChange}
+                        onBlur={formik.handleBlur}
                     >
                         <option key="0" value="">
                             Izaberite Brend
@@ -244,7 +295,6 @@ const AddArticle = () => {
                 {/* Dugme za dodavanje */}
                 <button type="submit">Dodaj artikal</button>
             </form>
-            {/* {message && <p>{message}</p>} */}
         </div>
     );
 };
