@@ -3,6 +3,7 @@ import ArticleDataService from "../services/ArticleService";
 import logo from "./../images/logo.jpg";
 import { ApplicationContext } from "./ApplicationContext";
 import './ShopComponent.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const images = require.context("./../images/", true);
 
 const ShopComponent = (props) => {
@@ -30,10 +31,10 @@ const ShopComponent = (props) => {
     ArticleDataService.getAllActiveArticles()
       .then((response) => {
         const articles = response.data;
-  
+
         // First, sort articles by ID treating ID as a number
         articles.sort((a, b) => Number(a.id) - Number(b.id));
-  
+
         // Next, group sorted articles by brandName
         let groups = articles.reduce((acc, article) => {
           const brandName = article.brand.brandName;
@@ -43,12 +44,12 @@ const ShopComponent = (props) => {
           acc[brandName].push(article);
           return acc;
         }, {});
-  
+
         // Flatten the grouped articles to get the final sorted list
         const sortedArticles = Object.keys(groups)
           .sort()
           .flatMap(brandName => groups[brandName]);
-  
+
         setArticles(sortedArticles);
         setFilteredArticles(sortedArticles);
         setBrands(Object.keys(groups).sort());
@@ -57,7 +58,7 @@ const ShopComponent = (props) => {
         console.log(e);
       });
   };
-  
+
   const addToBasket = (article, quantity) => {
     if (quantity > 0) {
       addOrUpdateBasketItem(article, quantity);
@@ -183,7 +184,7 @@ const ShopComponent = (props) => {
               className="shop-card"
               style={{ maxWidth: "250px" }}
             >
-              <img
+              <LazyLoadImage
                 src={findArticleImage(article.code)}
                 alt={article.name}
                 className="img-fluid styleShopImage"
