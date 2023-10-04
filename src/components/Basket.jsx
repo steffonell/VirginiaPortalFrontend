@@ -8,12 +8,13 @@ import 'react-toastify/dist/ReactToastify.css';
 const Basket = () => {
     const { setBasketItems, basketItems, removeAllBasketItems, loggedInClient, removeBasketItem } = useContext(ApplicationContext);
     const [deliveryAddress, setDeliveryAddress] = useState("");
-    const [missingItemQuantities, setMissingItemQuantities] = useState({}); // Add this state variable
+    const [missingItemQuantities, setMissingItemQuantities] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const newMissingItemQuantities = validateItemQuantities(basketItems);
         setMissingItemQuantities(newMissingItemQuantities);
-    }, [basketItems]); // Watch for changes in the basketItems array
+    }, [basketItems]);
 
     const validateItemQuantities = (basketItems) => {
         let missingQuantities = {};
@@ -45,6 +46,7 @@ const Basket = () => {
     };
 
     const confirmOrder = async () => {
+        setIsLoading(true);
         if (basketItems && basketItems.length > 0) {
             const itemsToCreate = basketItems
                 .filter((item) => item.quantity > 0)
@@ -64,6 +66,7 @@ const Basket = () => {
                 toast.error('Neuspešno ažuriranje!'+error);
             }
         }
+        setIsLoading(false);
     };
 
     const brandDiscount = (brand) => {
@@ -144,7 +147,8 @@ const Basket = () => {
     return (
         <div className="container mx-auto p-6">
             <ToastContainer />
-            <h3>Korpa</h3>
+            {isLoading && <div className="loading-animation"></div>}
+            <h3><i className="fas fa-shopping-cart"></i> Korpa</h3>
             <table className="table table-responsive table-striped table-bordered table-margin">
                 <thead>
                     <tr>
