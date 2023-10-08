@@ -200,6 +200,7 @@ const ShopComponent = (props) => {
                     <label className="block mb-1">Artikal</label>
                     <h6 className="h-12 truncate-2-lines">{article.name}</h6>
                   </div>
+                  <div className="hide-on-mobile">
                   <div className="mb-2">
                     <label className="block mb-1">Transportno Pakovanje</label>
                     <h6> {article.quantityPerTransportPackage} KOM</h6>
@@ -211,6 +212,7 @@ const ShopComponent = (props) => {
                   <div>
                     <label className="block mb-1">Fakturna Cena</label>
                     <h6 className="block mb-2">{article.wholesalePrice.toFixed(2)} RSD</h6>
+                  </div>
                   </div>
                   <div className="mb-2">
                     <label className="block mb-1">Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
