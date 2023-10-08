@@ -29,6 +29,7 @@ import ChangePasswordForm from "./ChangePasswordForm";
 import AddClientDeliveryAddress from "./AddClientDeliveryAddress";
 import EditArticle from "./EditArticle";
 import UserInfo from "./UserInfo";
+import StatisticsComponent from "./Statistics";
 
 const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
     return (
@@ -65,6 +66,7 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
                     <Route path="/discount/add" element={ProtectedComponent(AddCustomerDiscount, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/basket" element={ProtectedComponent(Basket, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
                     <Route path="/userInfo" element={ProtectedComponent(UserInfo, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
+                    <Route path="/statistics" element={ProtectedComponent(StatisticsComponent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
                     <Route path="/forbidden" element={<Forbidden />} />
                 </Routes>
             </div>

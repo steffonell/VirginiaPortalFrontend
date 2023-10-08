@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ApplicationContext } from "./ApplicationContext";
 
 const UserInfo = () => {
-  const { loggedInClient } = useContext(ApplicationContext);
+  const { userRole, loggedInClient} = useContext(ApplicationContext);
 
   if (!loggedInClient || Object.keys(loggedInClient).length === 0) {
     return <div className="text-center text-lg font-bold">Nema dostupnih podataka o korisniku</div>;
@@ -40,6 +40,7 @@ const UserInfo = () => {
       <p className="mb-2"><span className="font-bold">Kod kupca:</span> {customerCode}</p>
       <p className="mb-2"><span className="font-bold">Aktivan:</span> {isActive ? 'Da' : 'Ne'}</p>
       <p className="mb-2"><span className="font-bold">Komentar:</span> {comment}</p>
+      <p className="mb-2"><span className="font-bold">Uloga:</span> {userRole}</p>
       <div className="mt-4">
         <h3 className="text-lg font-bold mb-2">Adrese za isporuku</h3>
         <ul className="list-disc list-inside">

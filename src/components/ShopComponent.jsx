@@ -191,21 +191,31 @@ const ShopComponent = (props) => {
               />
               <div>
                 <div className="hide-on-mobile">
-                  <label>ID</label>
-                  <h6>{article.code}</h6>
-                </div>
-                <label>Artikal</label>
-                <h6>{article.name}</h6>
-                <div className="hide-on-mobile">
-                  <label>Transportno Pakovanje</label>
-                  <h6> {article.quantityPerTransportPackage} KOM</h6>
-                  <label>Minimalna Količina</label>
-                  <h6> {article.minimumQuantityDemand} KOM</h6>
-                  <label>Fakturna Cena</label>
-                  <h6>{article.wholesalePrice.toFixed(2)} RSD</h6>
-                </div>
-                <label>Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
-                <h6>{finalPriceWithDiscountForCustomer} RSD</h6>
+                  <div className="mb-2">
+                    <label className="block mb-1">ID</label>
+                    <h6>{article.code}</h6>
+                  </div>
+                  </div>
+                  <div className="h-20 flex flex-col mb-1">
+                    <label className="block mb-1">Artikal</label>
+                    <h6 className="h-12 truncate-2-lines">{article.name}</h6>
+                  </div>
+                  <div className="mb-2">
+                    <label className="block mb-1">Transportno Pakovanje</label>
+                    <h6> {article.quantityPerTransportPackage} KOM</h6>
+                  </div>
+                  <div className="mb-2">
+                    <label className="block mb-1">Minimalna Količina</label>
+                    <h6> {article.minimumQuantityDemand} KOM</h6>
+                  </div>
+                  <div>
+                    <label className="block mb-1">Fakturna Cena</label>
+                    <h6 className="block mb-2">{article.wholesalePrice.toFixed(2)} RSD</h6>
+                  </div>
+                  <div className="mb-2">
+                    <label className="block mb-1">Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
+                    <h6>{finalPriceWithDiscountForCustomer} RSD</h6>
+                  </div>
                 <div className="input-group input-group-custom">
                   <div className="input-group-prepend">
                     <button

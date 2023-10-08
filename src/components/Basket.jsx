@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import "./Basket.css";
+import "../styles/Basket.css";
 import { ApplicationContext } from "./ApplicationContext";
 import IndentEntryService from "../services/IndentEntryService";
 import { ToastContainer, toast } from 'react-toastify';

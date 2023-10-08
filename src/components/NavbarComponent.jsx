@@ -5,10 +5,11 @@ import { ApplicationContext } from "./ApplicationContext";
 import { useLogout } from "./useLogout";
 
 const NavbarComponent = () => {
+  const [open, setOpen] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const { userRole, loggedInClient, logout } = useContext(ApplicationContext);
   const logoutFunction = useLogout();
-    
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -19,20 +20,6 @@ const NavbarComponent = () => {
         Virdzinija Portal
       </Link>
       <ul className={`nav-menu${showMenu ? " show" : ""}`}>
-        <li className="nav-item user-data desktop">
-          <div className="nav-item-wrapper">
-            <NavLink to="#" className="nav-link">
-              Korisnički Profil &#x25BE; {/* This is a Unicode character for a down arrow */}
-            </NavLink>
-            <div className="dropdown-menu">
-              <div className="dropdown-item">Korisnik : <strong> {loggedInClient.nameOfTheLegalEntity} </strong> </div>
-              <div className="dropdown-item">Uloga : <strong> {userRole} </strong></div>
-              <NavLink to="/userInfo" className="button-primary">O profilu</NavLink>
-              <NavLink to="/change-password" className="button-primary">Promeni Šifru</NavLink>
-              <NavLink onClick={logoutFunction} className="button-secondary">Odjavi se</NavLink>
-            </div>
-          </div>
-        </li>
         {userRole === "ROLE_ADMIN" && (
           <>
             <li className="nav-item">
@@ -46,6 +33,9 @@ const NavbarComponent = () => {
             </li>
             <li className="nav-item">
               <NavLink to="/brands" onClick={toggleMenu} className="nav-link">Brendovi</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/statistics" onClick={toggleMenu} className="nav-link">Statistika</NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/indents" onClick={toggleMenu} className="nav-link">Porudzbine</NavLink>
@@ -64,6 +54,9 @@ const NavbarComponent = () => {
               <NavLink to="/indents" onClick={toggleMenu} className="nav-link">Porudzbine</NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/statistics" onClick={toggleMenu} className="nav-link">Statistika</NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/basket" onClick={toggleMenu} className="nav-link">Korpa</NavLink>
             </li>
           </>
@@ -75,19 +68,23 @@ const NavbarComponent = () => {
             </li>
           </>
         )}
-        <li className="nav-item user-data mobile">
-          <div className="nav-item-wrapper">
-            <NavLink to="#" className="nav-link">
-              Korisnički Profil &#x25BE; {/* This is a Unicode character for a down arrow */}
-            </NavLink>
-            <div className="dropdown-menu">
-              <div className="dropdown-item">Korisnik : <strong> {loggedInClient.nameOfTheLegalEntity} </strong> </div>
-              <div className="dropdown-item">Uloga : <strong> {userRole} </strong></div>
-              <NavLink to="/userInfo" className="button-primary">O profilu</NavLink>
-              <NavLink to="/change-password" className="button-primary">Promeni Šifru</NavLink>
-              <NavLink onClick={logoutFunction} className="button-secondary">Odjavi se</NavLink>
-            </div>
+        <li className="relative group">
+          <div className="flex items-center cursor-pointer px-6 py-1 text-white text-base" onClick={() => setOpen(!open)}>
+            <span className="mr-2">Korisnički Profil</span>
+            <svg className={`${open ? 'transform rotate-180' : ''} transition-transform duration-200`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
+          {open && (
+            <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div className="py-1">
+                <div className="flex items-center px-4 py-2 text-base text-gray-700">Korisnik: <strong className="ml-2">{loggedInClient.nameOfTheLegalEntity}</strong></div>
+                <NavLink to="/userInfo" className="block px-4 py-2 text-base text-blue-600 hover:bg-gray-100">O profilu</NavLink>
+                <NavLink to="/change-password" className="block px-4 py-2 text-base text-blue-600 hover:bg-gray-100">Promeni Šifru</NavLink>
+                <NavLink onClick={logoutFunction} className="block px-4 py-2 text-base text-blue-600 hover:bg-gray-100">Odjavi se</NavLink>
+              </div>
+            </div>
+          )}
         </li>
       </ul>
       <div className="menu-toggle" onClick={toggleMenu}>
