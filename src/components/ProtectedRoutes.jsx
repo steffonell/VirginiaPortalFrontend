@@ -29,7 +29,7 @@ import ChangePasswordForm from "./ChangePasswordForm";
 import AddClientDeliveryAddress from "./AddClientDeliveryAddress";
 import EditArticle from "./EditArticle";
 import UserInfo from "./UserInfo";
-import StatisticsComponent from "./Statistics";
+import StatisticsComponent from "./StatisticsComponent";
 
 const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
     return (
