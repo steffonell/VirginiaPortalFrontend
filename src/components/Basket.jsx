@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Basket = () => {
     const { setBasketItems, basketItems, removeAllBasketItems, loggedInClient, removeBasketItem } = useContext(ApplicationContext);
     const [deliveryAddress, setDeliveryAddress] = useState("");
+    const [comment, setComment] = useState("");
     const [missingItemQuantities, setMissingItemQuantities] = useState({});
     const [isLoading, setIsLoading] = useState(false);
 
@@ -57,13 +58,13 @@ const Basket = () => {
                     deliveryAddress,
                 }));
             try {
-                const response = await IndentEntryService.createIndentEntries(itemsToCreate);
-                console.log(response);
+                const response = await IndentEntryService.createIndentEntries(itemsToCreate, comment);
                 removeAllBasketItems();
+                setComment("");
                 toast.success('Uspešno kreirana porudžbina!');
             } catch (error) {
                 console.log(error);
-                toast.error('Neuspešno ažuriranje!'+error);
+                toast.error('Neuspešno ažuriranje!' + error);
             }
         }
         setIsLoading(false);
@@ -224,6 +225,12 @@ const Basket = () => {
                     )}
                 </tbody>
             </table>
+            <textarea
+                className="form-control"
+                placeholder="Dodaj komentar"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+            />
             <div className="total-cost">
                 <strong>Ukupna cena :</strong> {formatNumber(totalCost)}
             </div>

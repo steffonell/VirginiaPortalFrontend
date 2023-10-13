@@ -8,9 +8,13 @@ const get = (id) => {
   return axiosInstance.get(`unosi/${id}`);
 };
 
-const createIndentEntries = async (items) => {
+const createIndentEntries = async (items, comment) => {
+  const requestData = {
+    indentEntryRequests: items,
+    comment,
+  };
   try {
-    const response = await axiosInstance.post('unosi', items);
+    const response = await axiosInstance.post('unosi', requestData);
     return response.data;
   } catch (error) {
     console.error(error);
