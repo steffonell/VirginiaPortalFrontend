@@ -26,13 +26,13 @@ const update = (id, data) => {
   return axiosInstance.put(`porudzbine/${id}`, data);
 };
 
-const remove = (id) => {
-  return axiosInstance.delete(`porudzbine/${id}`);
+const remove = (indentCode) => {
+  return axiosInstance.delete(`porudzbine/${indentCode}`);
 };
 
 const activateIndent = (indentCode) => {
-  return axiosInstance.put("porudzbine/aktiviraj", indentCode);
-};
+  return axiosInstance.put("porudzbine/", indentCode);
+};  
 
 const confirmIndentDelivery = (indentCode) => {
   return axiosInstance.put("porudzbine/potvrdiIsporuku", indentCode);
