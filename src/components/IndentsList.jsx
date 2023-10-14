@@ -7,6 +7,8 @@ import { ApplicationContext } from "./ApplicationContext";
 import logo from './../images/logo.jpg';
 import { formatDate } from "./utils";
 import "../styles/IndentList.css"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const IndentsList = (props) => {
     const [indents, setIndents] = useState([]);
@@ -51,60 +53,31 @@ const IndentsList = (props) => {
         setDisplayedIndents(indentsRef.current);
     };
 
-    const refreshList = () => {
-        retrieveIndents();
-    };
-
     const deleteIndent = (rowIndex) => {
-        const id = indentsRef.current[rowIndex].id;
-
-        IndentDataService.remove(id)
+        const indentCode = indentsRef.current[rowIndex].code;
+        console.log(rowIndex + "X S A")
+        IndentDataService.remove(indentCode)
             .then((response) => {
-                <Navigate to="/indents" replace={true} />
-                let newIndents = [...indentsRef.current];
-                newIndents.splice(rowIndex, 1);
-
-                setIndents(newIndents);
+                retrieveIndents();
+                toast.success('Uspešno obrisana porudžbina! [' + indentCode + ']');
             })
             .catch((e) => {
-                console.log(e);
+                toast.error(e);
             });
     };
-
-    const DefaultColumnFilter = ({ column: { filterValue, setFilter } }) => {
-        return (
-            <input
-                value={filterValue || ""}
-                onChange={(e) => {
-                    setFilter(e.target.value || undefined);
-                }}
-                placeholder={`Search`}
-            />
-        );
-    };
-
-    const defaultColumn = React.useMemo(
-        () => ({
-            Filter: DefaultColumnFilter,
-        }),
-        []
-    );
 
     const activateIndent = (rowIndex) => {
         const indentCode = indentsRef.current[rowIndex].code;
         IndentDataService.activateIndent(indentCode)
             .then((response) => {
-                console.log("Aktiviran indent:" + response);
                 const newIndents = [...indentsRef.current];
-                console.log("newIndents:" + newIndents);
                 newIndents[rowIndex] = response.data;
-                console.log("newIndents2:" + newIndents);
                 setIndents(newIndents);
                 setDisplayedIndents(newIndents);
-                window.confirm('Uspešno aktivirana porudžbina! [' + indentCode + ']');
+                toast.success('Uspešno aktivirana porudžbina! [' + indentCode + ']');
             })
             .catch((e) => {
-                console.log(e);
+                toast.error(e);
             });
     };
 
@@ -116,10 +89,10 @@ const IndentsList = (props) => {
                 newIndents[rowIndex] = response.data;
                 setIndents(newIndents);
                 setDisplayedIndents(newIndents);
-                window.confirm('Uspešno isporučena porudžbina!! [' + indentCode + ']');
+                toast.success('Uspešno isporučena porudžbina!! [' + indentCode + ']');
             })
             .catch((e) => {
-                console.log(e);
+                toast.error(e);
             });
     }
 
@@ -354,13 +327,8 @@ const IndentsList = (props) => {
                     </tbody>
                 </table>
             </div>
-            {/*             <div className="col-md-4">
-                <a href="/indents/add" className="btn btn-sm btn-primary">Add Indent</a>
-            </div> */}
         </div>
     );
 };
-
-{/* <img src={cell.value} alt="Indent" /> */ }
 
 export default IndentsList;
