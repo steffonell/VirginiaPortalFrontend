@@ -1,3 +1,9 @@
+.shop-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
 .shop-card {
   background-color: #f7f7f7;
   padding: 20px;
@@ -5,7 +11,7 @@
   border: 1px solid #e5e5e5;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  flex: 1 0 calc(33.333% - 20px);
+  /* flex: 1 0 calc(33.333% - 20px); */
   width: 100%;
   max-height: 700px;
   object-fit: scale-down;
@@ -20,6 +26,18 @@
 .shop-card label {
   font-weight: bold;
   margin-right: 5px;
+}
+
+.inactive-card {
+  background-color: red;
+}
+
+.inactive-label {
+  text-align: center;
+  font-weight: bold;
+  color: white; /* Set text color for the "Nedostupno" label */
+  background-color: red; /* Set background color for the "Nedostupno" label */
+  padding: 20px;
 }
 
 .brand-filter {
@@ -68,18 +86,16 @@
   .d-flex {
     flex-direction: column;
   }
+
+  .shop-container {
+    justify-content: center; /* Center content on mobile screens */
+  }
 }
 
 @media (max-width: 480px) {
   .shop-card {
     flex: 1 0 100%;
   }
-}
-
-.shop-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
 .shop-main-container {
