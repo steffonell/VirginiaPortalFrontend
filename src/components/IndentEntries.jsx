@@ -25,17 +25,24 @@ const IndentEntries = () => {
         console.log("pressed deleteIndentEntry");
     };
 
-
     const columns = useMemo(
         () => [
             {
+                Header: "#",
+                accessor: "id",
+                Cell: (props) => {
+                    const rowIndex = props.row.index;
+                    return rowIndex + 1;
+                },
+            },
+/*             {
                 Header: "ID Unosa",
                 accessor: "id",
-            },
-            {
+            }, */
+/*             {
                 Header: "Klijent",
                 accessor: "customer.nameOfTheLegalEntity",
-            },
+            }, */
             {
                 Header: "Artikal",
                 accessor: "article.name",
@@ -57,21 +64,21 @@ const IndentEntries = () => {
                 accessor: "requestedQuantity",
             },
             {
-                Header: "Actions",
+                Header: "Akcije",
                 accessor: "actions",
                 Cell: (props) => {
                     const rowIdx = props.row.id;
-                    return (
-                        <div className="d-flex justify-content-between max-width-150">
-                            <span onClick={() => editIndentEntry(rowIdx)} className="btn btn-secondary disabled mx-1">
+/*                     return (
+                        <div className="flex justify-between max-w-xs">
+                            <span onClick={() => editIndentEntry(rowIdx)} className="btn btn-secondary disabled mx-1 text-gray-500 hover:text-gray-700">
                                 <i className="far fa-edit mr-2"></i> Izmeni
                             </span>
 
-                            <span onClick={() => deleteIndentEntry(rowIdx)} className="btn btn-danger disabled mx-1">
+                            <span onClick={() => deleteIndentEntry(rowIdx)} className="btn btn-danger disabled mx-1 text-red-500 hover:text-red-700">
                                 <i className="fas fa-trash"></i> Izbrisi
                             </span>
                         </div>
-                    );
+                    ); */
                 },
             },
         ],
@@ -93,30 +100,32 @@ const IndentEntries = () => {
         <div className="container mx-auto p-6">
             <div className="col-md-12 list">
                 <table
-                    className="table table-striped table-bordered"
+                    className="min-w-full bg-white divide-y divide-gray-200"
                     {...getTableProps()}
                 >
-                    <thead>
+                    <thead className="bg-gray-50">
                         {headerGroups.map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                                    <th {...column.getHeaderProps()} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {column.render("Header")}
+                                    </th>
                                 ))}
                             </tr>
                         ))}
                     </thead>
-                    <tbody {...getTableBodyProps()}>
+                    <tbody {...getTableBodyProps()} className="bg-white divide-y divide-gray-200">
                         {rows.map((row, i) => {
                             prepareRow(row);
                             return (
                                 <tr {...row.getRowProps()}>
                                     {row.cells.map((cell) => {
                                         return (
-                                            <td {...cell.getCellProps()}>
+                                            <td {...cell.getCellProps()} className="px-6 py-4 whitespace-nowrap">
                                                 {cell.column.id === "imageSource" ? (
-                                                    <img src={logo} alt="Logo" />
+                                                    <img src={logo} alt="Logo" className="h-10 w-10 rounded-full" />
                                                 ) : (
-                                                    cell.render("Cell")
+                                                    <div className="text-sm text-gray-900">{cell.render("Cell")}</div>
                                                 )}
                                             </td>
                                         );
@@ -130,4 +139,5 @@ const IndentEntries = () => {
         </div>
     );
 };
+
 export default IndentEntries;
