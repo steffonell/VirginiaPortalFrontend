@@ -30,6 +30,7 @@ import AddClientDeliveryAddress from "./AddClientDeliveryAddress";
 import EditArticle from "./EditArticle";
 import UserInfo from "./UserInfo";
 import StatisticsComponent from "./StatisticsComponent";
+import HomeComponent from "./HomeComponent";
 
 const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
     return (
@@ -37,6 +38,7 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
             <NavbarComponent />
             <div className="main-content">
                 <Routes>
+                    <Route path="/" element={ProtectedComponent(HomeComponent, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />
                     <Route path="/shop" element={ProtectedComponent(ShopComponent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
                     <Route path="/articles" element={ProtectedComponent(ArticlesList, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/articles/add" element={ProtectedComponent(AddArticle, userRole, ['ROLE_ADMIN'])} />
