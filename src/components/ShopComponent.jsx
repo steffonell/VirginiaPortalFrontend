@@ -28,7 +28,7 @@ const ShopComponent = (props) => {
   }, []);
 
   const retrieveArticles = () => {
-    ArticleDataService.getAllActiveArticles()
+    ArticleDataService.getAll()
       .then((response) => {
         const articles = response.data;
 
@@ -181,7 +181,7 @@ const ShopComponent = (props) => {
           return (
             <div
               key={article.article_id}
-              className="shop-card"
+              className={`shop-card ${!article.isActive ? 'inactive-card' : ''}`}
               style={{ maxWidth: "250px" }}
             >
               <LazyLoadImage
@@ -195,12 +195,12 @@ const ShopComponent = (props) => {
                     <label className="block mb-1">ID</label>
                     <h6>{article.code}</h6>
                   </div>
-                  </div>
-                  <div className="h-20 flex flex-col mb-1">
-                    <label className="block mb-1">Artikal</label>
-                    <h6 className="h-12 truncate-2-lines">{article.name}</h6>
-                  </div>
-                  <div className="hide-on-mobile">
+                </div>
+                <div className="h-20 flex flex-col mb-1">
+                  <label className="block mb-1">Artikal</label>
+                  <h6 className="h-12 truncate-2-lines">{article.name}</h6>
+                </div>
+                <div className="hide-on-mobile">
                   <div className="mb-2">
                     <label className="block mb-1">Transportno Pakovanje</label>
                     <h6> {article.quantityPerTransportPackage} KOM</h6>
@@ -213,58 +213,68 @@ const ShopComponent = (props) => {
                     <label className="block mb-1">Fakturna Cena</label>
                     <h6 className="block mb-2">{article.wholesalePrice.toFixed(2)} RSD</h6>
                   </div>
-                  </div>
-                  <div className="mb-2">
-                    <label className="block mb-1">Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
-                    <h6>{finalPriceWithDiscountForCustomer} RSD</h6>
-                  </div>
-                <div className="input-group input-group-custom">
-                  <div className="input-group-prepend">
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      onClick={() => currentQuantity > 0 && handleQuantityChange(article.article_id, currentQuantity - article.minimumQuantityDemand)}
-                    >
-                      -
-                    </button>
-                  </div>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id={`quantity_${article.article_id}`}
-                    required
-                    name={`quantity_${article.article_id}`}
-                    min={article.minimumQuantityDemand}
-                    value={currentQuantity}
-                    onChange={(e) => handleQuantityChange(article.article_id, e.target.value)}
-                    onBlur={(e) => handleValueValidation(article.article_id, e.target.value, article.minimumQuantityDemand)}
-                  />
-                  <div className="input-group-append">
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      onClick={() => handleQuantityChange(article.article_id, currentQuantity + article.minimumQuantityDemand)}
-                    >
-                      +
-                    </button>
-                  </div>
                 </div>
-                <button
-                  onClick={() => {
-                    addToBasket(article, currentQuantity);
-                  }}
-                  className="btn btn-success"
-                  disabled={!currentQuantity || currentQuantity % article.minimumQuantityDemand !== 0}
-                >
-                  Dodaj
-                </button>
+                <div className="mb-2">
+                  <label className="block mb-1">Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
+                  <h6>{finalPriceWithDiscountForCustomer} RSD</h6>
+                </div>
+                {/* Conditionally render input group or "Nedostupno" label */}
+                {!article.isActive ? (
+                  <div className="inactive-label">
+                    <span>Nedostupno</span>
+                  </div>
+                ) : (
+                  <div className="input-group input-group-custom">
+                    <div className="input-group-prepend">
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={() => currentQuantity > 0 && handleQuantityChange(article.article_id, currentQuantity - article.minimumQuantityDemand)}
+                      >
+                        -
+                      </button>
+                    </div>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id={`quantity_${article.article_id}`}
+                      required
+                      name={`quantity_${article.article_id}`}
+                      min={article.minimumQuantityDemand}
+                      value={currentQuantity}
+                      onChange={(e) => handleQuantityChange(article.article_id, e.target.value)}
+                      onBlur={(e) => handleValueValidation(article.article_id, e.target.value, article.minimumQuantityDemand)}
+                    />
+                    <div className="input-group-append">
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={() => handleQuantityChange(article.article_id, currentQuantity + article.minimumQuantityDemand)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {/* Conditionally render "Dodaj" button */}
+                {article.isActive && (
+                  <button
+                    onClick={() => {
+                      addToBasket(article, currentQuantity);
+                    }}
+                    className="btn btn-success"
+                    disabled={!currentQuantity || currentQuantity % article.minimumQuantityDemand !== 0}
+                  >
+                    Dodaj
+                  </button>
+                )}
               </div>
             </div>
           );
         })}
       </div>
     </div>
-  );
+  );  
 };
 
 export default ShopComponent;
