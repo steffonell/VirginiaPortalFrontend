@@ -227,7 +227,7 @@ const Basket = () => {
             </table>
             <textarea
                 className="form-control"
-                placeholder="Dodaj komentar"
+                placeholder="Napomena..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
             />
