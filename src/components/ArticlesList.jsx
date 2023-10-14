@@ -17,8 +17,28 @@ const ArticleTable = () => {
   const retrieveArticles = () => {
     ArticleDataService.getAll()
       .then((response) => {
-        setArticles(response.data);
-        console.log(response.data);
+        // Group the data by brandName
+        const groupedData = response.data.reduce((groups, article) => {
+          const brandName = article.brand.brandName;
+  
+          if (!groups[brandName]) {
+            groups[brandName] = [];
+          }
+  
+          groups[brandName].push(article);
+          return groups;
+        }, {});
+  
+        // Sort each group by name
+        for (const brandName in groupedData) {
+          groupedData[brandName].sort((a, b) => a.name.localeCompare(b.name));
+        }
+  
+        // Flatten the grouped data back into an array
+        const sortedAndGroupedData = Object.values(groupedData).flat();
+  
+        setArticles(sortedAndGroupedData);
+        console.log(sortedAndGroupedData);
       })
       .catch((e) => {
         console.log(e);
