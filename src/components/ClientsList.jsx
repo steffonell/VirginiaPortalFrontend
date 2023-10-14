@@ -71,6 +71,10 @@ const ClientsList = (props) => {
         setFilter(filterValue);
     }, []);
 
+    const addClient = useCallback(() => {
+        navigate(`/clients/add`);
+    }, [navigate]);
+
     const editClient = useCallback((id) => {
         console.log("ID of client" + id);
         navigate(`/clients/edit/${id}`);
@@ -128,6 +132,10 @@ const ClientsList = (props) => {
                 accessor: "contactPerson",
             },
             {
+                Header: "Aktivan",
+                accessor: "isActive",
+            },
+            {
                 Header: "Kontakt Broj",
                 accessor: "contactNumber",
             },
@@ -158,9 +166,9 @@ const ClientsList = (props) => {
                                 <i className="fas fa-building"></i> Poslovne Jedinice
                             </span>
 
-                            <span onClick={() => deleteClient(customerId)} className="btn btn-danger btn-sm disabled mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+{/*                             <span onClick={() => deleteClient(customerId)} className="btn btn-danger btn-sm disabled mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="fas fa-trash"></i> Izbrisi
-                            </span>
+                            </span> */}
                         </div>
                     );
                 },
@@ -188,25 +196,28 @@ const ClientsList = (props) => {
 
     return (
         <div className="w-full mx-4 my-4">
-            <div className="container mx-auto p-6">
-                <input
-                    type="text"
-                    className="flex-1 p-2 border rounded-md"
-                    placeholder="Ime Klijenta"
-                    value={clientName}
-                    onChange={e => setClientName(e.target.value)}
-                />
-                <input
-                    type="text"
-                    className="flex-1 p-2 border rounded-md"
-                    placeholder="Šifra Klijenta"
-                    value={clientCode}
-                    onChange={e => setClientCode(e.target.value)}
-                />
-                <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded-md">
+            <div className="container mx-auto p-6 space-y-4">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input
+                        type="text"
+                        className="flex-1 p-2 border rounded-md"
+                        placeholder="Ime Klijenta"
+                        value={clientName}
+                        onChange={e => setClientName(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        className="flex-1 p-2 border rounded-md"
+                        placeholder="Šifra Klijenta"
+                        value={clientCode}
+                        onChange={e => setClientCode(e.target.value)}
+                    />
+                </div>
+                <button onClick={handleSearch} className="w-full sm:w-auto bg-blue-500 text-white p-2 rounded-md">
                     Pretraga
                 </button>
             </div>
+
             <div className="overflow-x-auto">
                 <table {...getTableProps()} className="min-w-full">
                     <thead>
@@ -240,14 +251,9 @@ const ClientsList = (props) => {
                     </tbody>
                 </table>
             </div>
-            <div className="mt-4">
-                <Link
-                    to="/clients/add"
-                    className="inline-block bg-blue-600 hover:bg-blue-700 text-green py-2 px-4 rounded-md transition duration-200 ease-in-out shadow-md"
-                >
-                    Dodaj Klijenta
-                </Link>
-            </div>
+                <button onClick={() => addClient()} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                    <i className="far fa-edit mr-2"></i> Dodaj Klijenta
+                </button>
         </div>
     );
 };

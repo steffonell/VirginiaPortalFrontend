@@ -130,7 +130,7 @@ const AddClient = () => {
             if (!formik.isValid) {
                 setSubmitting(false);
                 return;
-            }        
+            }
             console.log("PRESSED");
             // separate the clientData and role from the form values
             const { role, ...clientData } = values;
@@ -318,10 +318,10 @@ const AddClient = () => {
                         <div className="error-message">{formik.errors.paymentCurrency}</div>
                     ) : null}
                 </div>
-                <div className="form-group">
-                <button type="button" className="custom-button" onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
-<button type="button" className="custom-button" onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
-
+                <div className="form-group flex justify-center">
+                    <button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4" onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
+                    <br/>
+                    <button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4" onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
                 </div>
                 <button type="submit">Potvrdi Unos Klijenta</button>
             </form>
