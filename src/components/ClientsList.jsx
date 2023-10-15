@@ -132,9 +132,10 @@ const ClientsList = (props) => {
                 accessor: "contactPerson",
             },
             {
-                Header: "Aktivan",
-                accessor: "isActive",
-            },
+                Header: 'Status',
+                accessor: 'isActive',
+                Cell: ({ value }) => value ? 'Aktivan' : 'Neaktivan', 
+              },
             {
                 Header: "Kontakt Broj",
                 accessor: "contactNumber",

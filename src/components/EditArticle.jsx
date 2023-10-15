@@ -231,7 +231,7 @@ const EditArticle = () => {
                     ) : null}
                 </label>
                 <label>
-                    Aktivan Artikal:
+                    Status :
                     <div className="radio-group">
                         <label>
                             <input

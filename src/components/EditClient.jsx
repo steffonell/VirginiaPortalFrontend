@@ -213,7 +213,7 @@ const EditClient = () => {
           </label>
 
           <label>
-            Aktivan Klijent:
+            Status :
             <div className="radio-group">
               <label>
                 <input

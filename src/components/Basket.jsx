@@ -13,9 +13,12 @@ const Basket = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        if (loggedInClient && loggedInClient.deliveryAddressList && loggedInClient.deliveryAddressList.length === 1) {
+            setDeliveryAddress(loggedInClient.deliveryAddressList[0]);
+        }
         const newMissingItemQuantities = validateItemQuantities(basketItems);
         setMissingItemQuantities(newMissingItemQuantities);
-    }, [basketItems]);
+    }, [basketItems, loggedInClient]);
 
     const validateItemQuantities = (basketItems) => {
         let missingQuantities = {};
@@ -234,7 +237,7 @@ const Basket = () => {
             <div className="total-cost">
                 <strong>Ukupna cena :</strong> {formatNumber(totalCost)}
             </div>
-            <select className="form-control adresa-slanja" onChange={handleDeliveryAddressChange}>
+            <select className="form-control adresa-slanja" value={JSON.stringify(deliveryAddress)} onChange={handleDeliveryAddressChange}>
                 <option key="0" value="">Izaberite Adresu Dostave</option>
                 {loggedInClient && loggedInClient.deliveryAddressList && loggedInClient.deliveryAddressList.map((deliveryAddress, index) => {
                     return (
