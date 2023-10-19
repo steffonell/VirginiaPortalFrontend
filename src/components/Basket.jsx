@@ -276,7 +276,7 @@ const Basket = () => {
                     </div>
                     <div className="flex justify-between items-center">
                         <strong className="text-lg text-gray-700">Ukupna Težina :</strong>
-                        <span className="text-lg text-gray-900 font-bold">{totalWeight} KG</span>
+                        <span className="text-lg text-gray-900 font-bold">{formatNumberWithoutPostfix(totalWeight)} KG</span>
                     </div>
                 </div>
             </div>
