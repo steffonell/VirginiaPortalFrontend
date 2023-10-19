@@ -41,6 +41,11 @@ const IndentEntries = () => {
         return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
     }
 
+    const formatNumberKG = (number) => {
+        return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} KG</span>
+    }
+
+
     const articlePriceWithDiscount = (article) => {
         return (Number(article.retailPrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
     }
@@ -158,7 +163,7 @@ const IndentEntries = () => {
                 Cell: (props) => {
                     const brutoMass = props.row.original.article.brutoMass;
                     const quantity = props.row.original.requestedQuantity;
-                    return `${brutoMass * quantity} KG`;
+                    return formatNumberKG(brutoMass * quantity);
                 },
             },
             {
@@ -253,7 +258,7 @@ const IndentEntries = () => {
                         </div>
                         <div className="flex justify-between items-center">
                             <strong className="text-lg text-gray-700">Ukupna Težina :</strong>
-                            <span className="text-lg text-gray-900 font-bold">{totalWeight} KG</span>
+                            <span className="text-lg text-gray-900 font-bold">{formatNumberKG(totalWeight)}</span>
                         </div>
                     </div>
                 </div>
