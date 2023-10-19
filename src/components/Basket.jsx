@@ -111,8 +111,36 @@ const Basket = () => {
         return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
     }
 
+    const formatNumberWithoutPostfix = (number) => {
+        return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</span>
+    }
+
     const totalCost = basketItems
         ? basketItems.reduce((acc, item) => acc + articlePriceWithDiscount(item.article) * item.quantity, 0)
+        : 0;
+
+    const totalWeight = basketItems
+        ? basketItems.reduce((acc, item, index) => {
+            const brutoMass = parseFloat(item.article.brutoMass);
+            const requestedQuantity = parseFloat(item.quantity);
+            if (isNaN(brutoMass) || isNaN(requestedQuantity)) {
+                return acc;
+            }
+            const newAcc = acc + brutoMass * requestedQuantity;
+            return newAcc;
+        }, 0)
+        : 0;
+
+    const totalNumberOfPackages = basketItems
+        ? basketItems.reduce((acc, item, index) => {
+            const quantityPerTransportPackage = item.article.quantityPerTransportPackage;
+            const requestedQuantity = parseFloat(item.quantity);
+            if (isNaN(quantityPerTransportPackage) || isNaN(requestedQuantity)) {
+                return acc;
+            }
+            const newAcc = acc + requestedQuantity / quantityPerTransportPackage;
+            return newAcc;
+        }, 0)
         : 0;
 
     const handleQuantityChange = (article, newQuantity) => {
@@ -129,14 +157,6 @@ const Basket = () => {
         setBasketItems(updatedBasketItems);
     };
 
-    const handleValueValidation = (article, value, quantityPerTransportPackage) => {
-        const parsedValue = parseInt(value) || 0;
-        const newValue = Math.max(Math.floor(parsedValue / quantityPerTransportPackage) * quantityPerTransportPackage, 0);
-
-        handleQuantityChange(article, newValue);
-    };
-
-
     const getPDV = (basketItems) => {
         if (basketItems && basketItems.length > 0) {
             return basketItems[0].article.pdv;
@@ -149,10 +169,15 @@ const Basket = () => {
     const allItemsHaveZeroQuantity = basketItems.every((item) => item.quantity === 0);
 
     return (
-        <div className="container mx-auto p-6">
+        <div className="overflow-x-auto">
+            <br />
             <ToastContainer />
             {isLoading && <div className="loading-animation"></div>}
-            <h3><i className="fas fa-shopping-cart"></i> Korpa</h3>
+            <h3 className="flex items-center text-2xl font-semibold text-gray-700">
+                <i className="fas fa-shopping-cart mr-2 text-blue-500"></i>
+                Korpa
+            </h3>
+
             <table className="table table-responsive table-striped table-bordered table-margin">
                 <thead>
                     <tr>
@@ -164,6 +189,8 @@ const Basket = () => {
                         <th className="hide-on-mobile">Rabat</th>
                         <th className="hide-on-mobile">Porez</th>
                         <th className="hide-on-mobile">Cena Sa Porezom</th>
+                        <th className="hide-on-mobile">Broj Paketa</th>
+                        <th className="hide-on-mobile">Težina</th>
                         <th>Iznos</th>
                         <th>Akcije</th>
                     </tr>
@@ -212,6 +239,8 @@ const Basket = () => {
                                 <td className="hide-on-mobile">{brandDiscount(item.article.brand)} %</td>
                                 <td className="hide-on-mobile">{pdv} %</td>
                                 <td className="hide-on-mobile">{formatNumber(priceWithPDV(discountedPrice(item.article.wholesalePrice, brandDiscount(item.article.brand)), pdv))}</td>
+                                <td className="hide-on-mobile">{item.quantity / item.article.quantityPerTransportPackage}</td>
+                                <td className="hide-on-mobile">{formatNumberWithoutPostfix(item.article.brutoMass * item.quantity)} KG</td>
                                 <td>{formatNumber(priceWithPDV(discountedPrice(item.article.wholesalePrice, brandDiscount(item.article.brand)), pdv) * item.quantity)}</td>
                                 <td>
                                     <button
@@ -229,15 +258,34 @@ const Basket = () => {
                 </tbody>
             </table>
             <textarea
-                className="form-control"
+                className="block w-full px-4 py-2 mt-1 border rounded-lg text-gray-700 bg-gray-50 border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Napomena..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
             />
-            <div className="total-cost">
-                <strong>Ukupna cena :</strong> {formatNumber(totalCost)}
+            <br />
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <strong className="text-lg text-gray-700">Ukupna Cena :</strong>
+                        <span className="text-lg text-gray-900 font-bold">{formatNumber(totalCost)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <strong className="text-lg text-gray-700">Ukupno Paketa :</strong>
+                        <span className="text-lg text-gray-900 font-bold">{totalNumberOfPackages}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <strong className="text-lg text-gray-700">Ukupna Težina :</strong>
+                        <span className="text-lg text-gray-900 font-bold">{totalWeight} KG</span>
+                    </div>
+                </div>
             </div>
-            <select className="form-control adresa-slanja" value={JSON.stringify(deliveryAddress)} onChange={handleDeliveryAddressChange}>
+            <br />
+            <select
+                className="block w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-base text-gray-700"
+                value={JSON.stringify(deliveryAddress)}
+                onChange={handleDeliveryAddressChange}
+            >
                 <option key="0" value="">Izaberite Adresu Dostave</option>
                 {loggedInClient && loggedInClient.deliveryAddressList && loggedInClient.deliveryAddressList.map((deliveryAddress, index) => {
                     return (
@@ -247,6 +295,7 @@ const Basket = () => {
                     );
                 })}
             </select>
+
             {!deliveryAddress && Object.keys(missingItemQuantities).length === 0 && basketItems.length > 0 && (
                 <div className="alert alert-warning" role="alert">
                     Morate izabrati <strong>adresu dostave</strong> kako bi aktivirali narudžbinu!

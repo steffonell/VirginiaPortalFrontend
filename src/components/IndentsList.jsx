@@ -16,7 +16,7 @@ const IndentsList = (props) => {
     const indentsRef = useRef();
     const navigate = useNavigate();
     indentsRef.current = indents;
-    const { loggedInClient, userRole } = useContext(ApplicationContext);
+    const { userRole } = useContext(ApplicationContext);
     const [searchCode, setSearchCode] = useState("");
     const [searchDateFrom, setSearchDateFrom] = useState("");
     const [searchDateTo, setSearchDateTo] = useState("");

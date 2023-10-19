@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import { useParams } from 'react-router-dom';
+import { ApplicationContext } from "./ApplicationContext";
 import IndentDataService from '../services/IndentService';
 import IndentEntryDataService from '../services/IndentEntryService';
 import { useTable } from "react-table";
@@ -8,6 +9,7 @@ import logo from './../images/logo.jpg';
 const IndentEntries = () => {
     const { code: indentCode } = useParams();
     const [entries, setEntries] = useState([]);
+    const { loggedInClient } = useContext(ApplicationContext);
 
     useEffect(() => {
         const fetchEntries = async () => {
@@ -25,6 +27,64 @@ const IndentEntries = () => {
         console.log("pressed deleteIndentEntry");
     };
 
+    const brandDiscount = (brand) => {
+        const brandName = brand.brandName;
+        const discountForTheBrand = loggedInClient?.discounts?.find((item) => item.brand.brandName === brandName);
+        if (discountForTheBrand) {
+            return discountForTheBrand.discount;
+        } else {
+            return 0;
+        }
+    };
+
+    const formatNumber = (number) => {
+        return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
+    }
+
+    const articlePriceWithDiscount = (article) => {
+        return (Number(article.retailPrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
+    }
+
+    const discountedPrice = (price, discount) => {
+        return (Number(price) * (1 - Number(discount / 100)).toFixed(2));
+    }
+
+    const priceWithPDV = (price, discount) => {
+        return (Number(price) * (1 + Number(discount / 100)).toFixed(2));
+    }
+
+    const firstEntry = entries && entries.length > 0 ? entries[0] : null;
+
+    const comment = firstEntry ? firstEntry.indent.comment : "";
+
+    const totalCost = entries
+        ? entries.reduce((acc, item) => acc + articlePriceWithDiscount(item.article) * item.requestedQuantity, 0)
+        : 0;
+
+    const totalWeight = entries
+        ? entries.reduce((acc, item, index) => {
+            const brutoMass = parseFloat(item.article.brutoMass);
+            const requestedQuantity = parseFloat(item.requestedQuantity);
+            if (isNaN(brutoMass) || isNaN(requestedQuantity)) {
+                return acc;
+            }
+            const newAcc = acc + brutoMass * requestedQuantity;
+            return newAcc;
+        }, 0)
+        : 0;
+
+    const totalNumberOfPackages = entries
+        ? entries.reduce((acc, item, index) => {
+            const quantityPerTransportPackage = item.article.quantityPerTransportPackage;
+            const requestedQuantity = parseFloat(item.requestedQuantity);
+            if (isNaN(quantityPerTransportPackage) || isNaN(requestedQuantity)) {
+                return acc;
+            }
+            const newAcc = acc + requestedQuantity / quantityPerTransportPackage;
+            return newAcc;
+        }, 0)
+        : 0;
+
     const columns = useMemo(
         () => [
             {
@@ -35,14 +95,14 @@ const IndentEntries = () => {
                     return rowIndex + 1;
                 },
             },
-/*             {
-                Header: "ID Unosa",
-                accessor: "id",
-            }, */
-/*             {
-                Header: "Klijent",
-                accessor: "customer.nameOfTheLegalEntity",
-            }, */
+            /*             {
+                            Header: "ID Unosa",
+                            accessor: "id",
+                        }, */
+            /*             {
+                            Header: "Klijent",
+                            accessor: "customer.nameOfTheLegalEntity",
+                        }, */
             {
                 Header: "Artikal",
                 accessor: "article.name",
@@ -64,21 +124,59 @@ const IndentEntries = () => {
                 accessor: "requestedQuantity",
             },
             {
+                Header: "Rabat",
+                accessor: "discount",
+                Cell: (props) => {
+                    const brand = props.row.original.article.brand;
+                    return `${brandDiscount(brand)} %`;
+                },
+            },
+            {
+                Header: "Ukupna Cena",
+                accessor: "price",
+                Cell: (props) => {
+                    const article = props.row.original.article;
+                    const articleWholesalePrice = article.wholesalePrice;
+                    const discount = brandDiscount(article.brand);
+                    const quantity = props.row.original.requestedQuantity;
+                    const pdv = article.pdv;
+                    return formatNumber(priceWithPDV(discountedPrice(articleWholesalePrice, discount), pdv) * quantity);
+                },
+            },            
+            {
+                Header: "Broj Paketa",
+                accessor: "numberOfPackages",
+                Cell: (props) => {
+                    const quantity = props.row.original.requestedQuantity;
+                    const quantityPerTransportPackage = props.row.original.article.quantityPerTransportPackage;
+                    return quantity / quantityPerTransportPackage;
+                },
+            },
+            {
+                Header: "Težina",
+                accessor: "weight",
+                Cell: (props) => {
+                    const brutoMass = props.row.original.article.brutoMass;
+                    const quantity = props.row.original.requestedQuantity;
+                    return `${brutoMass * quantity} KG`;
+                },
+            },
+            {
                 Header: "Akcije",
                 accessor: "actions",
                 Cell: (props) => {
                     const rowIdx = props.row.id;
-/*                     return (
-                        <div className="flex justify-between max-w-xs">
-                            <span onClick={() => editIndentEntry(rowIdx)} className="btn btn-secondary disabled mx-1 text-gray-500 hover:text-gray-700">
-                                <i className="far fa-edit mr-2"></i> Izmeni
-                            </span>
-
-                            <span onClick={() => deleteIndentEntry(rowIdx)} className="btn btn-danger disabled mx-1 text-red-500 hover:text-red-700">
-                                <i className="fas fa-trash"></i> Izbrisi
-                            </span>
-                        </div>
-                    ); */
+                    /*                     return (
+                                            <div className="flex justify-between max-w-xs">
+                                                <span onClick={() => editIndentEntry(rowIdx)} className="btn btn-secondary disabled mx-1 text-gray-500 hover:text-gray-700">
+                                                    <i className="far fa-edit mr-2"></i> Izmeni
+                                                </span>
+                    
+                                                <span onClick={() => deleteIndentEntry(rowIdx)} className="btn btn-danger disabled mx-1 text-red-500 hover:text-red-700">
+                                                    <i className="fas fa-trash"></i> Izbrisi
+                                                </span>
+                                            </div>
+                                        ); */
                 },
             },
         ],
@@ -135,6 +233,30 @@ const IndentEntries = () => {
                         })}
                     </tbody>
                 </table>
+                <textarea
+                    className="block w-full px-4 py-2 mt-1 border rounded-lg text-gray-700 bg-gray-50 border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Napomena..."
+                    value={comment}
+                    readOnly
+                />
+
+                <br />
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                    <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                            <strong className="text-lg text-gray-700">Ukupna Cena :</strong>
+                            <span className="text-lg text-gray-900 font-bold">{formatNumber(totalCost)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <strong className="text-lg text-gray-700">Ukupno Paketa :</strong>
+                            <span className="text-lg text-gray-900 font-bold">{totalNumberOfPackages}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <strong className="text-lg text-gray-700">Ukupna Težina :</strong>
+                            <span className="text-lg text-gray-900 font-bold">{totalWeight} KG</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
