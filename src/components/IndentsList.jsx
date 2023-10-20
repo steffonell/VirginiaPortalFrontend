@@ -148,7 +148,7 @@ const IndentsList = (props) => {
                 Header: "Cena",
                 accessor: "bill",
                 Cell: ({ value }) => (
-                    <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
+                    <span>{value} RSD</span>
                 ),
             },
             {
