@@ -144,13 +144,13 @@ const IndentsList = (props) => {
                 Header: "ID Porudzbenice",
                 accessor: "code",
             },
-/*             {
-                Header: "Cena",
-                accessor: "bill",
-                Cell: ({ value }) => (
-                    <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
-                ),
-            }, */
+            /*             {
+                            Header: "Cena",
+                            accessor: "bill",
+                            Cell: ({ value }) => (
+                                <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
+                            ),
+                        }, */
             {
                 Header: "Status Porudzbenice",
                 accessor: "indentStatus",
@@ -235,6 +235,22 @@ const IndentsList = (props) => {
         useSortBy
     );
 
+    const getRowBgColorClass = (status) => {
+        switch (status) {
+            case 'PENDING':
+                return 'bg-orange-100';  // light orange
+            case 'ACTIVATED':
+                return 'bg-green-100';  // light green
+            case 'CANCELED':
+                return 'bg-red-100';  // light red
+            case 'DELIVERED':
+                return 'bg-blue-100';  // light blue
+            default:
+                return '';  // default (no background color)
+        }
+    };
+
+
     return (
         <div className="w-full mx-4 my-4">
             <div className="container mx-auto p-6">
@@ -312,9 +328,7 @@ const IndentsList = (props) => {
                             prepareRow(row);
                             return (
                                 <tr {...row.getRowProps({
-                                    /*                style: {
-                                                       backgroundColor: row.original.isActive ? 'white' : '#FFD1D1',
-                                                   } */
+                                    className: getRowBgColorClass(row.original.indentStatus)
                                 })}>
                                     {row.cells.map(cell => (
                                         <td {...cell.getCellProps()} className="px-4 py-2 border-b border-gray-300 text-sm leading-5 text-gray-900">

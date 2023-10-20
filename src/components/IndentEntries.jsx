@@ -201,6 +201,10 @@ const IndentEntries = () => {
 
     return (
         <div className="container mx-auto p-6">
+                        <h3 className="flex items-center text-2xl font-semibold text-gray-700">
+                <i className="fas fa-shopping-cart mr-2 text-blue-500"></i>
+                Porudzbina {indentCode}
+            </h3>
             <div className="col-md-12 list">
                 <table
                     className="min-w-full bg-white divide-y divide-gray-200"
