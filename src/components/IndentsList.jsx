@@ -144,13 +144,13 @@ const IndentsList = (props) => {
                 Header: "ID Porudzbenice",
                 accessor: "code",
             },
-            {
+/*             {
                 Header: "Cena",
                 accessor: "bill",
                 Cell: ({ value }) => (
-                    <span>{value} RSD</span>
+                    <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
                 ),
-            },
+            }, */
             {
                 Header: "Status Porudzbenice",
                 accessor: "indentStatus",
