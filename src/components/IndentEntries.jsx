@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo, useContext } from "react";
 import { useParams } from 'react-router-dom';
 import { ApplicationContext } from "./ApplicationContext";
-import IndentDataService from '../services/IndentService';
 import IndentEntryDataService from '../services/IndentEntryService';
 import { useTable } from "react-table";
 import logo from './../images/logo.jpg';
+import { formatNumber, formatNumberKG, priceWithPDV, discountedPrice } from './utils';
 
 const IndentEntries = () => {
     const { code: indentCode } = useParams();
@@ -37,25 +37,8 @@ const IndentEntries = () => {
         }
     };
 
-    const formatNumber = (number) => {
-        return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
-    }
-
-    const formatNumberKG = (number) => {
-        return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} KG</span>
-    }
-
-
-    const articlePriceWithDiscount = (article) => {
+    function articlePriceWithDiscount(article) {
         return (Number(article.retailPrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
-    }
-
-    const discountedPrice = (price, discount) => {
-        return (Number(price) * (1 - Number(discount / 100)).toFixed(2));
-    }
-
-    const priceWithPDV = (price, discount) => {
-        return (Number(price) * (1 + Number(discount / 100)).toFixed(2));
     }
 
     const firstEntry = entries && entries.length > 0 ? entries[0] : null;
@@ -147,7 +130,7 @@ const IndentEntries = () => {
                     const pdv = article.pdv;
                     return formatNumber(priceWithPDV(discountedPrice(articleWholesalePrice, discount), pdv) * quantity);
                 },
-            },            
+            },
             {
                 Header: "Broj Paketa",
                 accessor: "numberOfPackages",
@@ -201,11 +184,11 @@ const IndentEntries = () => {
 
     return (
         <div className="container mx-auto p-6">
-                        <h3 className="flex items-center text-2xl font-semibold text-gray-700">
+            <h3 className="flex items-center text-2xl font-semibold text-gray-700">
                 <i className="fas fa-shopping-cart mr-2 text-blue-500"></i>
                 Porudzbina {indentCode}
             </h3>
-            <div className="col-md-12 list">
+            <div className="overflow-x-auto">
                 <table
                     className="min-w-full bg-white divide-y divide-gray-200"
                     {...getTableProps()}

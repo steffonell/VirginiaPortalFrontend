@@ -5,6 +5,8 @@ import ClientDataService from '../services/CustomerService';
 import BrandService from "../services/BrandService";
 import '../styles/addClientStyle.css';
 import { getAllowedRoles } from './utils';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddClient = () => {
 
@@ -31,14 +33,12 @@ const AddClient = () => {
 
     const addDeliveryAddress = (deliveryAddress) => {
         setCustomerDeliveryAddresses(prevCustomerDeliveryAddresses => [...prevCustomerDeliveryAddresses, deliveryAddress]);
-        window.confirm('Uspešno Dodata Poslovna Jedinica!');
     }
 
     const addBrandDiscount = (brand, discount) => {
         setBrandDiscounts(prevBrandDiscounts => {
             return { ...prevBrandDiscounts, [brand]: discount };
         });
-        window.confirm('Uspešno Dodat Rabat!');
     }
 
     const validationSchema = Yup.object().shape({
@@ -92,7 +92,7 @@ const AddClient = () => {
             addDeliveryAddress(values);
             setModalFormDeliveryAddressVisible(false);
             resetForm();
-            console.log(customerDeliveryAddresses);
+            toast.success('Uspešno dodata poslovna jedinica !');
         },
     });
 
@@ -107,7 +107,7 @@ const AddClient = () => {
             addBrandDiscount(values.selectedBrand, values.brandDiscount);
             setModalFormBrandDiscountVisible(false);
             resetForm();
-            console.log(brandDiscounts);
+            toast.success('Uspešno dodat rabat !');
         },
     });
 
@@ -141,7 +141,7 @@ const AddClient = () => {
                 .then((response) => {
                     console.log(response.data);
                     resetForm();
-                    window.confirm('Uspešno kreiran klijent!');
+                    toast.success('Uspešno kreiran klijent !');
                 })
                 .catch((e) => {
                     console.log(e);
@@ -153,318 +153,385 @@ const AddClient = () => {
         <div className="submit-form">
             <h2>Forma Za Dodavanje Klijenta</h2>
             <form onSubmit={formik.handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="customerCode">Šifra Klijenta</label>
-                    <input
-                        type="text"
-                        name="customerCode"
-                        placeholder="Šifra Klijenta"
-                        value={formik.values.customerCode}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="nameOfTheLegalEntity">Ime Legalnog Entiteta</label>
-                    <input
-                        type="text"
-                        name="nameOfTheLegalEntity"
-                        placeholder="Ime Legalnog Entiteta"
-                        value={formik.values.nameOfTheLegalEntity}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.nameOfTheLegalEntity && formik.errors.nameOfTheLegalEntity ? (
-                        <div className="error-message">{formik.errors.nameOfTheLegalEntity}</div>
-                    ) : null}
-                </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="customerCode">
+            Šifra Klijenta
+        </label>
+        <input
+            type="text"
+            name="customerCode"
+            placeholder="Šifra Klijenta"
+            value={formik.values.customerCode}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nameOfTheLegalEntity">
+            Ime Legalnog Entiteta
+        </label>
+        <input
+            type="text"
+            name="nameOfTheLegalEntity"
+            placeholder="Ime Legalnog Entiteta"
+            value={formik.values.nameOfTheLegalEntity}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.nameOfTheLegalEntity && formik.errors.nameOfTheLegalEntity ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.nameOfTheLegalEntity}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
+            Uloga
+        </label>
+        <select
+            name="role"
+            value={formik.values.role}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+        >
+            <option value="" disabled hidden>Odaberite ulogu</option>
+            {getAllowedRoles().map((role, index) => (
+                <option key={index} value={role}>
+                    {role}
+                </option>
+            ))}
+        </select>
+        {formik.touched.role && formik.errors.role ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.role}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
+            Grad
+        </label>
+        <input
+            type="text"
+            name="city"
+            placeholder="Grad"
+            value={formik.values.city}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.city && formik.errors.city ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.city}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
+            Adresa
+        </label>
+        <input
+            type="text"
+            name="address"
+            placeholder="Adresa"
+            value={formik.values.address}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.address && formik.errors.address ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.address}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pib">
+            PIB
+        </label>
+        <input
+            type="text"
+            name="pib"
+            placeholder="PIB"
+            value={formik.values.pib}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.pib && formik.errors.pib ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.pib}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="identificationNumber">
+            Matični Broj
+        </label>
+        <input
+            type="text"
+            name="identificationNumber"
+            placeholder="Matični Broj"
+            value={formik.values.identificationNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.identificationNumber && formik.errors.identificationNumber ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.identificationNumber}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactPerson">
+            Kontakt Osoba
+        </label>
+        <input
+            type="text"
+            name="contactPerson"
+            placeholder="Kontakt Osoba"
+            value={formik.values.contactPerson}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.contactPerson && formik.errors.contactPerson ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.contactPerson}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactNumber">
+            Kontakt Broj
+        </label>
+        <input
+            type="text"
+            name="contactNumber"
+            placeholder="Kontakt Broj"
+            value={formik.values.contactNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.contactNumber && formik.errors.contactNumber ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.contactNumber}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            Email
+        </label>
+        <input
+            type="text"
+            name="email"
+            placeholder="Email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.email && formik.errors.email ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.email}</div>
+        ) : null}
+    </div>
+    <div className="form-group mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="paymentCurrency">
+            Valuta Placanja
+        </label>
+        <input
+            type="text"
+            name="paymentCurrency"
+            placeholder="Valuta Placanja"
+            value={formik.values.paymentCurrency}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        {formik.touched.paymentCurrency && formik.errors.paymentCurrency ? (
+            <div className="error-message text-red-500 text-xs italic">{formik.errors.paymentCurrency}</div>
+        ) : null}
+    </div>
+    <div className="form-group flex gap-4 mt-4">
+        <button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={() => setModalFormBrandDiscountVisible(true)}>
+            Dodaj Rabat
+        </button>
+        <button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={() => setModalFormDeliveryAddressVisible(true)}>
+            Dodaj Poslovnu Jedinicu
+        </button>
+    </div>
+    <div className="form-group mt-4">
+        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Potvrdi Unos Klijenta
+        </button>
+    </div>
+</form>
 
-                <div className="form-group">
-                    <label htmlFor="role">Uloga</label>
-                    <select
-                        name="role"
-                        value={formik.values.role}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    >
-                        <option value="" disabled hidden>Odaberite ulogu</option> {/* This is the default empty option */}
-                        {getAllowedRoles().map((role, index) => (
-                            <option key={index} value={role}>
-                                {role}
-                            </option>
-                        ))}
-                    </select>
-                    {formik.touched.role && formik.errors.role ? (
-                        <div className="error-message">{formik.errors.role}</div>
-                    ) : null}
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="city">Grad</label>
-                    <input
-                        type="text"
-                        name="city"
-                        placeholder="Grad"
-                        value={formik.values.city}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.city && formik.errors.city ? (
-                        <div className="error-message">{formik.errors.city}</div>
-                    ) : null}
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="address">Adresa</label>
-                    <input
-                        type="text"
-                        name="address"
-                        placeholder="Adresa"
-                        value={formik.values.address}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.address && formik.errors.address ? (
-                        <div className="error-message">{formik.errors.address}</div>
-                    ) : null}
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="pib">PIB</label>
-                    <input
-                        type="text"
-                        name="pib"
-                        placeholder="PIB"
-                        value={formik.values.pib}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.pib && formik.errors.pib ? (
-                        <div className="error-message">{formik.errors.pib}</div>
-                    ) : null}
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="identificationNumber">Matični Broj</label>
-                    <input
-                        type="text"
-                        name="identificationNumber"
-                        placeholder="Matični Broj"
-                        value={formik.values.identificationNumber}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.identificationNumber && formik.errors.identificationNumber ? (
-                        <div className="error-message">{formik.errors.identificationNumber}</div>
-                    ) : null}
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="contactPerson">Kontakt Osoba</label>
-                    <input
-                        type="text"
-                        name="contactPerson"
-                        placeholder="Kontakt Osoba"
-                        value={formik.values.contactPerson}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.contactPerson && formik.errors.contactPerson ? (
-                        <div className="error-message">{formik.errors.contactPerson}</div>
-                    ) : null}
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="contactNumber">Kontakt Broj</label>
-                    <input
-                        type="text"
-                        name="contactNumber"
-                        placeholder="Kontakt Broj"
-                        value={formik.values.contactNumber}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.contactNumber && formik.errors.contactNumber ? (
-                        <div className="error-message">{formik.errors.contactNumber}</div>
-                    ) : null}
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="text"
-                        name="email"
-                        placeholder="Email"
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.email && formik.errors.email ? (
-                        <div className="error-message">{formik.errors.email}</div>
-                    ) : null}
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="paymentCurrency">Valuta Placanja</label>
-                    <input
-                        type="text"
-                        name="paymentCurrency"
-                        placeholder="Valuta Placanja"
-                        value={formik.values.paymentCurrency}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.paymentCurrency && formik.errors.paymentCurrency ? (
-                        <div className="error-message">{formik.errors.paymentCurrency}</div>
-                    ) : null}
-                </div>
-                <div className="form-group">
-                    <button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4" onClick={() => setModalFormBrandDiscountVisible(true)}>Dodaj Rabat</button>
-                    <br/>
-                    <button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4" onClick={() => setModalFormDeliveryAddressVisible(true)}>Dodaj Poslovnu Jedinicu</button>
-                </div>
-                <button type="submit">Potvrdi Unos Klijenta</button>
-            </form>
 
             {modalFormDeliveryAddressVisible && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <span className="close" onClick={() => setModalFormDeliveryAddressVisible(false)}>
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="modal-content bg-white p-6 rounded-lg shadow-lg w-3/4 md:w-1/2">
+                        <span className="close absolute top-4 right-4 text-gray-700 hover:text-gray-900 cursor-pointer" onClick={() => setModalFormDeliveryAddressVisible(false)}>
                             &times;
                         </span>
                         <form onSubmit={deliveryAddressFormik.handleSubmit} className="submit-form">
-                            <div className="form-group">
-                                <label>
-                                    Naziv poslovne jedinice :
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={deliveryAddressFormik.values.name}
-                                        onChange={deliveryAddressFormik.handleChange}
-                                        onBlur={deliveryAddressFormik.handleBlur}
-                                    />
-                                    {deliveryAddressFormik.touched.name && deliveryAddressFormik.errors.name ? (
-                                        <div className="error-message">{deliveryAddressFormik.errors.name}</div>
-                                    ) : null}
+                            <div className="form-group mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                                    Naziv poslovne jedinice:
                                 </label>
-                                <label>
-                                    Grad :
-                                    <input
-                                        type="text"
-                                        name="city"
-                                        value={deliveryAddressFormik.values.city}
-                                        onChange={deliveryAddressFormik.handleChange}
-                                        onBlur={deliveryAddressFormik.handleBlur}
-                                    />
-                                    {deliveryAddressFormik.touched.city && deliveryAddressFormik.errors.city ? (
-                                        <div className="error-message">{deliveryAddressFormik.errors.city}</div>
-                                    ) : null}
-                                </label>
-                                <label>
-                                    Adresa :
-                                    <input
-                                        type="text"
-                                        name="address"
-                                        value={deliveryAddressFormik.values.address}
-                                        onChange={deliveryAddressFormik.handleChange}
-                                        onBlur={deliveryAddressFormik.handleBlur}
-                                    />
-                                    {deliveryAddressFormik.touched.address && deliveryAddressFormik.errors.address ? (
-                                        <div className="error-message">{deliveryAddressFormik.errors.address}</div>
-                                    ) : null}
-                                </label>
-                                <label>
-                                    Kontakt Osoba :
-                                    <input
-                                        type="text"
-                                        name="contactPerson"
-                                        value={deliveryAddressFormik.values.contactPerson}
-                                        onChange={deliveryAddressFormik.handleChange}
-                                        onBlur={deliveryAddressFormik.handleBlur}
-                                    />
-                                    {deliveryAddressFormik.touched.contactPerson && deliveryAddressFormik.errors.contactPerson ? (
-                                        <div className="error-message">{deliveryAddressFormik.errors.contactPerson}</div>
-                                    ) : null}
-                                </label>
-                                <label>
-                                    Kontakt Broj :
-                                    <input
-                                        type="text"
-                                        name="contactNumber"
-                                        value={deliveryAddressFormik.values.contactNumber}
-                                        onChange={deliveryAddressFormik.handleChange}
-                                        onBlur={deliveryAddressFormik.handleBlur}
-                                    />
-                                    {deliveryAddressFormik.touched.contactNumber && deliveryAddressFormik.errors.contactNumber ? (
-                                        <div className="error-message">{deliveryAddressFormik.errors.contactNumber}</div>
-                                    ) : null}
-                                </label>
-                                <label>
-                                    Email :
-                                    <input
-                                        type="text"
-                                        name="email"
-                                        value={deliveryAddressFormik.values.email}
-                                        onChange={deliveryAddressFormik.handleChange}
-                                        onBlur={deliveryAddressFormik.handleBlur}
-                                    />
-                                    {deliveryAddressFormik.touched.email && deliveryAddressFormik.errors.email ? (
-                                        <div className="error-message">{deliveryAddressFormik.errors.email}</div>
-                                    ) : null}
-                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    id="name"
+                                    value={deliveryAddressFormik.values.name}
+                                    onChange={deliveryAddressFormik.handleChange}
+                                    onBlur={deliveryAddressFormik.handleBlur}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                                {deliveryAddressFormik.touched.name && deliveryAddressFormik.errors.name ? (
+                                    <div className="error-message text-red-500 text-xs italic">{deliveryAddressFormik.errors.name}</div>
+                                ) : null}
                             </div>
-                            <button type="submit">Unesite Poslovnu Jedinicu</button>
+                            {/* Form Group for City */}
+                            <div className="form-group mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
+                                    Grad:
+                                </label>
+                                <input
+                                    type="text"
+                                    name="city"
+                                    id="city"
+                                    value={deliveryAddressFormik.values.city}
+                                    onChange={deliveryAddressFormik.handleChange}
+                                    onBlur={deliveryAddressFormik.handleBlur}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                                {deliveryAddressFormik.touched.city && deliveryAddressFormik.errors.city ? (
+                                    <div className="error-message text-red-500 text-xs italic">{deliveryAddressFormik.errors.city}</div>
+                                ) : null}
+                            </div>
+                            {/* Form Group for Address */}
+                            <div className="form-group mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
+                                    Adresa:
+                                </label>
+                                <input
+                                    type="text"
+                                    name="address"
+                                    id="address"
+                                    value={deliveryAddressFormik.values.address}
+                                    onChange={deliveryAddressFormik.handleChange}
+                                    onBlur={deliveryAddressFormik.handleBlur}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                                {deliveryAddressFormik.touched.address && deliveryAddressFormik.errors.address ? (
+                                    <div className="error-message text-red-500 text-xs italic">{deliveryAddressFormik.errors.address}</div>
+                                ) : null}
+                            </div>
+                            {/* Form Group for Contact Person */}
+                            <div className="form-group mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactPerson">
+                                    Kontakt Osoba:
+                                </label>
+                                <input
+                                    type="text"
+                                    name="contactPerson"
+                                    id="contactPerson"
+                                    value={deliveryAddressFormik.values.contactPerson}
+                                    onChange={deliveryAddressFormik.handleChange}
+                                    onBlur={deliveryAddressFormik.handleBlur}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                                {deliveryAddressFormik.touched.contactPerson && deliveryAddressFormik.errors.contactPerson ? (
+                                    <div className="error-message text-red-500 text-xs italic">{deliveryAddressFormik.errors.contactPerson}</div>
+                                ) : null}
+                            </div>
+                            {/* Form Group for Contact Number */}
+                            <div className="form-group mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactNumber">
+                                    Kontakt Broj:
+                                </label>
+                                <input
+                                    type="text"
+                                    name="contactNumber"
+                                    id="contactNumber"
+                                    value={deliveryAddressFormik.values.contactNumber}
+                                    onChange={deliveryAddressFormik.handleChange}
+                                    onBlur={deliveryAddressFormik.handleBlur}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                                {deliveryAddressFormik.touched.contactNumber && deliveryAddressFormik.errors.contactNumber ? (
+                                    <div className="error-message text-red-500 text-xs italic">{deliveryAddressFormik.errors.contactNumber}</div>
+                                ) : null}
+                            </div>
+                            {/* Form Group for Email */}
+                            <div className="form-group mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                    Email:
+                                </label>
+                                <input
+                                    type="text"
+                                    name="email"
+                                    id="email"
+                                    value={deliveryAddressFormik.values.email}
+                                    onChange={deliveryAddressFormik.handleChange}
+                                    onBlur={deliveryAddressFormik.handleBlur}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                                {deliveryAddressFormik.touched.email && deliveryAddressFormik.errors.email ? (
+                                    <div className="error-message text-red-500 text-xs italic">{deliveryAddressFormik.errors.email}</div>
+                                ) : null}
+                            </div>
+                            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Unesite Poslovnu Jedinicu
+                            </button>
                         </form>
                     </div>
                 </div>
             )}
 
             {modalFormBrandDiscountVisible && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <span className="close" onClick={() => setModalFormBrandDiscountVisible(false)}>
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="modal-content bg-white p-6 rounded-lg shadow-lg w-3/4 md:w-1/2">
+                        <span className="close absolute top-4 right-4 text-gray-700 hover:text-gray-900 cursor-pointer" onClick={() => setModalFormBrandDiscountVisible(false)}>
                             &times;
                         </span>
                         <form onSubmit={brandFormik.handleSubmit} className="submit-form">
-                            <div className="form-group">
-                                <label>
+                            <div className="form-group mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="selectedBrand">
                                     Izaberite Brend:
-                                    <select
-                                        name="selectedBrand"
-                                        value={brandFormik.values.selectedBrand}
-                                        onChange={brandFormik.handleChange}
-                                        onBlur={brandFormik.handleBlur}
-                                    >
-                                        <option key="0" value="">
-                                            Izaberite Brend
+                                </label>
+                                <select
+                                    name="selectedBrand"
+                                    id="selectedBrand"
+                                    value={brandFormik.values.selectedBrand}
+                                    onChange={brandFormik.handleChange}
+                                    onBlur={brandFormik.handleBlur}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                >
+                                    <option key="0" value="">
+                                        Izaberite Brend
+                                    </option>
+                                    {brands.map((brand, index) => (
+                                        <option key={index + 1} value={brand.brandName}>
+                                            {brand.brandName}
                                         </option>
-                                        {brands.map((brand, index) => (
-                                            <option key={index + 1} value={brand.brandName}>
-                                                {brand.brandName}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {brandFormik.touched.selectedBrand && brandFormik.errors.selectedBrand ? (
-                                        <div className="error-message">{brandFormik.errors.selectedBrand}</div>
-                                    ) : null}
-                                </label>
+                                    ))}
+                                </select>
+                                {brandFormik.touched.selectedBrand && brandFormik.errors.selectedBrand ? (
+                                    <div className="error-message text-red-500 text-xs italic">{brandFormik.errors.selectedBrand}</div>
+                                ) : null}
                             </div>
-                            <div className="form-group">
-                                <label>
-                                    Rabat Brenda (%) :
-                                    <input
-                                        type="text"
-                                        name="brandDiscount"
-                                        value={brandFormik.values.brandDiscount}
-                                        onChange={brandFormik.handleChange}
-                                        onBlur={brandFormik.handleBlur}
-                                    />
-                                    {brandFormik.touched.brandDiscount && brandFormik.errors.brandDiscount ? (
-                                        <div className="error-message">{brandFormik.errors.brandDiscount}</div>
-                                    ) : null}
+                            <div className="form-group mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandDiscount">
+                                    Rabat Brenda (%):
                                 </label>
+                                <input
+                                    type="text"
+                                    name="brandDiscount"
+                                    id="brandDiscount"
+                                    value={brandFormik.values.brandDiscount}
+                                    onChange={brandFormik.handleChange}
+                                    onBlur={brandFormik.handleBlur}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                                {brandFormik.touched.brandDiscount && brandFormik.errors.brandDiscount ? (
+                                    <div className="error-message text-red-500 text-xs italic">{brandFormik.errors.brandDiscount}</div>
+                                ) : null}
                             </div>
-                            <button type="submit">Unesite Rabat</button>
+                            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Unesite Rabat
+                            </button>
                         </form>
                     </div>
                 </div>

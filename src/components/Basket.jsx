@@ -4,6 +4,7 @@ import { ApplicationContext } from "./ApplicationContext";
 import IndentEntryService from "../services/IndentEntryService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { formatNumber, formatNumberKG, formatNumberWithoutPostfix, priceWithPDV, discountedPrice } from './utils';
 
 const Basket = () => {
     const { setBasketItems, basketItems, removeAllBasketItems, loggedInClient, removeBasketItem } = useContext(ApplicationContext);
@@ -87,14 +88,6 @@ const Basket = () => {
         return (Number(article.retailPrice) * (1 - Number(brandDiscount(article.brand)) / 100)).toFixed(2);
     }
 
-    const discountedPrice = (price, discount) => {
-        return (Number(price) * (1 - Number(discount / 100)).toFixed(2));
-    }
-
-    const priceWithPDV = (price, discount) => {
-        return (Number(price) * (1 + Number(discount / 100)).toFixed(2));
-    }
-
     function handleDeliveryAddressChange(event) {
         const selectedValue = event.target.value;
         if (selectedValue) {
@@ -105,14 +98,6 @@ const Basket = () => {
         } else {
             setDeliveryAddress("");
         }
-    }
-
-    const formatNumber = (number) => {
-        return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
-    }
-
-    const formatNumberWithoutPostfix = (number) => {
-        return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</span>
     }
 
     const totalCost = basketItems
@@ -169,7 +154,7 @@ const Basket = () => {
     const allItemsHaveZeroQuantity = basketItems.every((item) => item.quantity === 0);
 
     return (
-        <div className="overflow-x-auto">
+        <div className="container mx-auto p-6">
             <br />
             <ToastContainer />
             {isLoading && <div className="loading-animation"></div>}
@@ -177,7 +162,7 @@ const Basket = () => {
                 <i className="fas fa-shopping-cart mr-2 text-blue-500"></i>
                 Korpa
             </h3>
-
+            <div className="overflow-x-auto">
             <table className="table table-responsive table-striped table-bordered table-margin">
                 <thead>
                     <tr>
@@ -240,7 +225,7 @@ const Basket = () => {
                                 <td className="hide-on-mobile">{pdv} %</td>
                                 <td className="hide-on-mobile">{formatNumber(priceWithPDV(discountedPrice(item.article.wholesalePrice, brandDiscount(item.article.brand)), pdv))}</td>
                                 <td className="hide-on-mobile">{item.quantity / item.article.quantityPerTransportPackage}</td>
-                                <td className="hide-on-mobile">{formatNumberWithoutPostfix(item.article.brutoMass * item.quantity)} KG</td>
+                                <td className="hide-on-mobile">{formatNumberKG(item.article.brutoMass * item.quantity)}</td>
                                 <td>{formatNumber(priceWithPDV(discountedPrice(item.article.wholesalePrice, brandDiscount(item.article.brand)), pdv) * item.quantity)}</td>
                                 <td>
                                     <button
@@ -257,6 +242,7 @@ const Basket = () => {
                     )}
                 </tbody>
             </table>
+            </div>
             <textarea
                 className="block w-full px-4 py-2 mt-1 border rounded-lg text-gray-700 bg-gray-50 border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Napomena..."

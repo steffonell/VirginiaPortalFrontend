@@ -4,6 +4,8 @@ import logo from "./../images/logo.jpg";
 import { ApplicationContext } from "./ApplicationContext";
 import './ShopComponent.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const images = require.context("./../images/", true);
 
 const ShopComponent = (props) => {
@@ -66,6 +68,7 @@ const ShopComponent = (props) => {
         ...prevQuantities,
         [article.article_id]: "",
       }));
+      toast.success('Uspešno dodavanje artikla '+article.name+' u korpu!');
     }
   };
 

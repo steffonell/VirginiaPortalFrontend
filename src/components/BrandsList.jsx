@@ -105,7 +105,8 @@ const BrandsList = (props) => {
     });
 
     return (
-        <div className="list row">
+        <div className="overflow-x-auto">
+            <br/>
             <div className="col-md-8">
                 <div className="input-group mb-3">
                     <input

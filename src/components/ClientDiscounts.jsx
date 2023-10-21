@@ -6,6 +6,8 @@ import BrandService from "../services/BrandService"; // Assuming this exists
 import { useTable } from "react-table";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ClientDiscounts = () => {
     const location = useLocation();
@@ -121,11 +123,12 @@ const ClientDiscounts = () => {
                     await DiscountService.updateCustomerDiscount(clientID, selectedBrand.brandName, values.brandDiscount);
                     fetchClientDiscounts();
                     setEditModalVisible(false);
+                    toast.success('Uspešna izmena rabata brenda ' + selectedBrand.brandName + ' !');
                 } else {
-                    console.error('Izabrani brend nije pronadjen u listi brendova.');
+                    toast.error('Izabrani brend nije pronadjen u listi brendova.');
                 }
             } catch (error) {
-                console.error('Greška prilikom ažuriranja:', error);
+                toast.error('Greška prilikom ažuriranja:', error);
             }
         },
     });
@@ -143,6 +146,7 @@ const ClientDiscounts = () => {
                     await DiscountService.createCustomerDiscount(clientID, selectedBrand.brandName, values.brandDiscount);
                     fetchClientDiscounts();
                     setModalFormBrandDiscountVisible(false);
+                    toast.success('Uspešno dodavanje rabata za brend ' + selectedBrand.brandName + ' !');
                 } else {
                     console.error('Izabrani brend nije pronadjen u listi brendova.');
                 }
@@ -212,38 +216,40 @@ const ClientDiscounts = () => {
     return (
         <div className="list row">
             <div className="col-md-12 list">
-                <h3>Rabati Klijenta <strong style={{ textDecoration: 'underline' }}>{customer.nameOfTheLegalEntity}</strong></h3>
-                <table
-                    className="table table-striped table-bordered"
-                    {...getTableProps()}
-                >
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()}>
-                                        {column.render("Header")}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()} key={i}>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
+                <h3>Rabati Klijenta:  <strong style={{ textDecoration: 'underline' }}>{customer.nameOfTheLegalEntity}</strong></h3>
+                <div className="overflow-x-auto">
+                    <table
+                        className="table table-striped table-bordered"
+                        {...getTableProps()}
+                    >
+                        <thead>
+                            {headerGroups.map((headerGroup) => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map((column) => (
+                                        <th {...column.getHeaderProps()}>
+                                            {column.render("Header")}
+                                        </th>
+                                    ))}
                                 </tr>
-                            );
-                        })}
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {rows.map((row, i) => {
+                                prepareRow(row);
+                                return (
+                                    <tr {...row.getRowProps()} key={i}>
+                                        {row.cells.map((cell) => {
+                                            return (
+                                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div className="col-md-4">

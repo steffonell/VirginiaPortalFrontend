@@ -49,100 +49,30 @@ const AddClientDeliveryAddress = () => {
     <form onSubmit={formik.handleSubmit} className="submit-form bg-gray-100 p-6 rounded-md shadow-md">
       <ToastContainer />
       <div className="form-group space-y-4">
-
-        <div className="flex flex-col">
-          <label className="font-medium text-gray-700">Name :</label>
-          <input
-            type="text"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="p-2 border rounded-md"
-          />
-          {formik.touched.name && formik.errors.name ? (
-            <div className="text-red-500">{formik.errors.name}</div>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col">
-          <label className="font-medium text-gray-700">Grad :</label>
-          <input
-            type="text"
-            name="city"
-            value={formik.values.city}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="p-2 border rounded-md"
-          />
-          {formik.touched.city && formik.errors.city ? (
-            <div className="text-red-500">{formik.errors.city}</div>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col">
-          <label className="font-medium text-gray-700">Adresa :</label>
-          <input
-            type="text"
-            name="address"
-            value={formik.values.address}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="p-2 border rounded-md"
-          />
-          {formik.touched.address && formik.errors.address ? (
-            <div className="text-red-500">{formik.errors.address}</div>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col">
-          <label className="font-medium text-gray-700">Kontakt Osoba :</label>
-          <input
-            type="text"
-            name="contactPerson"
-            value={formik.values.contactPerson}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="p-2 border rounded-md"
-          />
-          {formik.touched.contactPerson && formik.errors.contactPerson ? (
-            <div className="text-red-500">{formik.errors.contactPerson}</div>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col">
-          <label className="font-medium text-gray-700">Kontakt Broj :</label>
-          <input
-            type="text"
-            name="contactNumber"
-            value={formik.values.contactNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="p-2 border rounded-md"
-          />
-          {formik.touched.contactNumber && formik.errors.contactNumber ? (
-            <div className="text-red-500">{formik.errors.contactNumber}</div>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col">
-          <label className="font-medium text-gray-700">Email :</label>
-          <input
-            type="text"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="p-2 border rounded-md"
-          />
-          {formik.touched.email && formik.errors.email ? (
-            <div className="text-red-500">{formik.errors.email}</div>
-          ) : null}
-        </div>
+        {['name', 'city', 'address', 'contactPerson', 'contactNumber', 'email'].map((field, index) => (
+          <div className="flex flex-col" key={index}>
+            <label className="font-medium text-gray-700">
+              {field.charAt(0).toUpperCase() + field.slice(1)} :
+            </label>
+            <input
+              type="text"
+              name={field}
+              value={formik.values[field]}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="p-2 border rounded-md transition duration-300 ease-in-out focus:border-blue-500"
+            />
+            {formik.touched[field] && formik.errors[field] ? (
+              <div className="text-red-500">{formik.errors[field]}</div>
+            ) : null}
+          </div>
+        ))}
       </div>
-
-      <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Dodaj Poslovnu Jedinicu</button>
+      <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded-md transition duration-300 ease-in-out hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Dodaj Poslovnu Jedinicu
+      </button>
     </form>
+
   );
 };
 
