@@ -159,6 +159,7 @@ const IndentsList = (props) => {
                 accessor: "actions",
                 Cell: (props) => {
                     const rowIdx = props.row.id;
+                    const status = props.row.values.indentStatus;
                     return (
                         <div className="d-flex max-width-500">
                             {props.row.values.indentStatus == "PENDING" ? (
@@ -171,7 +172,7 @@ const IndentsList = (props) => {
                                 <i className="far fa-eye mr-2"></i> Pregled
                             </button>
 
-                            {props.row.values.indentStatus == "PENDING" && (userRole == "ROLE_FAKTURISTA" || userRole == "ROLE_ADMIN") ? (
+                            {status == "PENDING" && (userRole == "ROLE_FAKTURISTA" || userRole == "ROLE_ADMIN") ? (
                                 <React.Fragment>
                                     <button onClick={() => activateIndent(rowIdx)} className="btn btn-primary mx-1">
                                         <i className="fas fa-check"></i> Aktiviraj
@@ -179,7 +180,7 @@ const IndentsList = (props) => {
                                 </React.Fragment>
                             ) : null}
 
-                            {props.row.values.indentStatus == "ACTIVATED" && (userRole == "ROLE_MAGACIONER" || userRole == "ROLE_ADMIN") ? (
+                            {status == "ACTIVATED" && (userRole == "ROLE_MAGACIONER" || userRole == "ROLE_ADMIN" || userRole == "ROLE_FAKTURISTA") ? (
                                 <button onClick={() => confirmDelivery(rowIdx)} className="btn btn-primary mx-1">
                                     <i className="fas fa-check"></i> Potvrdi Isporuku
                                 </button>
