@@ -70,10 +70,7 @@ const IndentsList = (props) => {
         const indentCode = indentsRef.current[rowIndex].code;
         IndentDataService.activateIndent(indentCode)
             .then((response) => {
-                const newIndents = [...indentsRef.current];
-                newIndents[rowIndex] = response.data;
-                setIndents(newIndents);
-                setDisplayedIndents(newIndents);
+                retrieveIndents();
                 toast.success('Uspešno aktivirana porudžbina! [' + indentCode + ']');
             })
             .catch((e) => {
@@ -85,10 +82,7 @@ const IndentsList = (props) => {
         const indentCode = indentsRef.current[rowIndex].code;
         IndentDataService.confirmIndentDelivery(indentCode)
             .then((response) => {
-                const newIndents = [...indentsRef.current];
-                newIndents[rowIndex] = response.data;
-                setIndents(newIndents);
-                setDisplayedIndents(newIndents);
+                retrieveIndents();
                 toast.success('Uspešno isporučena porudžbina!! [' + indentCode + ']');
             })
             .catch((e) => {

@@ -31,7 +31,7 @@ const remove = (indentCode) => {
 };
 
 const activateIndent = (indentCode) => {
-  return axiosInstance.put("porudzbine/", indentCode);
+  return axiosInstance.put("porudzbine/aktiviraj", indentCode);
 };  
 
 const confirmIndentDelivery = (indentCode) => {

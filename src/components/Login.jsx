@@ -23,6 +23,7 @@ const Login = () => {
       if (response.data.accessToken) {
         const { accessToken, customer, roles } = response.data;
         localStorage.setItem("user", JSON.stringify(response.data));
+        /* console.log("Dobijeni Token :"+accessToken); */
         setAuthToken(accessToken);
         setUserRole(roles[0]);
         setAuthenticated(true);
