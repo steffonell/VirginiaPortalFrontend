@@ -133,10 +133,10 @@ const ArticleTable = () => {
           return value + " KG";
         },
       },
-      {
+/*       {
         Header: 'Slika',
         accessor: 'imageSource',
-      },
+      }, */
       {
         Header: 'Status',
         accessor: 'isActive',

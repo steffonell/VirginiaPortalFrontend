@@ -185,7 +185,6 @@ const IndentsList = (props) => {
                                     <i className="fas fa-check"></i> Potvrdi Isporuku
                                 </button>
                             ) : null}
-
                         </div>
                     );
                 },
@@ -252,13 +251,15 @@ const IndentsList = (props) => {
                 <div className="col-12">
                     <div className="form-row justify-content-center">
                         <div className="col-12 col-md-4 my-1">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Ime Klijenta"
-                                value={searchCustomerName}
-                                onChange={(e) => setSearchCustomerName(e.target.value)}
-                            />
+                            {userRole !== "ROLE_USER" && (
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Ime Klijenta"
+                                    value={searchCustomerName}
+                                    onChange={(e) => setSearchCustomerName(e.target.value)}
+                                />
+                            )}
                         </div>
                         <div className="col-12 col-md-4 my-1">
                             <input

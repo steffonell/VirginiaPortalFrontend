@@ -225,6 +225,8 @@ const IndentEntries = () => {
                         })}
                     </tbody>
                 </table>
+                </div>
+                <div className="overflow-x-auto">
                 <textarea
                     className="block w-full px-4 py-2 mt-1 border rounded-lg text-gray-700 bg-gray-50 border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Napomena..."
