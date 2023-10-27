@@ -20,23 +20,23 @@ const ArticleTable = () => {
         // Group the data by brandName
         const groupedData = response.data.reduce((groups, article) => {
           const brandName = article.brand.brandName;
-  
+
           if (!groups[brandName]) {
             groups[brandName] = [];
           }
-  
+
           groups[brandName].push(article);
           return groups;
         }, {});
-  
+
         // Sort each group by name
         for (const brandName in groupedData) {
           groupedData[brandName].sort((a, b) => a.name.localeCompare(b.name));
         }
-  
+
         // Flatten the grouped data back into an array
         const sortedAndGroupedData = Object.values(groupedData).flat();
-  
+
         setArticles(sortedAndGroupedData);
         console.log(sortedAndGroupedData);
       })
@@ -44,6 +44,10 @@ const ArticleTable = () => {
         console.log(e);
       });
   };
+
+  const addArticle = useCallback(() => {
+    navigate(`/articles/add`);
+  }, [navigate]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -133,10 +137,10 @@ const ArticleTable = () => {
           return value + " KG";
         },
       },
-/*       {
-        Header: 'Slika',
-        accessor: 'imageSource',
-      }, */
+      /*       {
+              Header: 'Slika',
+              accessor: 'imageSource',
+            }, */
       {
         Header: 'Status',
         accessor: 'isActive',
@@ -157,7 +161,7 @@ const ArticleTable = () => {
           const isActive = props.row.original.isActive;
           return (
             <div className="flex space-x-2">
-              <button onClick={() => editArticle(articleID)} className="px-2 py-1 bg-blue-500 text-white rounded">Izmeni</button>
+              <button onClick={() => editArticle(articleID)} className="px-1 py-1 bg-blue-500 text-white rounded"><i className="fas fa-edit mr-2"></i>Izmeni</button>
               {
                 Boolean(isActive) &&
                 <button
@@ -220,7 +224,7 @@ const ArticleTable = () => {
               return (
                 <tr {...row.getRowProps({
                   style: {
-                    backgroundColor: row.original.isActive ? 'white' : '#FFD1D1',  
+                    backgroundColor: row.original.isActive ? 'white' : '#FFD1D1',
                   }
                 })}>
                   {row.cells.map(cell => (
@@ -233,14 +237,9 @@ const ArticleTable = () => {
             })}
           </tbody>
         </table>
-        <div className="mt-4">
-          <Link
-            to="/articles/add"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-green py-2 px-4 rounded-md transition duration-200 ease-in-out shadow-md"
-          >
-            Dodaj Artikal
-          </Link>
-        </div>
+        <button onClick={() => addArticle()} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+          <i className="fas fa-plus mr-2"></i> Dodaj Artikal
+        </button>
       </div>
     </div>
   );

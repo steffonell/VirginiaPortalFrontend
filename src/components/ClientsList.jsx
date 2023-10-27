@@ -2,8 +2,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import ClientDataService from "../services/CustomerService";
 import { useTable } from "react-table";
-import { useNavigate, Navigate, Link } from "react-router-dom";
-import logo from './../images/logo.jpg';
+import { useNavigate, Navigate } from "react-router-dom";
 
 const ClientsList = (props) => {
     const [clients, setClients] = useState([]);
@@ -56,21 +55,6 @@ const ClientsList = (props) => {
             });
     }, []);
 
-    // ... rest of the code remains unchanged
-    const filterClientsBasedOnCriteria = useCallback(() => {
-
-        const filteredData = cachedClients.filter((entry) =>
-            (entry.nameOfTheLegalEntity && entry.nameOfTheLegalEntity.toLowerCase().includes(filter.toLowerCase())) ||
-            (entry.customerCode && entry.customerCode.toLowerCase().includes(clientCode.toLowerCase()))
-        );
-        setClients(filteredData);
-    }, [cachedClients, filter, clientCode]);
-
-    const onChangeFilter = useCallback((e) => {
-        const filterValue = e.target.value;
-        setFilter(filterValue);
-    }, []);
-
     const addClient = useCallback(() => {
         navigate(`/clients/add`);
     }, [navigate]);
@@ -116,8 +100,12 @@ const ClientsList = (props) => {
                 accessor: "nameOfTheLegalEntity",
             },
             {
+                Header: "Grad",
+                accessor: "city" ,
+            },
+            {
                 Header: "Addresa",
-                accessor: "address",
+                accessor: "address" ,
             },
             {
                 Header: "PIB",
@@ -134,8 +122,8 @@ const ClientsList = (props) => {
             {
                 Header: 'Status',
                 accessor: 'isActive',
-                Cell: ({ value }) => value ? 'Aktivan' : 'Neaktivan', 
-              },
+                Cell: ({ value }) => value ? 'Aktivan' : 'Neaktivan',
+            },
             {
                 Header: "Kontakt Broj",
                 accessor: "contactNumber",
@@ -167,7 +155,7 @@ const ClientsList = (props) => {
                                 <i className="fas fa-building"></i> Poslovne Jedinice
                             </span>
 
-{/*                             <span onClick={() => deleteClient(customerId)} className="btn btn-danger btn-sm disabled mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+                            {/*                             <span onClick={() => deleteClient(customerId)} className="btn btn-danger btn-sm disabled mx-1" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
                                 <i className="fas fa-trash"></i> Izbrisi
                             </span> */}
                         </div>
@@ -177,12 +165,6 @@ const ClientsList = (props) => {
         ],
         []
     );
-
-    const containerStyle = {
-        width: '100%',
-        margin: '0 10px 10px 10px'
-    };
-
 
     const {
         getTableProps,
@@ -252,9 +234,9 @@ const ClientsList = (props) => {
                     </tbody>
                 </table>
             </div>
-                <button onClick={() => addClient()} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                    <i className="far fa-edit mr-2"></i> Dodaj Klijenta
-                </button>
+            <button onClick={() => addClient()} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                <i className="fas fa-plus mr-2"></i> Dodaj Klijenta
+            </button>
         </div>
     );
 };

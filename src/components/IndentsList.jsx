@@ -250,8 +250,9 @@ const IndentsList = (props) => {
             <div className="container mx-auto p-6">
                 <div className="col-12">
                     <div className="form-row justify-content-center">
-                        <div className="col-12 col-md-4 my-1">
-                            {userRole !== "ROLE_USER" && (
+                        {userRole !== "ROLE_USER" && (
+                            <div className="col-12 col-md-4 my-1">
+
                                 <input
                                     type="text"
                                     className="form-control"
@@ -259,8 +260,9 @@ const IndentsList = (props) => {
                                     value={searchCustomerName}
                                     onChange={(e) => setSearchCustomerName(e.target.value)}
                                 />
-                            )}
-                        </div>
+
+                            </div>
+                        )}
                         <div className="col-12 col-md-4 my-1">
                             <input
                                 type="text"
