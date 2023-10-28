@@ -1,18 +1,15 @@
 import React, { useContext, useState, useEffect, useMemo, useRef } from "react";
 import IndentDataService from "../services/IndentService";
-import { useTable, useSortBy, useFilters } from "react-table";
-import { Navigate } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { useTable, useSortBy } from "react-table";
+import { useNavigate } from "react-router-dom";
 import { ApplicationContext } from "./ApplicationContext";
-import logo from './../images/logo.jpg';
 import { formatDate } from "./utils";
 import "../styles/IndentList.css"
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const IndentsList = (props) => {
     const [indents, setIndents] = useState([]);
-    const [searchName, setSearchName] = useState("");
     const indentsRef = useRef();
     const navigate = useNavigate();
     indentsRef.current = indents;
@@ -23,15 +20,9 @@ const IndentsList = (props) => {
     const [displayedIndents, setDisplayedIndents] = useState([]);
     const [searchCustomerName, setSearchCustomerName] = useState("");
 
-
     useEffect(() => {
         retrieveIndents();
     }, []);
-
-    const onChangeSearchName = (e) => {
-        const searchName = e.target.value;
-        setSearchName(searchName);
-    };
 
     const retrieveIndents = () => {
         IndentDataService.getAll()
@@ -69,7 +60,7 @@ const IndentsList = (props) => {
     const activateIndent = (rowIndex) => {
         const indentCode = indentsRef.current[rowIndex].code;
         IndentDataService.activateIndent(indentCode)
-            .then((response) => {
+            .then(() => {
                 retrieveIndents();
                 toast.success('Uspešno aktivirana porudžbina! [' + indentCode + ']');
             })
@@ -81,7 +72,7 @@ const IndentsList = (props) => {
     const confirmDelivery = (rowIndex) => {
         const indentCode = indentsRef.current[rowIndex].code;
         IndentDataService.confirmIndentDelivery(indentCode)
-            .then((response) => {
+            .then(() => {
                 retrieveIndents();
                 toast.success('Uspešno isporučena porudžbina!! [' + indentCode + ']');
             })
@@ -247,66 +238,69 @@ const IndentsList = (props) => {
 
     return (
         <div className="w-full mx-4 my-4">
-            <div className="container mx-auto p-6">
-                <div className="col-12">
-                    <div className="form-row justify-content-center">
-                        {userRole !== "ROLE_USER" && (
-                            <div className="col-12 col-md-4 my-1">
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Ime Klijenta"
-                                    value={searchCustomerName}
-                                    onChange={(e) => setSearchCustomerName(e.target.value)}
-                                />
-
-                            </div>
-                        )}
-                        <div className="col-12 col-md-4 my-1">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="ID porudzbenice"
-                                value={searchCode}
-                                onChange={(e) => setSearchCode(e.target.value)}
-                            />
-                        </div>
-                        <div className="col-12 col-md-4 my-1">
-                            <div className="form-row">
-                                <div className="col-6">
-                                    <input
-                                        type="date"
-                                        className="form-control"
-                                        placeholder="Date From"
-                                        value={searchDateFrom}
-                                        onChange={(e) => setSearchDateFrom(e.target.value)}
-                                    />
-                                </div>
-                                <div className="col-6">
-                                    <input
-                                        type="date"
-                                        className="form-control"
-                                        placeholder="Date To"
-                                        value={searchDateTo}
-                                        onChange={(e) => setSearchDateTo(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-auto my-1">
-                            <button className="btn btn-outline-secondary" type="button" onClick={handleSearchClick}>
-                                Pretraga
-                            </button>
-                        </div>
-                        <div className="col-12 col-md-auto my-1">
-                            <button className="btn btn-outline-secondary" type="button" onClick={handleResetClick}>
-                                Reset
-                            </button>
-                        </div>
-                    </div>
+<div className="container mx-auto p-6">
+    <div className="flex flex-wrap -mx-2">
+        {userRole !== "ROLE_USER" && (
+            <div className="w-full md:w-1/3 px-2 mb-4">
+                <label htmlFor="clientName" className="block text-sm font-medium text-gray-700">Klijent</label>
+                <input
+                    type="text"
+                    id="clientName"
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Ime Klijenta"
+                    value={searchCustomerName}
+                    onChange={(e) => setSearchCustomerName(e.target.value)}
+                />
+            </div>
+        )}
+        <div className="w-full md:w-1/3 px-2 mb-4">
+            <label htmlFor="orderID" className="block text-sm font-medium text-gray-700">ID porudzbine</label>
+            <input
+                type="text"
+                id="orderID"
+                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="ID porudzbenice"
+                value={searchCode}
+                onChange={(e) => setSearchCode(e.target.value)}
+            />
+        </div>
+        <div className="w-full md:w-1/3 px-2 mb-4">
+            <div className="flex flex-wrap -mx-2">
+                <div className="w-1/2 px-2">
+                    <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700">Od</label>
+                    <input
+                        type="date"
+                        id="dateFrom"
+                        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Date From"
+                        value={searchDateFrom}
+                        onChange={(e) => setSearchDateFrom(e.target.value)}
+                    />
+                </div>
+                <div className="w-1/2 px-2">
+                    <label htmlFor="dateTo" className="block text-sm font-medium text-gray-700">Do</label>
+                    <input
+                        type="date"
+                        id="dateTo"
+                        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Date To"
+                        value={searchDateTo}
+                        onChange={(e) => setSearchDateTo(e.target.value)}
+                    />
                 </div>
             </div>
+        </div>
+        <div className="w-full px-2 mb-4 flex justify-center md:justify-start">
+            <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleSearchClick}>
+                Pretraga
+            </button>
+            <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleResetClick}>
+                Reset
+            </button>
+        </div>
+    </div>
+</div>
+
 
             <div className="overflow-x-auto">
                 <table {...getTableProps()} className="min-w-full">
