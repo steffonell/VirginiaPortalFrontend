@@ -13,7 +13,7 @@ const ShopComponent = (props) => {
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [brands, setBrands] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('');
-  const { loggedInClient, setLoggedInClient, addOrUpdateBasketItem } = useContext(ApplicationContext);
+  const { loggedInClient, addOrUpdateBasketItem } = useContext(ApplicationContext);
   const [quantities, setQuantities] = useState({});
 
   const handleQuantityChange = (id, value) => {
@@ -68,7 +68,7 @@ const ShopComponent = (props) => {
         ...prevQuantities,
         [article.article_id]: "",
       }));
-      toast.success('Uspešno dodavanje artikla '+article.name+' u korpu!');
+      toast.success('Uspešno dodavanje artikla ' + article.name + ' u korpu!');
     }
   };
 
@@ -277,7 +277,7 @@ const ShopComponent = (props) => {
         })}
       </div>
     </div>
-  );  
+  );
 };
 
 export default ShopComponent;
