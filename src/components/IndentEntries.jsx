@@ -46,15 +46,31 @@ const IndentEntries = () => {
     const comment = firstEntry ? firstEntry.indent.comment : "";
 
     const totalCost = entries
-        ? entries.reduce((acc, item) => acc + item.finalPriceForGivenQuantity, 0)
+        ? entries.reduce((acc, item) => acc + articlePriceWithDiscount(item.article) * item.requestedQuantity, 0)
         : 0;
 
     const totalWeight = entries
-        ? entries.reduce((acc, item) => acc + item.articleWeightForGivenQuantity, 0)
+        ? entries.reduce((acc, item, index) => {
+            const brutoMass = parseFloat(item.article.brutoMass);
+            const requestedQuantity = parseFloat(item.requestedQuantity);
+            if (isNaN(brutoMass) || isNaN(requestedQuantity)) {
+                return acc;
+            }
+            const newAcc = acc + brutoMass * requestedQuantity;
+            return newAcc;
+        }, 0)
         : 0;
 
     const totalNumberOfPackages = entries
-        ? entries.reduce((acc, item) => acc + item.numberOfPackages, 0)
+        ? entries.reduce((acc, item, index) => {
+            const quantityPerTransportPackage = item.article.quantityPerTransportPackage;
+            const requestedQuantity = parseFloat(item.requestedQuantity);
+            if (isNaN(quantityPerTransportPackage) || isNaN(requestedQuantity)) {
+                return acc;
+            }
+            const newAcc = acc + requestedQuantity / quantityPerTransportPackage;
+            return newAcc;
+        }, 0)
         : 0;
 
     const columns = useMemo(
@@ -81,7 +97,7 @@ const IndentEntries = () => {
             },
             {
                 Header: "Cena",
-                accessor: "articleWholeSalePrice",
+                accessor: "article.wholesalePrice",
             },
             {
                 Header: "Valuta",
@@ -99,28 +115,38 @@ const IndentEntries = () => {
                 Header: "Rabat",
                 accessor: "discount",
                 Cell: (props) => {
-                    const discount = props.row.original.articleBrandDiscount;
-                    return `${discount} %`;
+                    const brand = props.row.original.article.brand;
+                    return `${brandDiscount(brand)} %`;
                 },
             },
             {
                 Header: "Ukupna Cena",
-                accessor: "finalPriceForGivenQuantity",
+                accessor: "price",
                 Cell: (props) => {
-                    const price = props.row.original.finalPriceForGivenQuantity;
-                    return formatNumber(price);
+                    const article = props.row.original.article;
+                    const articleWholesalePrice = article.wholesalePrice;
+                    const discount = brandDiscount(article.brand);
+                    const quantity = props.row.original.requestedQuantity;
+                    const pdv = article.pdv;
+                    return formatNumber(priceWithPDV(discountedPrice(articleWholesalePrice, discount), pdv) * quantity);
                 },
             },
             {
                 Header: "Broj Paketa",
                 accessor: "numberOfPackages",
+                Cell: (props) => {
+                    const quantity = props.row.original.requestedQuantity;
+                    const quantityPerTransportPackage = props.row.original.article.quantityPerTransportPackage;
+                    return quantity / quantityPerTransportPackage;
+                },
             },
             {
                 Header: "Težina",
                 accessor: "weight",
                 Cell: (props) => {
-                    const weight = props.row.original.articleWeightForGivenQuantity;
-                    return formatNumberKG(weight);
+                    const brutoMass = props.row.original.article.brutoMass;
+                    const quantity = props.row.original.requestedQuantity;
+                    return formatNumberKG(brutoMass * quantity);
                 },
             },
             {
@@ -199,8 +225,8 @@ const IndentEntries = () => {
                         })}
                     </tbody>
                 </table>
-            </div>
-            <div className="overflow-x-auto">
+                </div>
+                <div className="overflow-x-auto">
                 <textarea
                     className="block w-full px-4 py-2 mt-1 border rounded-lg text-gray-700 bg-gray-50 border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Napomena..."
