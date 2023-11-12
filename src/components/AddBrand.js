@@ -1,10 +1,13 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import BrandService from '../services/BrandService';
+import { toast } from 'react-toastify';  // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css';  // Import the CSS for react-toastify
 
 const AddBrand = () => {
   const validationSchema = Yup.object().shape({
-    brandName: Yup.string().required('Brand Name is required'),
+    brandName: Yup.string().required('Naziv brenda je obavezan.'),
   });
 
   const formik = useFormik({
@@ -12,8 +15,18 @@ const AddBrand = () => {
       brandName: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log('Form data', values);
+    onSubmit: (values, { resetForm }) => {
+      BrandService.create(values)
+        .then(() => {
+          // Notify success
+          toast.success('Brend uspešno kreiran!');
+          // Reset the form
+          resetForm();
+        })
+        .catch((error) => {
+          // Handle any errors here
+          toast.error('Došlo je do greške pri kreiranju brenda.');
+        });
     },
   });
 
@@ -23,7 +36,7 @@ const AddBrand = () => {
         <div>
           <input
             name="brandName"
-            placeholder="Brand Name"
+            placeholder="Naziv brenda"
             value={formik.values.brandName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}

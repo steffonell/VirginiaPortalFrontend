@@ -13,7 +13,8 @@ const create = (data) => {
 };
 
 const update = (id, data) => {
-  return axiosInstance.put(`brendovi/${id}`, data);
+  const jsonData = JSON.stringify(data);
+  return axiosInstance.put(`brendovi/${id}`, jsonData);
 };
 
 const remove = (id) => {
