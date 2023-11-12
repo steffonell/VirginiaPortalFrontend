@@ -33,22 +33,22 @@ const AddBrand = () => {
   return (
     <div className="submit-form">
       <form onSubmit={formik.handleSubmit} className="space-y-4">
-        <div>
+        <div className="flex flex-col space-y-2">
           <input
             name="brandName"
             placeholder="Naziv brenda"
             value={formik.values.brandName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className={`w-full p-2 border rounded-md ${formik.touched.brandName && formik.errors.brandName ? 'border-red-500' : 'border-gray-300'} lg:max-w-[200px]`}
+            className={`w-full px-4 py-2 border rounded-md ${formik.touched.brandName && formik.errors.brandName ? 'border-red-500' : 'border-gray-300'}`}
           />
           {formik.touched.brandName && formik.errors.brandName ? (
-            <div className="text-red-500 mt-1">{formik.errors.brandName}</div>
+            <div className="text-red-500 text-sm">{formik.errors.brandName}</div>
           ) : null}
         </div>
         <div>
-          <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-            Submit
+          <button type="submit" className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Dodaj Brend
           </button>
         </div>
       </form>
