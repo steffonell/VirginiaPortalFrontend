@@ -67,7 +67,7 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
                     <Route path="/discountsOfClient" element={ProtectedComponent(ClientDiscounts, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/discount/add" element={ProtectedComponent(AddCustomerDiscount, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/basket" element={ProtectedComponent(Basket, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
-                    <Route path="/userInfo" element={ProtectedComponent(UserInfo, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
+                    <Route path="/userInfo" element={ProtectedComponent(UserInfo, userRole, ['ROLE_USER', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER', 'ROLE_ADMIN'])} />
                     <Route path="/statistics" element={ProtectedComponent(StatisticsComponent, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/forbidden" element={<Forbidden />} />
                 </Routes>
