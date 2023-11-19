@@ -118,6 +118,10 @@ const IndentsList = (props) => {
     const columns = useMemo(
         () => [
             {
+                Header: "Šifra Klijenta",
+                accessor: "customerCode",
+            },
+            {
                 Header: "Klijent",
                 accessor: "customerNameOfTheLegalEntity",
             },
