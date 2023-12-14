@@ -63,8 +63,6 @@ const createCustomerWithDiscountAndAddresses = async (customer, role, brandDisco
 };
 
 const addDeliveryAddressForClient = async ( deliveryAddress,customerId) => {
-  console.log("1 Arghument : "+deliveryAddress);
-  console.log("2 Arghument : "+customerId);
   try {
     const requestData = {
       deliveryAddressDTO: deliveryAddress,
