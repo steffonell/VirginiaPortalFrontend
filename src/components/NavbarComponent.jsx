@@ -60,7 +60,7 @@ const NavbarComponent = () => {
             {open && (
               <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                 <div className="py-1">
-                  <div className="flex items-center px-4 py-2 text-gray-700">Korisnik: <strong className="ml-2">{loggedInClient.nameOfTheLegalEntity}</strong></div>
+                  <div className="flex items-center px-4 py-2 text-gray-700"><strong className="ml-2">{loggedInClient.nameOfTheLegalEntity}</strong></div>
                   <NavLink to="/userInfo" className="block px-4 py-2 text-blue-600 hover:bg-gray-100">O profilu</NavLink>
                   <NavLink to="/change-password" className="block px-4 py-2 text-blue-600 hover:bg-gray-100">Promeni Šifru</NavLink>
                   <NavLink onClick={logoutFunction} className="block px-4 py-2 text-blue-600 hover:bg-gray-100">Odjavi se</NavLink>
@@ -104,7 +104,6 @@ const NavbarComponent = () => {
         )}
         <div className="mt-4 bg-gray-800 rounded-lg shadow-md">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
-            <span className="text-gray-400">Korisnik:</span>
             <strong className="text-white">{loggedInClient.nameOfTheLegalEntity}</strong>
           </div>
           <div>
