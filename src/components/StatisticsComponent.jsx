@@ -139,8 +139,8 @@ const StatisticsComponent = () => {
             const { quantity, revenue } = parsedData[name];
             return {
                 name: name,
-                Kvantitet: quantity,
-                Cena: revenue,
+                Kvantitet: Number(quantity).toFixed(2),
+                Cena: Number(revenue).toFixed(2),
             };
         });
     };
@@ -157,7 +157,7 @@ const StatisticsComponent = () => {
                     <div className="flex-1 p-4">
                         <div className="flex flex-col space-y-4">
                             {/* Each label-select pair is a flex item for better alignment */}
-                            <div className="flex flex-col">
+{/*                             <div className="flex flex-col">
                                 <label className="mb-2 font-semibold">Izaberite Brend:</label>
                                 <select
                                     value={selectedBrand}
@@ -175,7 +175,7 @@ const StatisticsComponent = () => {
                                         );
                                     })}
                                 </select>
-                            </div>
+                            </div> */}
                             <div className="flex flex-col">
                                 <label className="mb-2 font-semibold">Izaberite Artikal:</label>
                                 <select
