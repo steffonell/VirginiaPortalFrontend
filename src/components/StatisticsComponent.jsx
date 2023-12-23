@@ -91,18 +91,19 @@ const StatisticsComponent = () => {
         setApiData(data);
     }
 
-    const compareAllArticlesForChosenYearByMonths = () => {
-        const data = StatisticsService.getCompareAllArticlesForChosenYearByMonths(selectedYear, selectedArticle);
-        setApiData(data);
-    }
-
-    const compareAllBrandsForChosenYearByMonths = () => {
-        const data = StatisticsService.getComparedYears();
+    const compareAllBrandsForChosenYear = async () => {
+        const data = await StatisticsService.getCompareAllBrandsForChosenYear(selectedYear);
         setApiData(data);
     }
 
     const orderedQuantityAndRevenueForChosenYearAndClientByMonths = async () => {
         const data = await StatisticsService.getOrderedQuantityAndRevenueForChosenYearAndClientByMonths(selectedYear, selectedCustomer);
+        setApiData(data);
+    }
+
+    const orderedQuantityAndRevenueForChosenYearAndBrandByMonths = async () => {
+        console.log("SELECTED BRAND : "+selectedBrand);
+        const data = await StatisticsService.getOrderedQuantityAndRevenueForChosenYearAndBrandByMonths(selectedYear, selectedBrand);
         setApiData(data);
     }
 
@@ -117,6 +118,7 @@ const StatisticsComponent = () => {
     }
 
     const orderedQuantityForSelectedArticleAndYear = async () => {
+        console.log("SELECTED ARTICLE : "+selectedArticle);
         const data = await StatisticsService.getOrderedQuantityForSelectedArticleAndYear(selectedYear, selectedArticle);
         setApiData(data);
     }
@@ -157,25 +159,33 @@ const StatisticsComponent = () => {
                     <div className="flex-1 p-4">
                         <div className="flex flex-col space-y-4">
                             {/* Each label-select pair is a flex item for better alignment */}
-{/*                             <div className="flex flex-col">
+                            <div className="flex flex-col">
                                 <label className="mb-2 font-semibold">Izaberite Brend:</label>
                                 <select
-                                    value={selectedBrand}
-                                    onChange={(e) => setSelectedBrand(e.target.value)}
+                                    value={selectedBrand ? selectedBrand.brand_id : ''}
+                                    onChange={(e) => {
+                                        const selectedId = e.target.value;
+                                        console.log("Selected ID:", selectedId); // Debug log
+
+                                        if (selectedId) {
+                                            // Convert selectedId to the same type as your article.id
+                                            const foundBrand = brands.find(brand => brand.brand_id === Number(selectedId));
+                                            console.log("Found Brand:", foundBrand); // Debug log
+                                            setSelectedBrand(foundBrand);
+                                        } else {
+                                            setSelectedBrand(null);
+                                        }
+                                    }}
                                     className="border border-gray-300 rounded p-2"
                                 >
-                                    <option key="0" value="">
-
-                                    </option>
-                                    {brands.map((brand, index) => {
-                                        return (
-                                            <option key={index + 1} value={brand.brandName}>
-                                                {brand.brandName}
-                                            </option>
-                                        );
-                                    })}
+                                    <option key="0" value=""></option>
+                                    {brands.map((brand, index) => (
+                                        <option key={index + 1} value={brand.brand_id}>
+                                            {brand.brandName}
+                                        </option>
+                                    ))}
                                 </select>
-                            </div> */}
+                            </div>
                             <div className="flex flex-col">
                                 <label className="mb-2 font-semibold">Izaberite Artikal:</label>
                                 <select
@@ -304,6 +314,20 @@ const StatisticsComponent = () => {
                                 disabled={!selectedArticle || !selectedYear}
                             >
                                 Poručen Kvanitet Za Izabrani Artikal I Godinu Po Mesecima
+                            </button>
+                            <button
+                                onClick={orderedQuantityAndRevenueForChosenYearAndBrandByMonths}
+                                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full ${(!selectedYear || !selectedBrand) ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : ''}`}
+                                disabled={!selectedYear || !selectedBrand}
+                            >
+                                Poručen Kvanitet I Prihodi Za Izabranu Godinu I Brend Po Mesecima
+                            </button>
+                            <button
+                                onClick={compareAllBrandsForChosenYear}
+                                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full ${!selectedYear ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : ''}`}
+                                disabled={!selectedYear}
+                            >
+                                Uporedite Sve Brendove Za Izabranu Godinu
                             </button>
                         </div>
                     </div>
