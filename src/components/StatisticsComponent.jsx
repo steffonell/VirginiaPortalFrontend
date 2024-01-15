@@ -4,6 +4,7 @@ import ArticleService from "../services/ArticleService";
 import CustomerService from '../services/CustomerService';
 import BrandService from '../services/BrandService';
 import { ApplicationContext } from "./ApplicationContext";
+import DataTable from "../components/StatisticsDataTable";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -102,7 +103,7 @@ const StatisticsComponent = () => {
     }
 
     const orderedQuantityAndRevenueForChosenYearAndBrandByMonths = async () => {
-        console.log("SELECTED BRAND : "+selectedBrand);
+        console.log("SELECTED BRAND : " + selectedBrand);
         const data = await StatisticsService.getOrderedQuantityAndRevenueForChosenYearAndBrandByMonths(selectedYear, selectedBrand);
         setApiData(data);
     }
@@ -118,7 +119,7 @@ const StatisticsComponent = () => {
     }
 
     const orderedQuantityForSelectedArticleAndYear = async () => {
-        console.log("SELECTED ARTICLE : "+selectedArticle);
+        console.log("SELECTED ARTICLE : " + selectedArticle);
         const data = await StatisticsService.getOrderedQuantityForSelectedArticleAndYear(selectedYear, selectedArticle);
         setApiData(data);
     }
@@ -147,9 +148,27 @@ const StatisticsComponent = () => {
         });
     };
 
+    /*     // Assuming you know the range of your data, set a fixed domain
+    const yAxisDomain = [0, 1000]; // Example fixed domain */
 
+    // Define custom ticks for Y-axis
+    const yAxisTicks = [0, 200, 400, 600, 800, 1000];
+
+    const formatYAxisTick = (value) => {
+        // Example formatter: formats thousands as 'K', millions as 'M'
+        if (value >= 1000000) {
+            return `${value / 1000000}M`;
+        } else if (value >= 1000) {
+            return `${value / 1000}K`;
+        }
+        return value;
+    };
 
     const data = getChartData();
+
+    // Calculate the maximum Y value for a dynamic range
+    const maxYValue = data.reduce((max, item) => Math.max(max, item.Kvantitet, item.Cena), 0);
+    const yAxisDomain = [0, 1000];
 
     return (
         <div className="p-4">
@@ -274,7 +293,7 @@ const StatisticsComponent = () => {
                             >
                                 Poručen Kvanitet I Prihodi Za Izabranu Godinu Po Mesecima
                             </button>
-{/*                             <button
+                            {/*                             <button
                                 onClick={() => compareYears}
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
                             >
@@ -334,19 +353,22 @@ const StatisticsComponent = () => {
                 </div>
 
                 <ResponsiveContainer width="100%" height={500}>
-                    <BarChart
-                        data={data}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="Kvantitet" fill="#8884d8" />
-                        <Bar dataKey="Cena" fill="#82ca9d" />
-                    </BarChart>
-                </ResponsiveContainer>
+                <BarChart
+                    data={data}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis domain={yAxisDomain} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="Kvantitet" fill="#8884d8" />
+                <Bar dataKey="Cena" fill="#82ca9d" />
+            </BarChart>
+        </ResponsiveContainer>
+                <div className="mt-4">
+                    <DataTable data={data} />
+                </div>
             </div>
             {/*             <h3 className="text-xl font-bold mb-4">Statistika</h3>
             <div className="grid grid-cols-12 gap-4">
