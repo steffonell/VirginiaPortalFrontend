@@ -197,15 +197,14 @@ const ArticleTable = () => {
   } = useTable({ columns, data: filteredArticles });
 
   return (
-    <div>
-      <input
+      <div className="overflow-x-auto">
+              <input
         type="text"
         value={searchTerm}
         onChange={handleSearchChange}
         placeholder="Unesite naziv artikla radi pretrage..."
         className="mb-4 p-2 border border-gray-300 rounded"
       />
-      <div className="overflow-x-auto">
         <table {...getTableProps()} className="min-w-full">
           <thead>
             {headerGroups.map(headerGroup => (
@@ -240,7 +239,6 @@ const ArticleTable = () => {
         <button onClick={() => addArticle()} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
           <i className="fas fa-plus mr-2"></i> Dodaj Artikal
         </button>
-      </div>
     </div>
   );
 };

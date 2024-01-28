@@ -141,7 +141,7 @@ const ShopComponent = (props) => {
   const addedBrands = new Set();
 
   return (
-    <div className="d-flex shop-main-container">
+    <div className="overflow-x-auto">
       <div className="filter-container">
         <div className="brand-filter">
           <h5>Filtriranje po brendu</h5>

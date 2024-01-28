@@ -182,7 +182,7 @@ const ClientsList = (props) => {
     });
 
     return (
-        <div className="w-full mx-4 my-4">
+        <div className="overflow-x-auto">
             <div className="container mx-auto p-6 space-y-2 space-x-1">
                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-1 sm:space-x-4">
                     <input

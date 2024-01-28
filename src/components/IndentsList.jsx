@@ -241,69 +241,69 @@ const IndentsList = (props) => {
 
 
     return (
-        <div className="w-full mx-4 my-4">
-<div className="container mx-auto p-6">
-    <div className="flex flex-wrap -mx-2">
-        {userRole !== "ROLE_USER" && (
-            <div className="w-full md:w-1/3 px-2 mb-4">
-                <label htmlFor="clientName" className="block text-sm font-medium text-gray-700">Klijent</label>
-                <input
-                    type="text"
-                    id="clientName"
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    placeholder="Ime Klijenta"
-                    value={searchCustomerName}
-                    onChange={(e) => setSearchCustomerName(e.target.value)}
-                />
-            </div>
-        )}
-        <div className="w-full md:w-1/3 px-2 mb-4">
-            <label htmlFor="orderID" className="block text-sm font-medium text-gray-700">ID porudzbine</label>
-            <input
-                type="text"
-                id="orderID"
-                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="ID porudzbenice"
-                value={searchCode}
-                onChange={(e) => setSearchCode(e.target.value)}
-            />
-        </div>
-        <div className="w-full md:w-1/3 px-2 mb-4">
-            <div className="flex flex-wrap -mx-2">
-                <div className="w-1/2 px-2">
-                    <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700">Od</label>
-                    <input
-                        type="date"
-                        id="dateFrom"
-                        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Date From"
-                        value={searchDateFrom}
-                        onChange={(e) => setSearchDateFrom(e.target.value)}
-                    />
+        <div className="overflow-x-auto">
+            <div className="container mx-auto p-6">
+                <div className="flex flex-wrap -mx-2">
+                    {userRole !== "ROLE_USER" && (
+                        <div className="w-full md:w-1/3 px-2 mb-4">
+                            <label htmlFor="clientName" className="block text-sm font-medium text-gray-700">Klijent</label>
+                            <input
+                                type="text"
+                                id="clientName"
+                                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                placeholder="Ime Klijenta"
+                                value={searchCustomerName}
+                                onChange={(e) => setSearchCustomerName(e.target.value)}
+                            />
+                        </div>
+                    )}
+                    <div className="w-full md:w-1/3 px-2 mb-4">
+                        <label htmlFor="orderID" className="block text-sm font-medium text-gray-700">ID porudzbine</label>
+                        <input
+                            type="text"
+                            id="orderID"
+                            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="ID porudzbenice"
+                            value={searchCode}
+                            onChange={(e) => setSearchCode(e.target.value)}
+                        />
+                    </div>
+                    <div className="w-full md:w-1/3 px-2 mb-4">
+                        <div className="flex flex-wrap -mx-2">
+                            <div className="w-1/2 px-2">
+                                <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700">Od</label>
+                                <input
+                                    type="date"
+                                    id="dateFrom"
+                                    className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="Date From"
+                                    value={searchDateFrom}
+                                    onChange={(e) => setSearchDateFrom(e.target.value)}
+                                />
+                            </div>
+                            <div className="w-1/2 px-2">
+                                <label htmlFor="dateTo" className="block text-sm font-medium text-gray-700">Do</label>
+                                <input
+                                    type="date"
+                                    id="dateTo"
+                                    className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="Date To"
+                                    value={searchDateTo}
+                                    onChange={(e) => setSearchDateTo(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-full px-2 mb-4 flex justify-center md:justify-start">
+                        <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleSearchClick}>
+                            Pretraga
+                        </button>
+                        <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleResetClick}>
+                            Reset
+                        </button>
+                    </div>
                 </div>
-                <div className="w-1/2 px-2">
-                    <label htmlFor="dateTo" className="block text-sm font-medium text-gray-700">Do</label>
-                    <input
-                        type="date"
-                        id="dateTo"
-                        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Date To"
-                        value={searchDateTo}
-                        onChange={(e) => setSearchDateTo(e.target.value)}
-                    />
-                </div>
             </div>
-        </div>
-        <div className="w-full px-2 mb-4 flex justify-center md:justify-start">
-            <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleSearchClick}>
-                Pretraga
-            </button>
-            <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleResetClick}>
-                Reset
-            </button>
-        </div>
-    </div>
-</div>
 
 
             <div className="overflow-x-auto">

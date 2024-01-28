@@ -171,8 +171,8 @@ const StatisticsComponent = () => {
     const yAxisDomain = [0, 1000];
 
     return (
-        <div className="p-4">
-            <div className="mt-4">
+        <div className="overflow-x-auto">
+            <div className="overflow-x-auto">
                 <h4 className="text-lg font-bold mb-3">Statistički Panel</h4>
                 <div className="flex divide-x divide-gray-200">
                     <div className="flex-1 p-4">
