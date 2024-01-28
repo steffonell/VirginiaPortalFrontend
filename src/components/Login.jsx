@@ -8,17 +8,18 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setLoggedInClient, setAuthenticated, setUserRole } = useContext(ApplicationContext);
+  const { setLoggedInClient, setAuthenticated, setUserRole, setUserName, setEmail } = useContext(ApplicationContext);
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    setUserName(username);
     try {
       const response = await axiosInstance.post("auth/signin", {
         username,
         password,
       });
-  
+
       console.log('API response: %O', response.data);
       if (response.data.accessToken) {
         const { accessToken, customer, roles } = response.data;
@@ -27,9 +28,12 @@ const Login = () => {
         setAuthToken(accessToken);
         setUserRole(roles[0]);
         setAuthenticated(true);
-  
+
         if (roles[0] === "ROLE_FAKTURISTA" || roles[0] === "ROLE_MAGACIONER") {
           navigate("/indents");
+        } else if (roles[0] === "ROLE_REGISTRATION") {
+          setEmail(password);//password for registration prompt is the email of the customer
+          navigate("/userManualRegistration");
         } else {
           setLoggedInClient(customer);
           navigate("/shop");
@@ -37,7 +41,7 @@ const Login = () => {
       } else {
         setError("Netačni kredencijali");
       }
-    } catch (error) {      
+    } catch (error) {
       // Check for bad request
       if (error.response && error.response.status === 400) {
         setError(error.response.data); // Set the error message from the API response
@@ -47,7 +51,6 @@ const Login = () => {
       }
     }
   };
-  
 
   return (
     <div className="login-container">

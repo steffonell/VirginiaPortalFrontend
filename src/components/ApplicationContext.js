@@ -13,7 +13,9 @@ export const ApplicationContextProvider = (props) => {
           basketItems: [],
           token: null,
           authenticated: false,
-          userRole: null
+          userRole: null,
+          userName: null,
+          email
         };
       }
       return JSON.parse(serializedState);
@@ -24,12 +26,16 @@ export const ApplicationContextProvider = (props) => {
         basketItems: [],
         token: null,
         authenticated: false,
-        userRole: null
+        userRole: null,
+        userName: null,
+        email: null
       };
     }
   };
 
   const initialState = loadStateFromLocalStorage();
+  const [userName, setUserName] = useState(initialState.userName);
+  const [email, setEmail] = useState(initialState.userName); //needed to perserve the email for manual
   const [loggedInClient, setLoggedInClient] = useState(initialState.loggedInClient);
   const [basketItems, setBasketItems] = useState(initialState.basketItems);
   const [token, setToken] = useState(initialState.token);
@@ -43,7 +49,9 @@ export const ApplicationContextProvider = (props) => {
       basketItems,
       token,
       authenticated,
-      userRole
+      userRole,
+      userName,
+      email
     };
     saveStateToLocalStorage(state);
   }, [loggedInClient, basketItems, token, authenticated]);
@@ -64,6 +72,8 @@ export const ApplicationContextProvider = (props) => {
     setBasketItems([]);
     setToken(null);
     setUserRole(null);
+    setUserName(null);
+    setEmail(null);
   }
 
   // kada nema autentifikacije da se brise kontekst
@@ -114,6 +124,10 @@ export const ApplicationContextProvider = (props) => {
     setAuthenticated,
     userRole,
     setUserRole,
+    userName,
+    setUserName,
+    email,
+    setEmail,
     logout
   };
 

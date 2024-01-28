@@ -30,6 +30,8 @@ import AddClientDeliveryAddress from "./AddClientDeliveryAddress";
 import EditArticle from "./EditArticle";
 import UserInfo from "./UserInfo";
 import StatisticsComponent from "./StatisticsComponent";
+import RegistrationPrompt from "./RegistrationPrompt";
+import UserManualRegistration from "./UserManualRegistration";
 import HomeComponent from "./HomeComponent";
 
 const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
@@ -38,7 +40,7 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
             <NavbarComponent />
             <div className="main-content">
                 <Routes>
-                    <Route path="/" element={ProtectedComponent(HomeComponent, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />
+                    <Route path="/" element={ProtectedComponent(HomeComponent, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER', 'ROLE_REGISTRATION'])} />
                     <Route path="/shop" element={ProtectedComponent(ShopComponent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
                     <Route path="/articles" element={ProtectedComponent(ArticlesList, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/articles/add" element={ProtectedComponent(AddArticle, userRole, ['ROLE_ADMIN'])} />
@@ -54,7 +56,9 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
                     <Route path="/address/add" element={ProtectedComponent(AddDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/address/edit/:id" element={ProtectedComponent(EditDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/address/:id" element={ProtectedComponent(ClientDeliveryAddresses, userRole, ['ROLE_ADMIN'])} />
+                    <Route path="/userManualRegistration" element={ProtectedComponent(UserManualRegistration, userRole, ['ROLE_REGISTRATION', 'ROLE_ADMIN'])} />
                     <Route path="/clients/add" element={ProtectedComponent(AddClient, userRole, ['ROLE_ADMIN'])} />
+                    <Route path="/clients/sendRegistrationPrompt" element={ProtectedComponent(RegistrationPrompt, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/editAddressOfSpecifiedClient" element={ProtectedComponent(EditDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/addDeliveryAddressToSpecifiedClient" element={ProtectedComponent(AddClientDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/indents" element={ProtectedComponent(IndentsList, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />

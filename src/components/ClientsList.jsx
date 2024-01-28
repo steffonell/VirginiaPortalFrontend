@@ -24,6 +24,10 @@ const ClientsList = (props) => {
         setClients(filteredData);
     };
 
+    const handleCustomerRegistrationAction = useCallback(() => {
+        navigate(`/clients/sendRegistrationPrompt`);
+    }, [navigate]);
+
     useEffect(() => {
         // Fetch all clients once on component mount
         ClientDataService.getAll()
@@ -101,11 +105,11 @@ const ClientsList = (props) => {
             },
             {
                 Header: "Grad",
-                accessor: "city" ,
+                accessor: "city",
             },
             {
                 Header: "Addresa",
-                accessor: "address" ,
+                accessor: "address",
             },
             {
                 Header: "PIB",
@@ -179,8 +183,8 @@ const ClientsList = (props) => {
 
     return (
         <div className="w-full mx-4 my-4">
-            <div className="container mx-auto p-6 space-y-4">
-                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+            <div className="container mx-auto p-6 space-y-2 space-x-1">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-1 sm:space-x-4">
                     <input
                         type="text"
                         className="flex-1 p-2 border rounded-md"
@@ -199,8 +203,10 @@ const ClientsList = (props) => {
                 <button onClick={handleSearch} className="w-full sm:w-auto bg-blue-500 text-white p-2 rounded-md">
                     Pretraga
                 </button>
+                <button onClick={handleCustomerRegistrationAction} className="w-full sm:w-auto bg-blue-500 text-white p-2 rounded-md">
+                    Slanje Registacionog Upita
+                </button>
             </div>
-
             <div className="overflow-x-auto">
                 <table {...getTableProps()} className="min-w-full">
                     <thead>

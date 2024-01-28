@@ -15,6 +15,8 @@ export function getAllowedRoles() {
   return ["ROLE_ADMIN", "ROLE_USER", "ROLE_MODERATOR", "ROLE_FAKTURISTA", "ROLE_MAGACIONER"];
 }
 
+export const phoneNumberRegEx = /^\+\d{3}\d{9}$/;
+
 export function formatNumber (number) {
   return <span>{Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
 }
