@@ -15,7 +15,7 @@ export const ApplicationContextProvider = (props) => {
           authenticated: false,
           userRole: null,
           userName: null,
-          email
+          email: null
         };
       }
       return JSON.parse(serializedState);
@@ -54,8 +54,8 @@ export const ApplicationContextProvider = (props) => {
       email
     };
     saveStateToLocalStorage(state);
-  }, [loggedInClient, basketItems, token, authenticated]);
-
+  }, [loggedInClient, basketItems, token, authenticated, userRole, userName, email]);
+  
   // Saving state to local storage
   const saveStateToLocalStorage = (state) => {
     try {
