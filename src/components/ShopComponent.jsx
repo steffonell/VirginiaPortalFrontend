@@ -32,7 +32,8 @@ const ShopComponent = (props) => {
   const retrieveArticles = () => {
     ArticleDataService.getAll()
       .then((response) => {
-        const articles = response.data;
+        const allArticles = response.data;
+        const articles = allArticles.filter(article => article.isVisible === true);
 
         // First, sort articles by ID treating ID as a number
         articles.sort((a, b) => Number(a.id) - Number(b.id));

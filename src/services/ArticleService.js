@@ -24,6 +24,24 @@ const create = (article, brandName) => {
   });
 };
 
+const showArticle = (id) => {
+  return axiosInstance.post("artikli/prikazi", id)  // send id directly
+    .then(response => {
+      return response.data;
+    }).catch(error => {
+      throw new Error(error);
+    });
+};
+
+const hideArticle = (id) => {
+  return axiosInstance.post("artikli/sakrij", id)  // send id directly
+  .then(response => {
+    return response.data;
+  }).catch(error => {
+    throw new Error(error);
+  });
+};
+
 const activateArticle = (id) => {
   return axiosInstance.post("artikli/aktiviraj", id)  // send id directly
     .then(response => {
@@ -68,7 +86,9 @@ const ArticleService = {
   removeAll,
   findByName,
   activateArticle,
-  deactivateArticle
+  deactivateArticle,
+  showArticle,
+  hideArticle
 };
 
 export default ArticleService;

@@ -58,6 +58,30 @@ const ArticleTable = () => {
     navigate(`/articles/edit/${id}`);
   }, [navigate]);
 
+  const showArticle = useCallback((id) => {
+    ArticleDataService.showArticle(id)
+      .then(() => {
+        retrieveArticles();
+        toast.success('Uspešno promenjena vidljivost artikla!');
+      })
+      .catch(e => {
+        console.log(e);
+        toast.error('Neuspešna promena vidljivosti artikla!');
+      });
+  });
+
+  const hideArticle = useCallback((id) => {
+    ArticleDataService.hideArticle(id)
+      .then(() => {
+        retrieveArticles();
+        toast.success('Uspešno promenjena vidljivost artikla!');
+      })
+      .catch(e => {
+        console.log(e);
+        toast.error('Neuspešna promena vidljivosti artikla!');
+      });
+  });
+
   const activateArticle = useCallback((id) => {
     ArticleDataService.activateArticle(id)
       .then(() => {
@@ -159,6 +183,7 @@ const ArticleTable = () => {
         Cell: (props) => {
           const articleID = props.row.original.article_id;
           const isActive = props.row.original.isActive;
+          const isVisible = props.row.original.isVisible;
           return (
             <div className="flex space-x-2">
               <button onClick={() => editArticle(articleID)} className="px-1 py-1 bg-blue-500 text-white rounded"><i className="fas fa-edit mr-2"></i>Izmeni</button>
@@ -180,6 +205,24 @@ const ArticleTable = () => {
                   Aktiviraj
                 </button>
               }
+              {
+                Boolean(isVisible) &&
+                <button
+                  onClick={() => hideArticle(articleID)}
+                  className="px-2 py-1 bg-red-500 text-white rounded"
+                >
+                  Sakrij
+                </button>
+              }
+              {
+                !Boolean(isVisible) &&
+                <button
+                  onClick={() => showArticle(articleID)}
+                  className="px-2 py-1 bg-green-800 text-white rounded"
+                >
+                  Prikaži
+                </button>
+              }              
             </div>
           );
         },

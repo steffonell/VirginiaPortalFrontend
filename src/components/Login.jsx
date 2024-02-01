@@ -20,7 +20,7 @@ const Login = () => {
         password,
       });
 
-      console.log('API response: %O', response.data);
+      /* console.log('API response: %O', response.data); */
       if (response.data.accessToken) {
         const { accessToken, customer, roles } = response.data;
         localStorage.setItem("user", JSON.stringify(response.data));
@@ -46,7 +46,7 @@ const Login = () => {
       if (error.response && error.response.status === 400) {
         setError(error.response.data); // Set the error message from the API response
       } else {
-        console.error("Greška prilikom prijavljivanja", error);
+        /* console.error("Greška prilikom prijavljivanja", error); */
         setError("Greška prilikom prijavljivanja");
       }
     }

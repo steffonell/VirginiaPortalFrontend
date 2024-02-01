@@ -28,6 +28,7 @@ const EditArticle = () => {
             imageSource: "",
             pdv: "20",
             isActive: 'true',
+            isVisible: 'true',
             brandName: "",
         },
         validationSchema: Yup.object().shape({
@@ -42,6 +43,7 @@ const EditArticle = () => {
             imageSource: Yup.string(),
             pdv: Yup.number().required('PDV je obavezan'),
             isActive: Yup.string().required('Obavezno biranje statusa artikla.'),
+            isVisible: Yup.string().required('Obavezno biranje vidljivosti artikla.'),
             brandName: Yup.string().required('Naziv brenda je obavezan.'),
         }),
         onSubmit: values => {
@@ -51,8 +53,7 @@ const EditArticle = () => {
                     toast.success('Uspešno ažuriran artikal!');
                 })
                 .catch(e => {
-                    console.log(e);
-                    toast.error('Neuspešno ažuriranje!');
+                    toast.error('Neuspešno ažuriranje!', e);
                 });
         },
     });
@@ -74,10 +75,11 @@ const EditArticle = () => {
                     imageSource: response.data.imageSource || "",
                     pdv: response.data.pdv || "20",
                     isActive: response.data.isActive ? 'true' : 'false',
+                    isVisible: response.data.isVisible ? 'true' : 'false',
                     brandName: response.data.brand ? response.data.brand.brandName : "",
                 });
             }).catch(e => {
-                console.log(e);
+                toast.error('Neuspešno preuzimanje artikala!', e);
             });
     }, []);
 
@@ -88,7 +90,7 @@ const EditArticle = () => {
                 setBrands(response.data);
             })
             .catch(e => {
-                console.log(e);
+                toast.error('Neuspešno preuzimanje brendova!', e);
             });
     };
 
@@ -256,6 +258,34 @@ const EditArticle = () => {
                     </div>
                     {formik.touched.isActive && formik.errors.isActive ? (
                         <div className="error-message">{formik.errors.isActive}</div>
+                    ) : null}
+                </label>
+                <label>
+                    Vidljivost :
+                    <div className="radio-group">
+                        <label>
+                            <input
+                                type="radio"
+                                name="isVisible"
+                                value="true"
+                                checked={formik.values.isVisible === 'true'}
+                                onChange={formik.handleChange}
+                            />
+                            Vidljiv
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="isVisible"
+                                value="false"
+                                checked={formik.values.isVisible === 'false'}
+                                onChange={formik.handleChange}
+                            />
+                            Nevidljiv
+                        </label>
+                    </div>
+                    {formik.touched.isVisible && formik.errors.isVisible ? (
+                        <div className="error-message">{formik.errors.isVisible}</div>
                     ) : null}
                 </label>
                 <div className="form-group">

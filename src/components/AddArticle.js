@@ -47,6 +47,7 @@ const AddArticle = () => {
         imageSource: Yup.string(),
         pdv: Yup.number().required('PDV je obavezan.'),
         isActive: Yup.string().required('Obavezno biranje statusa artikla.'),
+        isVisible: Yup.string().required('Obavezno biranje vidljivosti artikla.'),
         brandName: Yup.string().required('Naziv brenda je obavezan.'),
     });
 
@@ -63,6 +64,7 @@ const AddArticle = () => {
             imageSource: '',
             pdv: '20',
             isActive: 'true',
+            isVisible: 'true',
             brandName: '',
         },
         validationSchema: validationSchema,
@@ -262,6 +264,36 @@ const AddArticle = () => {
                     </div>
                     {formik.touched.isActive && formik.errors.isActive ? (
                         <div className="error-message">{formik.errors.isActive}</div>
+                    ) : null}
+                </label>
+                <br></br>
+                <br></br>
+                <label>
+                    Vidljivost :
+                    <div className="radio-group">
+                        <label>
+                            <input
+                                type="radio"
+                                name="isVisible"
+                                value="true"
+                                checked={formik.values.isVisible === 'true'}
+                                onChange={formik.handleChange}
+                            />
+                            Vidljiv
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="isVisible"
+                                value="false"
+                                checked={formik.values.isVisible === 'false'}
+                                onChange={formik.handleChange}
+                            />
+                            Nevidljiv
+                        </label>
+                    </div>
+                    {formik.touched.isVisible && formik.errors.isVisible ? (
+                        <div className="error-message">{formik.errors.isVisible}</div>
                     ) : null}
                 </label>
                 <br></br>
