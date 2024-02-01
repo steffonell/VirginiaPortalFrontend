@@ -40,7 +40,6 @@ const UserManualRegistration = () => {
         contactPerson: Yup.string().required('Polje "Kontakt osoba" je obavezno.'),
         contactNumber: Yup.string().matches(phoneNumberRegEx, 'Polje "Kontakt broj" mora biti u formatu +381XXXXXXXXX.')
             .required('Polje "Kontakt broj" je obavezno.'),
-        paymentCurrency: Yup.string().required('Polje "Valuta plaćanja" je obavezno.'),
         role: Yup.string().required('Izaberite privilegije novog klijenta.'),
     });
 
@@ -84,7 +83,7 @@ const UserManualRegistration = () => {
             contactPerson: '',
             contactNumber: '',
             email: email,
-            paymentCurrency: '',
+            paymentCurrency: '0',
             role: 'ROLE_USER',
         },
         validationSchema: validationSchema,
@@ -217,23 +216,6 @@ const UserManualRegistration = () => {
                         <div className="error-message text-red-500 text-xs italic">{formik.errors.contactNumber}</div>
                     ) : null}
                 </div>
-                <div className="form-group mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="paymentCurrency">
-                        Valuta Placanja
-                    </label>
-                    <input
-                        type="text"
-                        name="paymentCurrency"
-                        placeholder="Valuta Placanja"
-                        value={formik.values.paymentCurrency}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                    {formik.touched.paymentCurrency && formik.errors.paymentCurrency ? (
-                        <div className="error-message text-red-500 text-xs italic">{formik.errors.paymentCurrency}</div>
-                    ) : null}
-                </div>
                 <div className="form-group flex gap-4 mt-4">
                     <button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={() => setModalFormDeliveryAddressVisible(true)}>
                         Dodaj Poslovnu Jedinicu
@@ -245,7 +227,6 @@ const UserManualRegistration = () => {
                     </button>
                 </div>
             </form>
-
 
             {modalFormDeliveryAddressVisible && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
