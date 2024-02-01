@@ -47,8 +47,8 @@ const EditClient = () => {
       contactPerson: client.contactPerson || "",
       contactNumber: client.contactNumber || "",
       email: client.email || "",
-      isActive: 'true',
-      comment: "",
+      isActive: client.isActive ? 'true' : 'false',
+      comment: client.comment || "",
       paymentCurrency: client.paymentCurrency || "",
     },
     validationSchema: Yup.object().shape({
