@@ -9,6 +9,8 @@ function HomePage() {
           <h1 className="text-4xl font-bold mb-4">Dobrodošli na Virdzinija B2B Portal za Narudžbine</h1>
           <p className="text-lg mb-8">Vaše jedinstveno rešenje za narudžbine artikala u velikim količinama.</p>
           <a href="/shop" className="bg-blue-500 text-white px-4 py-2 rounded">Pregledajte Proizvode</a>
+          <br/><br/>
+          <p className="text-md text-gray-700">Za sva dodatna pitanja obratite se Marini na <a href="tel:+381631071864" className="text-blue-500 underline">063-1071864.</a></p>
         </div>
       </section>
 
