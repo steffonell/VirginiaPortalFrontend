@@ -28,14 +28,13 @@ const Basket = () => {
         for (let item of basketItems) {
             if (item.article.brand.brandName === "NOCCO") {
                 noccoItemsQuantity += item.quantity;
-            } else {
-                const remainder = item.quantity % item.article.quantityPerTransportPackage;
-                if (remainder !== 0) {
-                    missingQuantities[item.article.name] = {
-                        article: item.article,
-                        missingQuantity: item.article.quantityPerTransportPackage - remainder
-                    };
-                }
+            }
+            const remainder = item.quantity % item.article.minimumQuantityDemand;
+            if (remainder !== 0) {
+                missingQuantities[item.article.name] = {
+                    article: item.article,
+                    missingQuantity: item.article.minimumQuantityDemand - remainder
+                };
             }
         }
 
@@ -163,85 +162,85 @@ const Basket = () => {
                 Korpa
             </h3>
             <div className="overflow-x-auto">
-            <table className="table table-responsive table-striped table-bordered table-margin">
-                <thead>
-                    <tr>
-                        <th className="hide-on-mobile">Redni Broj</th>
-                        <th>Šifra Artikla</th>
-                        <th>Artikal</th>
-                        <th>Količina</th>
-                        <th className="hide-on-mobile">Fakturna Cena</th>
-                        <th className="hide-on-mobile">Rabat</th>
-                        <th className="hide-on-mobile">Porez</th>
-                        <th className="hide-on-mobile">Cena Sa Porezom</th>
-                        <th className="hide-on-mobile">Broj Paketa</th>
-                        <th className="hide-on-mobile">Težina</th>
-                        <th>Iznos</th>
-                        <th>Akcije</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {basketItems ? (
-                        basketItems.map((item, index) => (
-                            <tr key={item.article.id}>
-                                <td className="hide-on-mobile">{index + 1}</td>
-                                <td>{item.article.code}</td>
-                                <td>{item.article.name}</td>
-                                <td>
-                                    <div className="input-group quantity-buttons">
-                                        <div className="input-group-prepend">
-                                            <button
-                                                type="button"
-                                                className="btn btn-outline-secondary"
-                                                onClick={() => item.quantity > 0 && handleQuantityChange(item.article, item.quantity - item.article.minimumQuantityDemand)}
-                                            >
-                                                -
-                                            </button>
+                <table className="table table-responsive table-striped table-bordered table-margin">
+                    <thead>
+                        <tr>
+                            <th className="hide-on-mobile">Redni Broj</th>
+                            <th>Šifra Artikla</th>
+                            <th>Artikal</th>
+                            <th>Količina</th>
+                            <th className="hide-on-mobile">Fakturna Cena</th>
+                            <th className="hide-on-mobile">Rabat</th>
+                            <th className="hide-on-mobile">Porez</th>
+                            <th className="hide-on-mobile">Cena Sa Porezom</th>
+                            <th className="hide-on-mobile">Broj Paketa</th>
+                            <th className="hide-on-mobile">Težina</th>
+                            <th>Iznos</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {basketItems ? (
+                            basketItems.map((item, index) => (
+                                <tr key={item.article.id}>
+                                    <td className="hide-on-mobile">{index + 1}</td>
+                                    <td>{item.article.code}</td>
+                                    <td>{item.article.name}</td>
+                                    <td>
+                                        <div className="input-group quantity-buttons">
+                                            <div className="input-group-prepend">
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-outline-secondary"
+                                                    onClick={() => item.quantity > 0 && handleQuantityChange(item.article, item.quantity - item.article.minimumQuantityDemand)}
+                                                >
+                                                    -
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="number"
+                                                className="form-control input-width"
+                                                id={`quantity_${item.article.id}`}
+                                                required
+                                                name={`quantity_${item.article.id}`}
+                                                min={item.article.quantityPerTransportPackage}
+                                                value={item.quantity}
+                                                onChange={(e) => handleQuantityChange(item.article, e.target.value)}
+                                            />
+                                            <div className="input-group-append">
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-outline-secondary"
+                                                    onClick={() => handleQuantityChange(item.article, item.quantity + item.article.minimumQuantityDemand)}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
                                         </div>
-                                        <input
-                                            type="number"
-                                            className="form-control input-width"
-                                            id={`quantity_${item.article.id}`}
-                                            required
-                                            name={`quantity_${item.article.id}`}
-                                            min={item.article.quantityPerTransportPackage}
-                                            value={item.quantity}
-                                            onChange={(e) => handleQuantityChange(item.article, e.target.value)}
-                                        />
-                                        <div className="input-group-append">
-                                            <button
-                                                type="button"
-                                                className="btn btn-outline-secondary"
-                                                onClick={() => handleQuantityChange(item.article, item.quantity + item.article.minimumQuantityDemand)}
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                    </div>
 
-                                </td>
-                                <td className="hide-on-mobile">{formatNumber(item.article.wholesalePrice)}</td>
-                                <td className="hide-on-mobile">{brandDiscount(item.article.brand)} %</td>
-                                <td className="hide-on-mobile">{pdv} %</td>
-                                <td className="hide-on-mobile">{formatNumber(priceWithPDV(discountedPrice(item.article.wholesalePrice, brandDiscount(item.article.brand)), pdv))}</td>
-                                <td className="hide-on-mobile">{item.quantity / item.article.quantityPerTransportPackage}</td>
-                                <td className="hide-on-mobile">{formatNumberKG(item.article.brutoMass * item.quantity)}</td>
-                                <td>{formatNumber(priceWithPDV(discountedPrice(item.article.wholesalePrice, brandDiscount(item.article.brand)), pdv) * item.quantity)}</td>
-                                <td>
-                                    <button
-                                        className="btn btn-danger"
-                                        onClick={() => removeBasketItem(item.article)}
-                                    >
-                                        Ukloni
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <p>Korpa je prazna.</p>
-                    )}
-                </tbody>
-            </table>
+                                    </td>
+                                    <td className="hide-on-mobile">{formatNumber(item.article.wholesalePrice)}</td>
+                                    <td className="hide-on-mobile">{brandDiscount(item.article.brand)} %</td>
+                                    <td className="hide-on-mobile">{pdv} %</td>
+                                    <td className="hide-on-mobile">{formatNumber(priceWithPDV(discountedPrice(item.article.wholesalePrice, brandDiscount(item.article.brand)), pdv))}</td>
+                                    <td className="hide-on-mobile">{item.quantity / item.article.quantityPerTransportPackage}</td>
+                                    <td className="hide-on-mobile">{formatNumberKG(item.article.brutoMass * item.quantity)}</td>
+                                    <td>{formatNumber(priceWithPDV(discountedPrice(item.article.wholesalePrice, brandDiscount(item.article.brand)), pdv) * item.quantity)}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() => removeBasketItem(item.article)}
+                                        >
+                                            Ukloni
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <p>Korpa je prazna.</p>
+                        )}
+                    </tbody>
+                </table>
             </div>
             <textarea
                 className="block w-full px-4 py-2 mt-1 border rounded-lg text-gray-700 bg-gray-50 border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -258,7 +257,9 @@ const Basket = () => {
                     </div>
                     <div className="flex justify-between items-center">
                         <strong className="text-lg text-gray-700">Ukupno Paketa :</strong>
-                        <span className="text-lg text-gray-900 font-bold">{totalNumberOfPackages}</span>
+                        <span className="text-lg text-gray-900 font-bold">
+                            {Number(Math.ceil(totalNumberOfPackages * 100) / 100).toFixed(2)}
+                        </span>
                     </div>
                     <div className="flex justify-between items-center">
                         <strong className="text-lg text-gray-700">Ukupna Težina :</strong>
