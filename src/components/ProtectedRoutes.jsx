@@ -49,8 +49,8 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
                     <Route path="/brands" element={ProtectedComponent(BrandsList, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/brands/add" element={ProtectedComponent(AddBrand, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/brands/:id" element={ProtectedComponent(Brand, userRole, ['ROLE_ADMIN'])} />
-                    <Route path="/clients" element={ProtectedComponent(ClientsList, userRole, ['ROLE_ADMIN'])} />
-                    <Route path="/clients/edit/:id" element={ProtectedComponent(EditClient, userRole, ['ROLE_ADMIN'])} />
+                    <Route path="/clients" element={ProtectedComponent(ClientsList, userRole, ['ROLE_ADMIN', 'ROLE_FAKTURISTA'])} />
+                    <Route path="/clients/edit/:id" element={ProtectedComponent(EditClient, userRole, ['ROLE_ADMIN', 'ROLE_FAKTURISTA'])} />
                     <Route path="/address" element={ProtectedComponent(DeliveryAddressesList, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/addressesOfClient" element={ProtectedComponent(ClientDeliveryAddresses, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/address/add" element={ProtectedComponent(AddDeliveryAddress, userRole, ['ROLE_ADMIN'])} />

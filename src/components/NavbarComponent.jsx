@@ -45,7 +45,13 @@ const NavbarComponent = () => {
               <NavLink to="/basket" className="hover:text-gray-300">Korpa</NavLink>
             </>
           )}
-          {(userRole === "ROLE_FAKTURISTA" || userRole === "ROLE_MAGACIONER") && (
+          {userRole === "ROLE_FAKTURISTA" && (
+            <>
+              <NavLink to="/clients" className="hover:text-gray-300">Klijenti</NavLink>
+              <NavLink to="/indents" className="hover:text-gray-300">Porudzbine</NavLink>
+            </>
+          )}          
+          {userRole === "ROLE_MAGACIONER" && (
             <>
               <NavLink to="/indents" className="hover:text-gray-300">Porudzbine</NavLink>
             </>

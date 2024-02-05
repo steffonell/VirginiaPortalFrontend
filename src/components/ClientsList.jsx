@@ -49,15 +49,26 @@ const ClientsList = (props) => {
         // Fetch all clients once on component mount
         ClientDataService.getAll()
             .then((response) => {
-                if (response && response.data) {
-                    setCachedClients(response.data);
-                    setClients(response.data);  // Initially display all clients
+                // Check if response.data is an array
+                if (response && Array.isArray(response.data)) {
+                    // Sort clients with isActive = false to come first
+                    const sortedClients = response.data.sort((a, b) => {
+                        // Convert isActive to numbers (false = 0, true = 1) and subtract to sort
+                        return (a.isActive === b.isActive) ? 0 : a.isActive ? 1 : -1;
+                    });
+    
+                    setCachedClients(sortedClients);
+                    setClients(sortedClients);  // Initially display all clients, sorted
+                } else {
+                    // Handle case where data is not an array
+                    console.error('Expected an array of clients, but received:', response.data);
                 }
             })
             .catch((e) => {
                 console.log(e);
             });
     }, []);
+    
 
     const addClient = useCallback(() => {
         navigate(`/clients/add`);
