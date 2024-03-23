@@ -57,7 +57,7 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
                     <Route path="/address/edit/:id" element={ProtectedComponent(EditDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/address/:id" element={ProtectedComponent(ClientDeliveryAddresses, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/userManualRegistration" element={ProtectedComponent(UserManualRegistration, userRole, ['ROLE_REGISTRATION', 'ROLE_ADMIN'])} />
-                    <Route path="/clients/add" element={ProtectedComponent(AddClient, userRole, ['ROLE_ADMIN'])} />
+                    <Route path="/clients/add" element={ProtectedComponent(AddClient, userRole, ['ROLE_ADMIN', 'ROLE_FAKTURISTA'])} />
                     <Route path="/clients/sendRegistrationPrompt" element={ProtectedComponent(RegistrationPrompt, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/editAddressOfSpecifiedClient" element={ProtectedComponent(EditDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
                     <Route path="/addDeliveryAddressToSpecifiedClient" element={ProtectedComponent(AddClientDeliveryAddress, userRole, ['ROLE_ADMIN'])} />
@@ -67,9 +67,9 @@ const ProtectedRoutes = ({ userRole, ProtectedComponent }) => {
                     <Route path="/indents/:id" element={ProtectedComponent(Indent, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
                     <Route path="/indentEntry" element={ProtectedComponent(AddIndentEntry, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
                     <Route path="/indents/entries/:code" element={ProtectedComponent(IndentEntries, userRole, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER'])} />
-                    <Route path="/discount" element={ProtectedComponent(DiscountList, userRole, ['ROLE_ADMIN'])} />
-                    <Route path="/discountsOfClient" element={ProtectedComponent(ClientDiscounts, userRole, ['ROLE_ADMIN'])} />
-                    <Route path="/discount/add" element={ProtectedComponent(AddCustomerDiscount, userRole, ['ROLE_ADMIN'])} />
+                    <Route path="/discount" element={ProtectedComponent(DiscountList, userRole, ['ROLE_ADMIN', 'ROLE_FAKTURISTA'])} />
+                    <Route path="/discountsOfClient" element={ProtectedComponent(ClientDiscounts, userRole, ['ROLE_ADMIN', 'ROLE_FAKTURISTA'])} />
+                    <Route path="/discount/add" element={ProtectedComponent(AddCustomerDiscount, userRole, ['ROLE_ADMIN', 'ROLE_FAKTURISTA'])} />
                     <Route path="/basket" element={ProtectedComponent(Basket, userRole, ['ROLE_USER', 'ROLE_ADMIN'])} />
                     <Route path="/userInfo" element={ProtectedComponent(UserInfo, userRole, ['ROLE_USER', 'ROLE_FAKTURISTA', 'ROLE_MAGACIONER', 'ROLE_ADMIN'])} />
                     <Route path="/statistics" element={ProtectedComponent(StatisticsComponent, userRole, ['ROLE_ADMIN'])} />
