@@ -6,13 +6,14 @@ import BrandService from "../services/BrandService";
 import { useParams, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const EditArticle = () => {
-    const [article, setArticle] = useState(null);  // initialize to null
+    const [article, setArticle] = useState(null);
     const [brands, setBrands] = useState([]);
+    const [existingImage, setExistingImage] = useState(null);
     const { id: articleID } = useParams();
     const navigate = useNavigate();
-
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -30,6 +31,7 @@ const EditArticle = () => {
             isActive: 'true',
             isVisible: 'true',
             brandName: "",
+            imageFile: null,
         },
         validationSchema: Yup.object().shape({
             code: Yup.string().required('Šifra Artikla je obavezna.'),
@@ -46,6 +48,36 @@ const EditArticle = () => {
             isVisible: Yup.string().required('Obavezno biranje vidljivosti artikla.'),
             brandName: Yup.string().required('Naziv brenda je obavezan.'),
         }),
+        onSubmit: async values => {
+            try {
+                if (values.imageFile) {
+                    const formData = new FormData();
+                    formData.append('code', values.code);
+                    formData.append('articleImage', values.imageFile);
+
+                    await axios.post('/azurirajSliku', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+
+                    const imageName = `${values.code}.png`;
+                    const fileReader = new FileReader();
+                    fileReader.onload = (event) => {
+                        const imageData = event.target.result;
+                        localStorage.setItem(imageName, imageData);
+                        setExistingImage(imageData);  // Update existing image state
+                    };
+                    fileReader.readAsDataURL(values.imageFile);
+                }
+
+                await ArticleService.update(articleID, values);
+                navigate(`/articles`);
+                toast.success('Uspešno ažuriran artikal!');
+            } catch (error) {
+                console.log(error);
+                toast.error('Neuspešno ažuriranje!');
+            }
         onSubmit: values => {
             ArticleService.update(articleID, values)
                 .then(() => {
@@ -63,6 +95,9 @@ const EditArticle = () => {
         ArticleService.get(articleID)
             .then(response => {
                 setArticle(response.data);
+                const imageName = `${response.data.code}.png`;
+                const existingImageData = localStorage.getItem(imageName);
+                setExistingImage(existingImageData);  // Load existing image from localStorage
                 formik.setValues({
                     code: response.data.code || "",
                     barcode: response.data.barcode || "",
@@ -77,6 +112,7 @@ const EditArticle = () => {
                     isActive: response.data.isActive ? 'true' : 'false',
                     isVisible: response.data.isVisible ? 'true' : 'false',
                     brandName: response.data.brand ? response.data.brand.brandName : "",
+                    imageFile: null,
                 });
             }).catch(e => {
                 toast.error('Neuspešno preuzimanje artikala!', e);
@@ -86,7 +122,6 @@ const EditArticle = () => {
     const retrieveBrands = () => {
         BrandService.getAll()
             .then(response => {
-                console.log("Brands: ", response.data);
                 setBrands(response.data);
             })
             .catch(e => {
@@ -96,6 +131,10 @@ const EditArticle = () => {
 
     const handleBrandChange = (event) => {
         formik.setFieldValue('brandName', event.target.value);
+    };
+
+    const handleImageChange = (event) => {
+        formik.setFieldValue('imageFile', event.currentTarget.files[0]);
     };
 
     return (
@@ -151,7 +190,7 @@ const EditArticle = () => {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.unitOfMeasurement && formik.errors.unitOfMeasurement ? (
-                        <div className="error-message">{formik.errors.unitOfMeasurement}</div>
+                        <div class="error-message">{formik.errors.unitOfMeasurement}</div>
                     ) : null}
                 </label>
                 <label>
@@ -164,7 +203,7 @@ const EditArticle = () => {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.quantityPerTransportPackage && formik.errors.quantityPerTransportPackage ? (
-                        <div className="error-message">{formik.errors.quantityPerTransportPackage}</div>
+                        <div class="error-message">{formik.errors.quantityPerTransportPackage}</div>
                     ) : null}
                 </label>
                 <label>
@@ -177,7 +216,7 @@ const EditArticle = () => {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.minimumQuantityDemand && formik.errors.minimumQuantityDemand ? (
-                        <div className="error-message">{formik.errors.minimumQuantityDemand}</div>
+                        <div class="error-message">{formik.errors.minimumQuantityDemand}</div>
                     ) : null}
                 </label>
                 <label>
@@ -190,7 +229,7 @@ const EditArticle = () => {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.brutoMass && formik.errors.brutoMass ? (
-                        <div className="error-message">{formik.errors.brutoMass}</div>
+                        <div class="error-message">{formik.errors.brutoMass}</div>
                     ) : null}
                 </label>
                 <label>
@@ -203,7 +242,7 @@ const EditArticle = () => {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.wholesalePrice && formik.errors.wholesalePrice ? (
-                        <div className="error-message">{formik.errors.wholesalePrice}</div>
+                        <div class="error-message">{formik.errors.wholesalePrice}</div>
                     ) : null}
                 </label>
                 <label>
@@ -216,7 +255,7 @@ const EditArticle = () => {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.imageSource && formik.errors.imageSource ? (
-                        <div className="error-message">{formik.errors.imageSource}</div>
+                        <div class="error-message">{formik.errors.imageSource}</div>
                     ) : null}
                 </label>
                 <label>
@@ -229,12 +268,12 @@ const EditArticle = () => {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.pdv && formik.errors.pdv ? (
-                        <div className="error-message">{formik.errors.pdv}</div>
+                        <div class="error-message">{formik.errors.pdv}</div>
                     ) : null}
                 </label>
                 <label>
                     Status :
-                    <div className="radio-group">
+                    <div class="radio-group">
                         <label>
                             <input
                                 type="radio"
@@ -257,7 +296,7 @@ const EditArticle = () => {
                         </label>
                     </div>
                     {formik.touched.isActive && formik.errors.isActive ? (
-                        <div className="error-message">{formik.errors.isActive}</div>
+                        <div class="error-message">{formik.errors.isActive}</div>
                     ) : null}
                 </label>
                 <label>
@@ -292,7 +331,7 @@ const EditArticle = () => {
                     <label htmlFor="brandName">Brend</label>
                     <select
                         name="brandName"
-                        className='add-article-field'
+                        class="add-article-field"
                         value={formik.values.brandName}
                         onChange={handleBrandChange}
                         onBlur={formik.handleBlur}
@@ -310,8 +349,25 @@ const EditArticle = () => {
                     </select>
                 </div>
                 {formik.touched.brandName && formik.errors.brandName ? (
-                    <div className="error-message">{formik.errors.brandName}</div>
+                    <div class="error-message">{formik.errors.brandName}</div>
                 ) : null}
+                <label>
+                    Slika Artikla:
+                    <input
+                        type="file"
+                        name="imageFile"
+                        onChange={handleImageChange}
+                    />
+                    {formik.touched.imageFile && formik.errors.imageFile ? (
+                        <div class="error-message">{formik.errors.imageFile}</div>
+                    ) : null}
+                </label>
+                {existingImage && (
+                    <div>
+                        <p>Postojeća slika:</p>
+                        <img src={existingImage} alt="Postojeća slika" style={{ width: '100px', height: '100px' }} />
+                    </div>
+                )}
             </div>
             <button type="submit">Ažuriraj Artikal</button>
         </form>
