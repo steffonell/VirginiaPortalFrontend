@@ -76,6 +76,18 @@ const findByName = (articleName) => {
   return axiosInstance.get(`artikli/findByArticleName?articleName=${articleName}`);
 };
 
+const updateImage = (id, code, imageFile) => {
+  const formData = new FormData();
+  formData.append('articleImage', imageFile);
+  formData.append('code', code);
+
+  return axiosInstance.post(`/artikli/azurirajSliku/${id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+
 const ArticleService = {
   getAll,
   getAllActiveArticles,
@@ -88,7 +100,8 @@ const ArticleService = {
   activateArticle,
   deactivateArticle,
   showArticle,
-  hideArticle
+  hideArticle,
+  updateImage
 };
 
 export default ArticleService;

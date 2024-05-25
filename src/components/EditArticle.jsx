@@ -50,16 +50,10 @@ const EditArticle = () => {
         }),
         onSubmit: async values => {
             try {
-                if (values.imageFile) {
-                    const formData = new FormData();
-                    formData.append('code', values.code);
-                    formData.append('articleImage', values.imageFile);
+                let isUpdated = false;
 
-                    await axios.post('/azurirajSliku', formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    });
+                if (values.imageFile) {
+                    await ArticleService.updateImage(articleID, values.code, values.imageFile);
 
                     const imageName = `${values.code}.png`;
                     const fileReader = new FileReader();
@@ -69,25 +63,20 @@ const EditArticle = () => {
                         setExistingImage(imageData);  // Update existing image state
                     };
                     fileReader.readAsDataURL(values.imageFile);
+                    isUpdated = true;
                 }
 
-                await ArticleService.update(articleID, values);
+                if (!isUpdated || !isEqual(article, values)) {
+                    await ArticleService.update(articleID, values);
+                    toast.success('Uspešno ažuriran artikal!');
+                }
+
                 navigate(`/articles`);
-                toast.success('Uspešno ažuriran artikal!');
             } catch (error) {
                 console.log(error);
                 toast.error('Neuspešno ažuriranje!');
             }
-        onSubmit: values => {
-            ArticleService.update(articleID, values)
-                .then(() => {
-                    navigate(`/articles`);
-                    toast.success('Uspešno ažuriran artikal!');
-                })
-                .catch(e => {
-                    toast.error('Neuspešno ažuriranje!', e);
-                });
-        },
+        }
     });
 
     useEffect(() => {
@@ -135,6 +124,15 @@ const EditArticle = () => {
 
     const handleImageChange = (event) => {
         formik.setFieldValue('imageFile', event.currentTarget.files[0]);
+    };
+
+    const isEqual = (obj1, obj2) => {
+        for (let key in obj1) {
+            if (obj1[key] !== obj2[key]) {
+                return false;
+            }
+        }
+        return true;
     };
 
     return (
