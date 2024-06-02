@@ -6,7 +6,6 @@ import './ShopComponent.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const images = require.context("./../images/", true);
 
 const ShopComponent = (props) => {
   const [articles, setArticles] = useState([]);
@@ -15,6 +14,8 @@ const ShopComponent = (props) => {
   const [selectedBrand, setSelectedBrand] = useState('');
   const { loggedInClient, addOrUpdateBasketItem } = useContext(ApplicationContext);
   const [quantities, setQuantities] = useState({});
+
+  console.log('Image directory:', process.env.REACT_APP_IMAGE_DIRECTORY); // Check the value
 
   const handleQuantityChange = (id, value) => {
     const newValue = Math.max(value, 0);
@@ -121,24 +122,10 @@ const ShopComponent = (props) => {
   };
 
   const findArticleImage = (code) => {
-    const checkFileExists = (path) => {
-      try {
-        images(path);
-        return true;
-      } catch (error) {
-        return false;
-      }
-    };
-
-    if (checkFileExists(`./${code}.jpg`)) {
-      return images(`./${code}.jpg`);
-    } else if (checkFileExists(`./${code}.png`)) {
-      return images(`./${code}.png`);
-    } else {
-      return logo;
-    }
+    const baseUrl = "http://virdzinijaportal.com/uploads"; // Hardcoded base URL
+    return `${baseUrl}/${code}.png`;
   };
-
+  
   const addedBrands = new Set();
 
   return (
@@ -215,12 +202,12 @@ const ShopComponent = (props) => {
                   </div>
                   <div>
                     <label className="block mb-1">Fakturna Cena</label>
-                    <h6 className="block mb-2">{article.wholesalePrice.toFixed(2)} RSD</h6>
+                    <h6 className="block mb-2">{numberFormatter.format(article.wholesalePrice)}</h6>
                   </div>
                 </div>
                 <div className="mb-2">
                   <label className="block mb-1">Cena sa rabatom [{brandDiscount(article.brand)}%]</label>
-                  <h6>{finalPriceWithDiscountForCustomer} RSD</h6>
+                  <h6>{numberFormatter.format(finalPriceWithDiscountForCustomer)}</h6>
                 </div>
                 {/* Conditionally render input group or "Nedostupno" label */}
                 {!article.isActive ? (
