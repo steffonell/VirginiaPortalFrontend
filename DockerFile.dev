@@ -1,0 +1,17 @@
+# Use the same Node.js runtime version as your development environment
+FROM node:20.14.0-alpine
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . .
+
+# Install any needed packages
+RUN npm install
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Command to start the development server
+CMD ["npm", "start"]

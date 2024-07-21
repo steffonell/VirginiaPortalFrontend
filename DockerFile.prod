@@ -1,0 +1,26 @@
+# Use the same Node.js runtime version as your development environment
+FROM node:20.14.0-alpine as build
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . .
+
+# Install any needed packages
+RUN npm install
+
+# Build the app
+RUN npm run build
+
+# Stage 2: Use an official Apache2 image to serve the app
+FROM httpd:2.4
+
+# Copy the build output to the Apache2 web directory
+COPY --from=build /app/build /usr/local/apache2/htdocs/
+
+# Expose the port the app runs on
+EXPOSE 80
+
+# Command to run Apache2
+CMD ["httpd-foreground"]

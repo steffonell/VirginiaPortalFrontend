@@ -4,12 +4,14 @@ import { useTable, useSortBy } from "react-table";
 import { useNavigate } from "react-router-dom";
 import { ApplicationContext } from "./ApplicationContext";
 import { formatDate } from "./utils";
+import { ThreeDots } from 'react-loader-spinner';
 import "../styles/IndentList.css"
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const IndentsList = (props) => {
     const [indents, setIndents] = useState([]);
+    const [loading, setLoading] = useState(false);
     const indentsRef = useRef();
     const navigate = useNavigate();
     indentsRef.current = indents;
@@ -25,14 +27,17 @@ const IndentsList = (props) => {
     }, []);
 
     const retrieveIndents = () => {
+        setLoading(true);
         IndentDataService.getAll()
             .then((response) => {
                 setIndents(response.data);
                 setDisplayedIndents(response.data);
-                console.log(response.data);
+                //console.log(response.data);
+                setLoading(false);
             })
             .catch((e) => {
-                console.log(e);
+                //console.log(e);
+                setLoading(false);
             });
     };
 
@@ -46,7 +51,6 @@ const IndentsList = (props) => {
 
     const deleteIndent = (rowIndex) => {
         const indentCode = indentsRef.current[rowIndex].code;
-        console.log(rowIndex + "X S A")
         IndentDataService.remove(indentCode)
             .then((response) => {
                 retrieveIndents();
@@ -83,7 +87,6 @@ const IndentsList = (props) => {
 
     const viewIndent = (rowIndex) => {
         const indentCode = indentsRef.current[rowIndex].code;
-        console.log("navigate");
         navigate(`/indents/entries/${indentCode}`);
     };
 
@@ -133,13 +136,6 @@ const IndentsList = (props) => {
                 Header: "ID Porudzbenice",
                 accessor: "code",
             },
-            /*             {
-                            Header: "Cena",
-                            accessor: "bill",
-                            Cell: ({ value }) => (
-                                <span>{Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} RSD</span>
-                            ),
-                        }, */
             {
                 Header: "Status Porudzbenice",
                 accessor: "indentStatus",
@@ -205,6 +201,50 @@ const IndentsList = (props) => {
         setDisplayedIndents(filteredIndents);
     };
 
+    const handleShowActiveIndents = () => {
+        setLoading(true);
+        IndentDataService.getAllActiveIndents()
+            .then((response) => {
+                setIndents(response.data);
+                setDisplayedIndents(response.data);
+                //console.log(response.data);
+                setLoading(false);
+            })
+            .catch((e) => {
+                //console.log(e);
+                setLoading(false);
+            });
+    };
+
+    const handleShowInactiveIndents = () => {
+        setLoading(true);
+        IndentDataService.getAllInactiveIndents()
+            .then((response) => {
+                setIndents(response.data);
+                setDisplayedIndents(response.data);
+                //console.log(response.data);
+                setLoading(false);
+            })
+            .catch((e) => {
+                //console.log(e);
+                setLoading(false);
+            });
+    };
+
+    const handleShowAllIndents = () => {
+        setLoading(true);
+        IndentDataService.getAllIndents()
+            .then((response) => {
+                setIndents(response.data);
+                setDisplayedIndents(response.data);
+                //console.log(response.data);
+                setLoading(false);
+            })
+            .catch((e) => {
+                //console.log(e);
+                setLoading(false);
+            });
+    };
 
     const {
         getTableProps,
@@ -294,6 +334,7 @@ const IndentsList = (props) => {
                             </div>
                         </div>
                     </div>
+                    <br/>
                     <div className="w-full px-2 mb-4 flex justify-center md:justify-start">
                         <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleSearchClick}>
                             Pretraga
@@ -301,41 +342,60 @@ const IndentsList = (props) => {
                         <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleResetClick}>
                             Reset
                         </button>
+                        {userRole !== "ROLE_USER" && (
+                            <div>
+                                <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleShowActiveIndents}>
+                                    Prikaži Samo Aktivne Porudžbine
+                                </button>
+                                <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleShowInactiveIndents}>
+                                    Prikaži Samo Neaktivne Porudžbine
+                                </button>
+                                <button className="btn btn-outline-secondary mx-1" type="button" onClick={handleShowAllIndents}>
+                                    Prikaži Sve Porudžbine
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
 
 
             <div className="overflow-x-auto">
-                <table {...getTableProps()} className="min-w-full">
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps()} className="px-4 py-2 border-b border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                        {column.render('Header')}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(row => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps({
-                                    className: getRowBgColorClass(row.original.indentStatus)
-                                })}>
-                                    {row.cells.map(cell => (
-                                        <td {...cell.getCellProps()} className="px-4 py-2 border-b border-gray-300 text-sm leading-5 text-gray-900">
-                                            {cell.render('Cell')}
-                                        </td>
+                {loading ? (
+                    <div className="flex justify-center items-center">
+                        <ThreeDots type="ThreeDots" color="#00BFFF" height={80} width={80} />
+                    </div>
+                ) : (
+                    <table {...getTableProps()} className="min-w-full">
+                        <thead>
+                            {headerGroups.map(headerGroup => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map(column => (
+                                        <th {...column.getHeaderProps()} className="px-4 py-2 border-b border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                            {column.render('Header')}
+                                        </th>
                                     ))}
                                 </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {rows.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <tr {...row.getRowProps({
+                                        className: getRowBgColorClass(row.original.indentStatus)
+                                    })}>
+                                        {row.cells.map(cell => (
+                                            <td {...cell.getCellProps()} className="px-4 py-2 border-b border-gray-300 text-sm leading-5 text-gray-900">
+                                                {cell.render('Cell')}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );

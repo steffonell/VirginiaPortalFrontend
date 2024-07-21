@@ -4,6 +4,18 @@ const getAll = () => {
   return axiosInstance.get("porudzbine");
 };
 
+const getAllActiveIndents = () => {
+  return axiosInstance.get("porudzbine/aktivnePorudzbine");
+};
+
+const getAllInactiveIndents = () => {
+  return axiosInstance.get("porudzbine/neaktivnePorudzbine");
+};
+
+const getAllIndents = () => {
+  return axiosInstance.get("porudzbine/svePorudzbine");
+};
+
 const get = (id) => {
   return axiosInstance.get(`porudzbine/${id}`);
 };
@@ -59,7 +71,10 @@ const IndentService = {
   removeAll,
   activateIndent,
   findByCode,
-  confirmIndentDelivery
+  confirmIndentDelivery,
+  getAllActiveIndents,
+  getAllInactiveIndents,
+  getAllIndents
 };
 
 export default IndentService;

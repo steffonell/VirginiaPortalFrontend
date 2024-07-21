@@ -126,6 +126,26 @@ const ShopComponent = (props) => {
     return `${baseUrl}/${code}.png`;
   };
   
+
+/*   const findArticleImage = (code) => {
+    const checkFileExists = (path) => {
+      try {
+        images(path);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    };
+
+    if (checkFileExists(`./${code}.jpg`)) {
+      return images(`./${code}.jpg`);
+    } else if (checkFileExists(`./${code}.png`)) {
+      return images(`./${code}.png`);
+    } else {
+      return logo;
+    }
+  }; */
+
   const addedBrands = new Set();
 
   return (
